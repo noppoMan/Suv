@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "3F46238ADAD11DA3B7DDDBB74DD15566970E7D15",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "C8BCB70E5BA9B013E246CB2F9844FEB774381333" : 0,
+    "3F46238ADAD11DA3B7DDDBB74DD15566970E7D15" : 0,
+    "D2645895BE86F596C92A5059EF3018F63D63400C" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "968DDFEE-795D-4E8A-A3F0-3F9F212F27E5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "C8BCB70E5BA9B013E246CB2F9844FEB774381333" : "",
+    "3F46238ADAD11DA3B7DDDBB74DD15566970E7D15" : "Suv\/",
+    "D2645895BE86F596C92A5059EF3018F63D63400C" : ".."
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Suv",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Xcode\/Suv.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/noppoMan\/Suv.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3F46238ADAD11DA3B7DDDBB74DD15566970E7D15"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/noppoMan\/SlimaneHTTP.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C8BCB70E5BA9B013E246CB2F9844FEB774381333"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:noppoMan\/slimane.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2645895BE86F596C92A5059EF3018F63D63400C"
+    }
+  ]
+}
