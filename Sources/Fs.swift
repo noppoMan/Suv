@@ -6,54 +6,97 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
+
 import CLibUv
 
-func destroy_req(req: UnsafeMutablePointer<uv_fs_t>) {
+func fs_req_cleanup(req: UnsafeMutablePointer<uv_fs_t>) {
     uv_fs_req_cleanup(req)
     req.destroy()
     req.dealloc(sizeof(uv_fs_t))
 }
 
-// http://lxr.free-electrons.com/source/include/uapi/asm-generic/fcntl.h#L19
-public enum OpenFlag: Int32 {
-    case Read = 0x0000
-    case Write = 0x0001
-}
-
 public class Fs {
-    public static func unlink(loop: Loop = Loop.defaultLoop, path: String){
+    public static func unlink(path: String, loop: Loop = Loop.defaultLoop){
         let fs = FileSystem(loop: loop, path: path)
         fs.unlink()
+    }
+    
+    public static func exists(path: String, loop: Loop = Loop.defaultLoop, completion: Bool -> ()){
+        let fs = FileSystem(loop: loop, path: path)
+        fs.stat { res in
+            fs.close()
+            if case .Error = res {
+                return completion(false)
+            }
+            completion(true)
+        }
+    }
+    
+    public static func createFile(path: String, loop: Loop = Loop.defaultLoop, completion: SuvError? -> ()) {
+        let fs = FileSystem(loop: loop, path: path)
+        fs.open(.W) { res in
+            fs.close()
+            if case .Error(let err) = res {
+                return completion(err)
+            }
+            completion(nil)
+        }
     }
 
     public static func readFile(path: String, loop: Loop = Loop.defaultLoop, completion: (FsReadResult) -> Void) {
         let fs = FileSystem(loop: loop, path: path)
-        fs.open(.Read) { err, fd in
-            if let e = err {
-                return completion(.Error(e))
+        
+        fs.open(.R) { res in
+            if case .Error(let err) = res {
+                return completion(.Error(err))
             }
 
-            fs.read(fd!) { result in
-                fs.close(fd!)
+            fs.read { result in
+                fs.close()
                 completion(result)
             }
         }
     }
+    
+    public static func appendFile(path: String, data: Buffer, loop: Loop = Loop.defaultLoop, completion: (FsWriteResult) -> Void) {
+        let fs = FileSystem(loop: loop, path: path)
+        fs.open(.A) { res in
+            if case .Error(let err) = res {
+                return completion(.Error(err))
+            }
+            
+            fs.ftell { pos in
+                if pos < 0 {
+                    return completion(.Error(SuvError.RuntimeError(message: "Couldn't get current position")))
+                }
+                
+                fs.write(data, position: pos) { res in
+                    fs.close()
+                    completion(res)
+                }
+            }
+        }
+    }
 
-    public static func writeFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (SuvError?) -> Void) {
+    public static func writeFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (FsWriteResult) -> Void) {
         writeFile(path, data: Buffer(data), loop: loop, completion: completion)
     }
 
-    public static func writeFile(path: String, data: Buffer, loop: Loop = Loop.defaultLoop, completion: (SuvError?) -> Void) {
+    public static func writeFile(path: String, data: Buffer, loop: Loop = Loop.defaultLoop, completion: (FsWriteResult) -> Void) {
         let fs = FileSystem(loop: loop, path: path)
-        fs.open(.Write) { err, fd in
-            if let e = err {
-                return completion(e)
+        fs.open(.W) { res in
+            if case .Error(let err) = res {
+                return completion(.Error(err))
             }
 
-            fs.write(fd!, data: data) { err in
-                fs.close(fd!)
-                completion(err)
+            fs.write(data) { res in
+                fs.close()
+                completion(res)
             }
         }
     }

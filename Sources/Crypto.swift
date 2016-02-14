@@ -30,7 +30,7 @@ func crypto_work_queue_task(req: UnsafeMutablePointer<uv_work_t>){
 func crypto_work_queue_finished(req: UnsafeMutablePointer<uv_work_t>, status: Int32){
     let context = UnsafeMutablePointer<CryptoWorkQueueContext>(req.memory.data)
     context.destroy()
-    context.dealloc(sizeof(uv_work_t))
+    context.dealloc(sizeof(CryptoWorkQueueContext))
     req.destroy()
     req.dealloc(sizeof(uv_work_t))
 }
