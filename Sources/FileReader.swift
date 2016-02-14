@@ -18,6 +18,7 @@ import CLibUv
 
 public enum FsReadResult {
     case Data(Buffer)
+    case End(Int)
     case Error(SuvError)
 }
 
@@ -40,17 +41,30 @@ class FileReaderContext {
     
     var bytesRead: Int64 = 0
     
-    var buffer = Buffer()
-    
     var buf: uv_buf_t? = nil
     
     let loop: Loop
     
     var fd: Int32
     
-    init(loop: Loop = Loop.defaultLoop, fd: Int32, completion: (FsReadResult) -> Void){
+    var bufferd: Bool = true
+    
+    /**
+     an integer specifying the number of bytes to read
+    */
+    var length: Int?
+    
+    /**
+     an integer specifying where to begi1n reading from in the file. 
+     If position is null, data will be read from the current file position
+    */
+    var position: Int
+    
+    init(loop: Loop = Loop.defaultLoop, fd: Int32, length: Int? = nil, position: Int, completion: (FsReadResult) -> Void){
         self.loop = loop
         self.fd = fd
+        self.position = position
+        self.length = length
         self.onRead = completion
     }
 }
@@ -59,18 +73,21 @@ class FileReader {
     
     var context: UnsafeMutablePointer<FileReaderContext>
     
-    init(loop: Loop = Loop.defaultLoop, fd: Int32, completion: (FsReadResult) -> Void){
+    init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int = 0, length: Int? = nil, position: Int, completion: (FsReadResult) -> Void){
         context = UnsafeMutablePointer<FileReaderContext>.alloc(1)
         context.initialize(
             FileReaderContext(
                 loop: loop,
                 fd: fd,
+                length: length,
+                position: position,
                 completion: completion
             )
         )
     }
     
-    func read(){
+    func read(bufferd: Bool = true){
+        self.context.memory.bufferd = bufferd
         readNext(context)
     }
 }
@@ -86,14 +103,22 @@ private func readNext(context: UnsafeMutablePointer<FileReaderContext>){
     
     readReq.memory.data = UnsafeMutablePointer(context)
     
-    uv_fs_read(context.memory.loop.loopPtr, readReq, uv_file(context.memory.fd), &context.memory.buf!, UInt32(context.memory.buf!.len), context.memory.bytesRead) { req in
+    let r = uv_fs_read(context.memory.loop.loopPtr, readReq, uv_file(context.memory.fd), &context.memory.buf!, UInt32(context.memory.buf!.len), context.memory.bytesRead) { req in
         onReadEach(req)
+    }
+    
+    if r < 0 {
+        defer {
+            fs_req_cleanup(readReq)
+            destroyContext(context)
+        }
+        return context.memory.onRead(.Error(SuvError.UVError(code: r)))
     }
 }
 
 private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
     defer {
-        destroy_req(req)
+        fs_req_cleanup(req)
     }
     
     var context = UnsafeMutablePointer<FileReaderContext>(req.memory.data)
@@ -112,14 +137,30 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
             destroyContext(context)
             context = nil
         }
-        return context.memory.onRead(.Data(context.memory.buffer))
+        return context.memory.onRead(.End(Int(context.memory.bytesRead)))
+    }
+    
+    // break when length is specified and bytesRead is reached
+    if let length = context.memory.length {
+        if Int(context.memory.bytesRead) >= length {
+            defer {
+                destroyContext(context)
+                context = nil
+            }
+            return context.memory.onRead(.End(Int(context.memory.bytesRead)))
+        }
     }
     
     context.memory.bytesRead += req.memory.result
     
-    let bytes = UnsafePointer<UInt8>(context.memory.buf!.base)
-    for i in 0.stride(to: req.memory.result, by: 1) {
-        context.memory.buffer.append(bytes[i])
+    if context.memory.bufferd {
+        var buf = Buffer()
+        let bytes = UnsafePointer<UInt8>(context.memory.buf!.base)
+        for i in 0.stride(to: req.memory.result, by: 1) {
+            buf.append(bytes[i])
+        }
+        
+        context.memory.onRead(.Data(buf))
     }
     
     readNext(context)

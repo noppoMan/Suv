@@ -33,7 +33,7 @@ public class PipeServer: ServerBase, ServerType {
         sig.start(SIGINT) { [unowned self] _ in
             let req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
             // Unlink sock file
-            Fs.unlink(self.loop, path: self.sockName!)
+            Fs.unlink(self.sockName!, loop: self.loop)
             sig.stop()
             req.destroy()
             req.dealloc(sizeof(uv_fs_t))
