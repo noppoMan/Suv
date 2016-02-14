@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Timer Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/Timer" class="dashAnchor"></a>
+    <a title="Timer Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">Suv Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/noppoMan/Suv"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">Suv Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        Timer Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Address.html">Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Base64.html">Base64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ChildProcess.html">ChildProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Cluster.html">Cluster</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DNS.html">DNS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FileSystem.html">FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Fs.html">Fs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Loop.html">Loop</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Pipe.html">Pipe</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PipeServer.html">PipeServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ReadableStream.html">ReadableStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Signal.html">Signal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SpawnedProcess.html">SpawnedProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C3Suv11StdioOption">StdioOption</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Stream.html">Stream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCP.html">TCP</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCPServer.html">TCPServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Time.html">Time</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Timer.html">Timer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Worker.html">Worker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WritableStream.html">WritableStream</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/Crypto.html">Crypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Encoding.html">Encoding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FsReadResult.html">FsReadResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/GenericResult.html">GenericResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OpenFlag.html">OpenFlag</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ReadStreamResult.html">ReadStreamResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Result.html">Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RunMode.html">RunMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Stdio.html">Stdio</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SuvError.html">SuvError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimeZone.html">TimeZone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerMode.html">TimerMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerState.html">TimerState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Process.html">Process</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/ServerType.html">ServerType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AddrInfo.html">AddrInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Buffer.html">Buffer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OS.html">OS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:V3Suv12SpawnOptions">SpawnOptions</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Timer</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Timer</span></code></pre>
+
+                </div>
+              </div>
+            <p>Timer handle</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv5Timer5stateOS_10TimerState"></a>
+                    <a name="//apple_ref/swift/Property/state" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv5Timer5stateOS_10TimerState">state</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Current timer state</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">TimerState</span> <span class="o">=</span> <span class="o">.</span><span class="kt">Pause</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv5Timer4modeOS_9TimerMode"></a>
+                    <a name="//apple_ref/swift/Property/mode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv5Timer4modeOS_9TimerMode">mode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Timer</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv5Timer4tickVSs6UInt64"></a>
+                    <a name="//apple_ref/swift/Property/tick" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv5Timer4tickVSs6UInt64">tick</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Timer</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5TimercFMS0_FT4modeOS_9TimerMode4tickVSs6UInt64_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(mode:tick:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5TimercFMS0_FT4modeOS_9TimerMode4tickVSs6UInt64_S0_">init(mode:tick:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="kt">TimerMode</span> <span class="o">=</span> <span class="o">.</span><span class="kt">Timeout</span><span class="p">,</span> <span class="nv">tick</span><span class="p">:</span> <span class="kt">UInt64</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>.Interval or Timeout</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tick</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Micro sec for timer tick.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer3refFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/ref()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer3refFS0_FT_T_">ref()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reference the internal uv_timer_t handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ref</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer5unrefFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/unref()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer5unrefFS0_FT_T_">unref()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Un-reference the internal uv_timer_t handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unref</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer4stopFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/stop()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer4stopFS0_FT_T_">stop()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Stop the timer. If you stop the timer, it can restart with calling resume.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer5startFS0_FFT_T_T_"></a>
+                    <a name="//apple_ref/swift/Method/start(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer5startFS0_FFT_T_T_">start(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start the timer with specific mode</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">callback</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer6resumeFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/resume()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer6resumeFS0_FT_T_">resume()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resume the timer that is initialized once</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">resume</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv5Timer3endFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/end()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv5Timer3endFS0_FT_T_">end()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>End the timer.
+Anyways, You must call end in both of Interval and Timeout mode to release resource, when the timing that timer should be ended.
+If you forgot to call end, memory leak will be occured.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">end</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

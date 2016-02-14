@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TCPServer Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/TCPServer" class="dashAnchor"></a>
+    <a title="TCPServer Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">Suv Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/noppoMan/Suv"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">Suv Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        TCPServer Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Address.html">Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Base64.html">Base64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ChildProcess.html">ChildProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Cluster.html">Cluster</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DNS.html">DNS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FileSystem.html">FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Fs.html">Fs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Loop.html">Loop</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Pipe.html">Pipe</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PipeServer.html">PipeServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ReadableStream.html">ReadableStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Signal.html">Signal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SpawnedProcess.html">SpawnedProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C3Suv11StdioOption">StdioOption</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Stream.html">Stream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCP.html">TCP</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCPServer.html">TCPServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Time.html">Time</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Timer.html">Timer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Worker.html">Worker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WritableStream.html">WritableStream</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/Crypto.html">Crypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Encoding.html">Encoding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FsReadResult.html">FsReadResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/GenericResult.html">GenericResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OpenFlag.html">OpenFlag</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ReadStreamResult.html">ReadStreamResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Result.html">Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RunMode.html">RunMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Stdio.html">Stdio</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SuvError.html">SuvError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimeZone.html">TimeZone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerMode.html">TimerMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerState.html">TimerState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Process.html">Process</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/ServerType.html">ServerType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AddrInfo.html">AddrInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Buffer.html">Buffer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OS.html">OS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:V3Suv12SpawnOptions">SpawnOptions</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>TCPServer</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TCPServer</span><span class="p">:</span> <span class="kt">ServerType</span></code></pre>
+
+                </div>
+              </div>
+            <p>For Creating TCP Server</p>
+
+<p><a href='#simple_echo_server_example' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='simple_echo_server_example'>Simple Echo Server Example</h3>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">server</span> <span class="o">=</span> <span class="kt">TCPServer</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+   <span class="k">if</span> <span class="k">case</span> <span class="o">.</span><span class="kt">Error</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">)</span> <span class="o">=</span> <span class="n">result</span> <span class="p">{</span>
+       <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">server</span><span class="o">.</span><span class="nf">close</span><span class="p">()</span>
+   <span class="p">}</span></p>
+
+<p><span class="k">let</span> <span class="nv">client</span> <span class="o">=</span> <span class="kt">TCP</span><span class="p">()</span>
+   <span class="k">try!</span> <span class="n">server</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></p>
+
+<p><span class="n">client</span><span class="o">.</span><span class="n">read</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+       <span class="k">if</span> <span class="k">case</span> <span class="kd">let</span> <span class="o">.</span><span class="kt">Data</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">=</span> <span class="n">result</span> <span class="p">{</span>
+           <span class="n">client</span><span class="o">.</span><span class="nf">write</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+           <span class="n">client</span><span class="o">.</span><span class="nf">close</span><span class="p">()</span>
+       <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span></p>
+
+<p><span class="k">try!</span> <span class="n">server</span><span class="o">.</span><span class="nf">bind</span><span class="p">(</span><span class="kt">Address</span><span class="p">(</span><span class="nv">host</span><span class="p">:</span> <span class="s"><q>127.0.0.1</q></span><span class="p">,</span> <span class="nv">port</span><span class="p">:</span> <span class="mi">3000</span><span class="p">))</span></p>
+
+<p><span class="k">try!</span> <span class="n">server</span><span class="o">.</span><span class="nf">listen</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span></p>
+
+<p><span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="o">.</span><span class="nf">run</span><span class="p">()</span>
+</code></pre></p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:C3Suv9TCPServer4Hoge"></a>
+                    <a name="//apple_ref/swift/Alias/Hoge" class="dashAnchor"></a>
+                    <a class="token" href="#/s:C3Suv9TCPServer4Hoge">Hoge</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Hoge</span> <span class="o">=</span> <span class="kt">GenericResult</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span> <span class="o">-&gt;</span> <span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>backlog</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The maximum number of tcp established connection that server can handle</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onConnection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:C3Suv9TCPServer24OnConnectionCallbackType"></a>
+                    <a name="//apple_ref/swift/Alias/OnConnectionCallbackType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:C3Suv9TCPServer24OnConnectionCallbackType">OnConnectionCallbackType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Type for generic listen method</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnConnectionCallbackType</span> <span class="o">=</span> <span class="kt">GenericResult</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span> <span class="o">-&gt;</span> <span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:C3Suv9TCPServer8BindType"></a>
+                    <a name="//apple_ref/swift/Alias/BindType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:C3Suv9TCPServer8BindType">BindType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Type for generic bind method</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">BindType</span> <span class="o">=</span> <span class="kt">Address</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv9TCPServer4loopCS_4Loop"></a>
+                    <a name="//apple_ref/swift/Property/loop" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv9TCPServer4loopCS_4Loop">loop</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Event loop</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv9TCPServer16keepAliveTimeoutSi"></a>
+                    <a name="//apple_ref/swift/Property/keepAliveTimeout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv9TCPServer16keepAliveTimeoutSi">keepAliveTimeout</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Seconds for keep alive timeout, if zero keep alive is disabled. Default is 0</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keepAliveTimeout</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv9TCPServer10setNoDelaySb"></a>
+                    <a name="//apple_ref/swift/Property/setNoDelay" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv9TCPServer10setNoDelaySb">setNoDelay</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Flag for Enable / disable Nagle’s algorithm.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">setNoDelay</span> <span class="o">=</span> <span class="kc">false</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv9TCPServercFMS0_FT4loopCS_4Loop9ipcEnableSb_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(loop:ipcEnable:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv9TCPServercFMS0_FT4loopCS_4Loop9ipcEnableSb_S0_">init(loop:ipcEnable:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">ipcEnable</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ipcEnable</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if true TCP is initilized as ipcMode and it can&rsquo;t bind, false it is initialized as basic TCP handle instance</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onConnection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Connection handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv9TCPServer4bindFS0_FzCS_7AddressT_"></a>
+                    <a name="//apple_ref/swift/Method/bind(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv9TCPServer4bindFS0_FzCS_7AddressT_">bind(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Bind address</p>
+
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    SuvError.UVError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">bind</span><span class="p">(</span><span class="nv">addr</span><span class="p">:</span> <span class="kt">BindType</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>addr</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Bind Address</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv9TCPServer6acceptFS0_FzCS_6StreamT_"></a>
+                    <a name="//apple_ref/swift/Method/accept(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv9TCPServer6acceptFS0_FzCS_6StreamT_">accept(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Accept client</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">accept</span><span class="p">(</span><span class="nv">client</span><span class="p">:</span> <span class="kt">Stream</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>client</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Stream extended client instance</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv9TCPServer6listenFS0_FzTSi12onConnectionFGOS_13GenericResultSi_T__T_"></a>
+                    <a name="//apple_ref/swift/Method/listen(_:onConnection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv9TCPServer6listenFS0_FzTSi12onConnectionFGOS_13GenericResultSi_T__T_">listen(_:onConnection:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TCPServer</span><span class="p">:</span> <span class="kt">ServerType</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv9TCPServer5closeFS0_FT_T_"></a>
+                    <a name="//apple_ref/swift/Method/close()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv9TCPServer5closeFS0_FT_T_">close()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Close server handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

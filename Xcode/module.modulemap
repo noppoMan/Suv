@@ -1,0 +1,21 @@
+module CLibUv [system] {
+    header "/usr/local/include/uv.h"
+    link "uv"
+    export *
+}
+
+module COpenSSL [system] {
+    header "/usr/local/include/openssl/evp.h"
+    header "/usr/local/include/openssl/e_os2.h"
+    header "/usr/local/include/openssl/rand.h"
+    header "/usr/local/include/openssl/err.h"
+    header "/usr/local/include/openssl/crypto.h"
+    header "/usr/local/include/openssl/md5.h"
+    header "/usr/local/include/openssl/ssl.h"
+    header "/usr/local/include/openssl/x509v3.h"
+    header "/usr/local/include/openssl/bn.h"
+    header "/usr/local/include/openssl/srtp.h"
+    link "ssl"
+    link "crypto"
+    export *
+}

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SpawnedProcess Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/SpawnedProcess" class="dashAnchor"></a>
+    <a title="SpawnedProcess Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">Suv Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/noppoMan/Suv"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">Suv Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SpawnedProcess Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Address.html">Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Base64.html">Base64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ChildProcess.html">ChildProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Cluster.html">Cluster</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DNS.html">DNS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FileSystem.html">FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Fs.html">Fs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Loop.html">Loop</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Pipe.html">Pipe</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PipeServer.html">PipeServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ReadableStream.html">ReadableStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Signal.html">Signal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SpawnedProcess.html">SpawnedProcess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C3Suv11StdioOption">StdioOption</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Stream.html">Stream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCP.html">TCP</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TCPServer.html">TCPServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Time.html">Time</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Timer.html">Timer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Worker.html">Worker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WritableStream.html">WritableStream</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/Crypto.html">Crypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Encoding.html">Encoding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FsReadResult.html">FsReadResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/GenericResult.html">GenericResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OpenFlag.html">OpenFlag</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ReadStreamResult.html">ReadStreamResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Result.html">Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RunMode.html">RunMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Stdio.html">Stdio</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SuvError.html">SuvError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimeZone.html">TimeZone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerMode.html">TimerMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TimerState.html">TimerState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Process.html">Process</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/ServerType.html">ServerType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AddrInfo.html">AddrInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Buffer.html">Buffer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OS.html">OS</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:V3Suv12SpawnOptions">SpawnOptions</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SpawnedProcess</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SpawnedProcess</span></code></pre>
+
+                </div>
+              </div>
+            <p>Spawned Process type</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess3pidGSqVSs5Int32_"></a>
+                    <a name="//apple_ref/swift/Property/pid" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess3pidGSqVSs5Int32_">pid</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Pid for spawned process</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">pid</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess6signalGSqVSs5Int32_"></a>
+                    <a name="//apple_ref/swift/Property/signal" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess6signalGSqVSs5Int32_">signal</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Signal that got at exit</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">signal</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess6statusGSqVSs5Int64_"></a>
+                    <a name="//apple_ref/swift/Property/status" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess6statusGSqVSs5Int64_">status</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Status that got at status</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess5stdioGSaCS_11StdioOption_"></a>
+                    <a name="//apple_ref/swift/Property/stdio" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess5stdioGSaCS_11StdioOption_">stdio</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Options that is used spawn</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">stdio</span><span class="p">:</span> <span class="p">[</span><span class="kt">StdioOption</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess5stdinGSqCS_14WritableStream_"></a>
+                    <a name="//apple_ref/swift/Property/stdin" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess5stdinGSqCS_14WritableStream_">stdin</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>stdin stream handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">stdin</span><span class="p">:</span> <span class="kt">WritableStream</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess6stdoutGSqCS_14ReadableStream_"></a>
+                    <a name="//apple_ref/swift/Property/stdout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess6stdoutGSqCS_14ReadableStream_">stdout</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>stdout stream handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">stdout</span><span class="p">:</span> <span class="kt">ReadableStream</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC3Suv14SpawnedProcess6stderrGSqCS_14ReadableStream_"></a>
+                    <a name="//apple_ref/swift/Property/stderr" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC3Suv14SpawnedProcess6stderrGSqCS_14ReadableStream_">stderr</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>stderr stream handle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">stderr</span><span class="p">:</span> <span class="kt">ReadableStream</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv14SpawnedProcess6onExitFS0_FFT_T_T_"></a>
+                    <a name="//apple_ref/swift/Method/onExit(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv14SpawnedProcess6onExitFS0_FFT_T_T_">onExit(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Will be called when process is exit</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">onExit</span><span class="p">(</span><span class="nv">callback</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>callback</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC3Suv14SpawnedProcess4killFS0_FzVSs5Int32T_"></a>
+                    <a name="//apple_ref/swift/Method/kill(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv14SpawnedProcess4killFS0_FzVSs5Int32T_">kill(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Kill the process</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">kill</span><span class="p">(</span><span class="nv">sig</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sig</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>signal for kill</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
