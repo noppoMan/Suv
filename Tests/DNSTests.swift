@@ -30,5 +30,4 @@ class DNSTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
 }

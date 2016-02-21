@@ -18,6 +18,6 @@ extension String {
     }
     
     var buffer: UnsafePointer<Int8> {
-        return (self as NSString).UTF8String
+        return NSString(string: self).UTF8String
     }
 }

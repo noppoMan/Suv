@@ -193,7 +193,7 @@ internal class Spawn {
         var argv = ([execPath] + execOptions).map { $0.buffer }
         argv.append(nil)
 
-        options.memory.file = (execPath).withCString { $0 }
+        options.memory.file = execPath.withCString { $0 }
         options.memory.args = UnsafeMutablePointer(argv)
 
         if(opts.detached) {

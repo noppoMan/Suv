@@ -28,10 +28,22 @@ Recently Suv doesn't have coveragge for all of libuv apis.
 
 ## Installation
 
-### Linux
+### Ubuntu
 ```sh
-apt-get install libuv-dev libssl-dev
+# Install build tools and libssl-dev
+apt-get install build-essential libtool libssl-dev
+
+# build and install libuv
+git clone https://github.com/libuv/libuv.git
+cd libuv
+sh autogen.sh
+./configure
+make
+make install
 ```
+
+### Other Linux
+Install the libuv and openssl to follow the guideline for those
 
 ### Mac OS X
 ```sh

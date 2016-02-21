@@ -51,7 +51,7 @@ private func destroy_req(req: UnsafeMutablePointer<uv_getaddrinfo_t>) {
 }
 
 // TODO Should implement with uv_queue_work or uv_getnameinfo
-func sockaddr_description(addr: UnsafePointer<sockaddr>) -> AddrInfo? {
+func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> AddrInfo? {
     
     var host : String?
     var service : String?
@@ -61,7 +61,7 @@ func sockaddr_description(addr: UnsafePointer<sockaddr>) -> AddrInfo? {
     
     let r = getnameinfo(
         addr,
-        socklen_t(addr.memory.sa_len),
+        length,
         &hostBuffer,
         socklen_t(hostBuffer.count),
         &serviceBuffer,
@@ -96,7 +96,7 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
     var addrInfos = [AddrInfo]()
     
     for (var info = res; info != nil; info = info.memory.ai_next) {
-        let addrInfo = sockaddr_description(info.memory.ai_addr)
+        let addrInfo = sockaddr_description(info.memory.ai_addr, length: info.memory.ai_addrlen)
         if let ai = addrInfo {
             addrInfos.append(ai)
         }
@@ -119,11 +119,6 @@ public class DNS {
     */
     public static func getAddrInfo(loop: Loop = Loop.defaultLoop, fqdn: String, port: String? = nil, completion: GenericResult<[AddrInfo]> -> ()){
         let req = UnsafeMutablePointer<uv_getaddrinfo_t>.alloc(sizeof(uv_getaddrinfo_t))
-        var hints = addrinfo()
-        
-        hints.ai_family = AF_UNSPEC
-        hints.ai_socktype = SOCK_STREAM
-        hints.ai_protocol = IPPROTO_TCP
         
         let context = UnsafeMutablePointer<DnsContext>.alloc(sizeof(DnsContext))
         context.initialize(DnsContext(completion: completion))
@@ -132,9 +127,9 @@ public class DNS {
         
         let r: Int32
         if let port = port {
-            r = uv_getaddrinfo(loop.loopPtr, req, getaddrinfo_cb, fqdn, port, &hints)
+            r = uv_getaddrinfo(loop.loopPtr, req, getaddrinfo_cb, fqdn, port, nil)
         } else {
-            r = uv_getaddrinfo(loop.loopPtr, req, getaddrinfo_cb, fqdn, nil, &hints)
+            r = uv_getaddrinfo(loop.loopPtr, req, getaddrinfo_cb, fqdn, nil, nil)
         }
         
         if r < 0 {

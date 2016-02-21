@@ -6,6 +6,12 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
+
 import CLibUv
 
 /**
