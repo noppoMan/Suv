@@ -36,7 +36,12 @@ class CryptoTests: XCTestCase {
         context.forEach {
             let crypto = $0[0] as! Crypto
             let expected = $0[1] as! String
-            XCTAssertEqual(crypto.hashSync("hash value")!.toString(.Hex)!, expected)
+            do {
+                let buf = try crypto.hashSync("hash value")
+                XCTAssertEqual(buf.toString(.Hex), expected)
+            } catch {
+                XCTFail("\(error)")
+            }
         }
     }
     
@@ -46,15 +51,41 @@ class CryptoTests: XCTestCase {
                 return { callback in
                     let crypto = a[0] as! Crypto
                     let expected = a[1] as! String
-                    crypto.hash("hash value") {
-                        XCTAssertEqual($0!.toString(.Hex)!, expected)
-                        callback(nil)
+                    crypto.hash("hash value") { result in
+                        if case .Success(let buf) = result {
+                            XCTAssertEqual(buf.toString(.Hex)!, expected)
+                            callback(nil)
+                        } else if case .Error(let err) = result {
+                            XCTFail("\(err)")
+                        }
                     }
                 }
             }
             
             seriesTask(tasks) { err in
                 done()
+            }
+        }
+    }
+    
+    func testRandomBytesSync(){
+        do {
+            let buf = try Crypto.randomBytesSync(10)
+            XCTAssertEqual(buf.toString(.Hex)!.characters.count, 20)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testRandomBytes(){
+        waitUntil(description: "RandomBytes") { done in
+            Crypto.randomBytes(size: 10) { result in
+                if case .Success(let buf) = result {
+                    XCTAssertEqual(buf.toString(.Hex)!.characters.count, 20)
+                    done()
+                } else if case .Error(let err) = result {
+                    XCTFail("\(err)")
+                }
             }
         }
     }

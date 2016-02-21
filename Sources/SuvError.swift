@@ -8,6 +8,7 @@
 
 import Foundation
 import CLibUv
+import COpenSSL
 
 
 /**
@@ -23,6 +24,8 @@ public enum SuvError: ErrorType, CustomStringConvertible {
     case RuntimeError(message: String)
     
     case TimerError(message: String)
+    
+    case OpenSSLError(code: UInt)
 }
 
 extension SuvError {
@@ -45,6 +48,9 @@ extension SuvError {
         switch(self) {
         case .UVError(let code):
             return String(CString: uv_err_name(code), encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
+        case .OpenSSLError(let code):
+            return "Open SSL ERR \(code)"
+            
         default:
             return self.description
         }
@@ -63,6 +69,10 @@ extension SuvError {
             return message
         case .TimerError(let message):
             return message
+        case .OpenSSLError(let code):
+            var buf = [Int8](count: 128, repeatedValue: 0)
+            ERR_error_string_n(code, &buf, 128)
+            return String(CString: &buf, encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
         }
     }
     
