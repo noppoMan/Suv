@@ -124,6 +124,9 @@
                 <a href="../Enums/RunMode.html">RunMode</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/SocketState.html">SocketState</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/Stdio.html">Stdio</a>
               </li>
               <li class="nav-group-task">
@@ -220,65 +223,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:C3Suv9TCPServer4Hoge"></a>
-                    <a name="//apple_ref/swift/Alias/Hoge" class="dashAnchor"></a>
-                    <a class="token" href="#/s:C3Suv9TCPServer4Hoge">Hoge</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Hoge</span> <span class="o">=</span> <span class="kt">GenericResult</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span> <span class="o">-&gt;</span> <span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>backlog</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The maximum number of tcp established connection that server can handle</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>onConnection</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Completion handler</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:C3Suv9TCPServer24OnConnectionCallbackType"></a>
                     <a name="//apple_ref/swift/Alias/OnConnectionCallbackType" class="dashAnchor"></a>
                     <a class="token" href="#/s:C3Suv9TCPServer24OnConnectionCallbackType">OnConnectionCallbackType</a>
@@ -351,60 +295,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:vC3Suv9TCPServer16keepAliveTimeoutSi"></a>
-                    <a name="//apple_ref/swift/Property/keepAliveTimeout" class="dashAnchor"></a>
-                    <a class="token" href="#/s:vC3Suv9TCPServer16keepAliveTimeoutSi">keepAliveTimeout</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Seconds for keep alive timeout, if zero keep alive is disabled. Default is 0</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keepAliveTimeout</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:vC3Suv9TCPServer10setNoDelaySb"></a>
-                    <a name="//apple_ref/swift/Property/setNoDelay" class="dashAnchor"></a>
-                    <a class="token" href="#/s:vC3Suv9TCPServer10setNoDelaySb">setNoDelay</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Flag for Enable / disable Nagle’s algorithm.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">setNoDelay</span> <span class="o">=</span> <span class="kc">false</span></code></pre>
 
                         </div>
                       </div>
@@ -586,9 +476,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC3Suv9TCPServer6listenFS0_FzTSi12onConnectionFGOS_13GenericResultSi_T__T_"></a>
+                    <a name="/s:FC3Suv9TCPServer6listenFS0_FzTSu12onConnectionFGOS_13GenericResultSi_T__T_"></a>
                     <a name="//apple_ref/swift/Method/listen(_:onConnection:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv9TCPServer6listenFS0_FzTSi12onConnectionFGOS_13GenericResultSi_T__T_">listen(_:onConnection:)</a>
+                    <a class="token" href="#/s:FC3Suv9TCPServer6listenFS0_FzTSu12onConnectionFGOS_13GenericResultSi_T__T_">listen(_:onConnection:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -596,16 +486,48 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TCPServer</span><span class="p">:</span> <span class="kt">ServerType</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listen</span><span class="p">(</span><span class="nv">backlog</span><span class="p">:</span> <span class="kt">UInt</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="nv">onConnection</span><span class="p">:</span> <span class="kt">OnConnectionCallbackType</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="p">()</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>backlog</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The maximum number of tcp established connection that server can handle</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onConnection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -642,7 +564,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-19)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
