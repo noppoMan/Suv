@@ -26,25 +26,22 @@ public class WritableStream: ReadableStream {
      
      - parameter ipcPipe: Pipe Instance for ipc
      - paramter  data: Buffer to write
-     - parameter onWrite: Completion handler
+     - parameter onWrite: Completion handler(Not implemented yet)
     */
-    public func write2(ipcPipe: Pipe, data: Buffer, onWrite: Result -> () = { _ in }){
+    public func write2(ipcPipe: Pipe, onWrite: Result -> () = { _ in }){
         if isClosing() {
             return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        let len = UInt32(data.length)
-        var data = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), len)
-        self.onWrite = onWrite
-        
+        var bytes: [Int8] = [97]
+        var data = uv_buf_init(UnsafeMutablePointer<Int8>(bytes), UInt32(bytes.count))
+
         withUnsafePointer(&data) {
             let writeReq = UnsafeMutablePointer<uv_write_t>.alloc(1)
-            writeReq.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
-            
-            let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, len, self.streamPtr) { req, _ in
-                let stream = unsafeBitCast(req.memory.data, WritableStream.self)
-                destroy_write_req(req)
-                stream.onWrite(.Success)
+            let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, UInt32(bytes.count), self.streamPtr) { req, _ in
+                defer {
+                    destroy_write_req(req)
+                }
             }
             
             if r < 0 {

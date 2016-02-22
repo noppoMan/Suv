@@ -20,11 +20,7 @@ public class Worker {
         self.process = process
         
         if process.stdio.count >= Stdio.CLUSTER_MODE_IPC.intValue {
-            if let stream = process.stdio[Stdio.CLUSTER_MODE_IPC.intValue].pipe {
-                if stream.ipcEnable {
-                    self.ipcPipe = Pipe(UnsafeMutablePointer<uv_pipe_t>(stream.streamPtr))
-                }
-            }
+            ipcPipe = process.stdio[Stdio.CLUSTER_MODE_IPC.intValue].pipe
         }
     }
 }
