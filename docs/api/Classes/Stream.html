@@ -53,6 +53,9 @@
                 <a href="../Classes/Fs.html">Fs</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/Handle.html">Handle</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Loop.html">Loop</a>
               </li>
               <li class="nav-group-task">
@@ -184,11 +187,11 @@
             <h1>Stream</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Stream</span></code></pre>
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Stream</span><span class="p">:</span> <span class="kt">Handle</span></code></pre>
 
                 </div>
               </div>
-            <p>Base wrapper class of Stream Handle</p>
+            <p>Base wrapper class of Stream and Handle</p>
 
           </section>
           <section class="section task-group-section">
@@ -215,33 +218,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ipcEnable</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:vC3Suv6Stream9streamPtrGVSs20UnsafeMutablePointerVSC11uv_stream_s_"></a>
-                    <a name="//apple_ref/swift/Property/streamPtr" class="dashAnchor"></a>
-                    <a class="token" href="#/s:vC3Suv6Stream9streamPtrGVSs20UnsafeMutablePointerVSC11uv_stream_s_">streamPtr</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>C lang Pointer to the uv_stream_t</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">streamPtr</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="n">uv_stream_t</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -413,123 +389,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC3Suv6Stream9isClosingFS0_FT_Sb"></a>
-                    <a name="//apple_ref/swift/Method/isClosing()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv6Stream9isClosingFS0_FT_Sb">isClosing()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Returns true if the stream handle is closing, 0 otherwise.
-- returns: bool</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">isClosing</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>bool</p>
-
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC3Suv6Stream5closeFS0_FT_T_"></a>
-                    <a name="//apple_ref/swift/Method/close()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv6Stream5closeFS0_FT_T_">close()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>close stream handle</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC3Suv6Stream3refFS0_FT_T_"></a>
-                    <a name="//apple_ref/swift/Method/ref()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv6Stream3refFS0_FT_T_">ref()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Stream</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC3Suv6Stream5unrefFS0_FT_T_"></a>
-                    <a name="//apple_ref/swift/Method/unref()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv6Stream5unrefFS0_FT_T_">unref()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Stream</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC3Suv6Stream8shutdownFS0_FT_T_"></a>
-                    <a name="//apple_ref/swift/Method/shutdown()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC3Suv6Stream8shutdownFS0_FT_T_">shutdown()</a>
+                    <a name="/s:FC3Suv6Stream8shutdownFS0_FTGSqFT_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/shutdown(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC3Suv6Stream8shutdownFS0_FTGSqFT_T___T_">shutdown(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -544,7 +406,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">shutdown</span><span class="p">()</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">shutdown</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -556,7 +418,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-22)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
