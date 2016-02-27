@@ -49,6 +49,6 @@ public class Signal {
     }
     
     deinit {
-        close_stream_handle(signalPtr)
+        close_handle(signalPtr)
     }
 }

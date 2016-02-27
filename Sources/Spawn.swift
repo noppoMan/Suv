@@ -100,7 +100,7 @@ public struct SpawnOptions {
 
 private func exit_cb(req: UnsafeMutablePointer<uv_process_t>, status: Int64, signal: Int32) {
     defer {
-        close_stream_handle(req)
+        close_handle(req)
     }
 
     let context = Unmanaged<SpawnedProcess>.fromOpaque(COpaquePointer(req.memory.data)).takeRetainedValue()
@@ -187,7 +187,6 @@ internal class Spawn {
             default:
                 continue
             }
-
         }
 
         var argv = ([execPath] + execOptions).map { $0.buffer }
@@ -209,7 +208,7 @@ internal class Spawn {
 
         let r = uv_spawn(loop, childReq, options)
         if r < 0 {
-            close_stream_handle(childReq)
+            close_handle(childReq)
             throw SuvError.UVError(code: r)
         }
         

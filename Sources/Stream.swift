@@ -31,9 +31,9 @@ public enum SocketState {
 }
 
 /**
- Base wrapper class of Stream Handle
+ Base wrapper class of Stream and Handle
  */
-public class Stream {
+public class Stream: Handle {
     
     /**
      Returns true if the pipe is ipc, 0 otherwise.
@@ -45,14 +45,12 @@ public class Stream {
     /**
      C lang Pointer to the uv_stream_t
      */
-    public private(set) var streamPtr: UnsafeMutablePointer<uv_stream_t>
-    
-    var handle: UnsafeMutablePointer<uv_handle_t> {
-        return UnsafeMutablePointer<uv_handle_t>(streamPtr)
+    internal var streamPtr: UnsafeMutablePointer<uv_stream_t> {
+        return UnsafeMutablePointer<uv_stream_t>(handlePtr)
     }
     
-    var pipe: UnsafeMutablePointer<uv_pipe_t> {
-        return UnsafeMutablePointer<uv_pipe_t>(streamPtr)
+    internal var pipe: UnsafeMutablePointer<uv_pipe_t> {
+        return UnsafeMutablePointer<uv_pipe_t>(handlePtr)
     }
     
     /**
@@ -60,7 +58,7 @@ public class Stream {
      - parameter stream: Pointer of the uv_stream_t
      */
     public init(_ stream: UnsafeMutablePointer<uv_stream_t>){
-        self.streamPtr = stream
+        super.init(UnsafeMutablePointer<uv_handle_t>(stream))
     }
     
     /**
@@ -68,7 +66,7 @@ public class Stream {
      - parameter pipe: Pointer of the uv_pipe_t
      */
     public init(_ pipe: UnsafeMutablePointer<uv_pipe_t>){
-        self.streamPtr = UnsafeMutablePointer<uv_stream_t>(pipe)
+        super.init(UnsafeMutablePointer<uv_handle_t>(pipe))
     }
     
     /**
@@ -95,42 +93,24 @@ public class Stream {
         return false
     }
     
-    /**
-     Returns true if the stream handle is closing, 0 otherwise.
-     - returns: bool
-     */
-    public func isClosing() -> Bool {
-        if(uv_is_closing(handle) == 1) {
-            return true
-        }
-        
-        return false
-    }
     
-    /**
-     close stream handle
-    */
-    public func close(){
-        if isClosing() { return }
-        
-        close_stream_handle(streamPtr)
-    }
-    
-    public func ref(){
-        uv_ref(handle)
-    }
-    
-    public func unref(){
-        uv_unref(handle)
-    }
+    private var onShutDown: () -> () = {}
     
     /**
      shoutdown connection
      */
-    public func shutdown() {
+    public func shutdown(completion: (() -> ())? = nil) {
         if isClosing() { return }
+        
+        if let onShutDown = completion {
+            self.onShutDown = onShutDown
+        }
+        
         let req = UnsafeMutablePointer<uv_shutdown_t>.alloc(sizeof(uv_shutdown_t))
+        req.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
         uv_shutdown(req, streamPtr) { req, status in
+            let stream = unsafeBitCast(req.memory.data, Stream.self)
+            stream.onShutDown()
             destroy_shoutdown_req(req)
         }
     }

@@ -12,12 +12,13 @@ let alloc_buffer: @convention(c) (UnsafeMutablePointer<uv_handle_t>, ssize_t, Un
     buf.memory = uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize))
 }
 
-internal func close_stream_handle<T>(req: UnsafeMutablePointer<T>){
-    if uv_is_active(UnsafeMutablePointer(req)) == 1 {
-        uv_close(UnsafeMutablePointer(req)) { handle in
-            handle.destroy()
-            handle.dealloc(sizeof(uv_process_t))
-        }
+internal func close_handle<T>(req: UnsafeMutablePointer<T>){
+    if uv_is_closing(UnsafeMutablePointer(req)) == 1 { return }
+    
+    uv_close(UnsafeMutablePointer<uv_handle_t>(req)) { handle in        
+        handle.destroy()
+        handle.dealloc(sizeof(uv_handle_t))
+        
     }
 }
 
