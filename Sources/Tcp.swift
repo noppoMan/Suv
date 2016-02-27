@@ -36,21 +36,13 @@ public class TCP: WritableStream {
     
     /**
      - parameter loop: event loop. Default is Loop.defaultLoop
-     - parameter ipcEnable: true is enable ipc, false otherwise
      */
-    public init(loop: Loop = Loop.defaultLoop, ipcEnable: Bool = false){
+    public init(loop: Loop = Loop.defaultLoop){
         self.loop = loop
-        
-        if !ipcEnable {
-            let socket = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
-            uv_tcp_init(loop.loopPtr, socket)
-            let stream = UnsafeMutablePointer<uv_stream_t>(socket)
-            super.init(stream)
-        } else {
-            let queue = Pipe(loop: loop, ipcEnable: true)
-            queue.open(Stdio.CLUSTER_MODE_IPC.rawValue)
-            super.init(queue.streamPtr)
-        }
+        let socket = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+        uv_tcp_init(loop.loopPtr, socket)
+        let stream = UnsafeMutablePointer<uv_stream_t>(socket)
+        super.init(stream)
     }
     
     /**

@@ -12,7 +12,9 @@ import CLibUv
  Stream handle type for reading
  */
 public class ReadableStream: Stream {
-    var onRead: ReadStreamResult -> () = { _ in}
+    private var onRead: ReadStreamResult -> () = { _ in}
+    
+    private var onRead2: GenericResult<Pipe> -> () = { _ in }
     
     /**
      Stop reading data from the stream
@@ -32,31 +34,54 @@ public class ReadableStream: Stream {
      - parameter pendingType: uv_handle_type
      - parameter callback: Completion handler
     */
-    public func read2(pendingType: uv_handle_type, callback: ReadStreamResult -> ()) {
+    public func read2(pendingType: uv_handle_type, callback: GenericResult<Pipe> -> ()) {
         if isClosing() {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        self.read { [unowned self] result in
-            if case .Error = result {
-                return callback(result)
+        onRead2 = { result in
+            if case .Success(let queue) = result {
+                let pipePtr = UnsafeMutablePointer<uv_pipe_t>(queue.streamPtr)
+                if uv_pipe_pending_count(pipePtr) <= 0 {
+                    let err = SuvError.RuntimeError(message: "No pending count")
+                    return callback(.Error(err))
+                }
+                
+                let pending = uv_pipe_pending_type(pipePtr)
+                if pending != pendingType {
+                    let err = SuvError.RuntimeError(message: "Pending pipe type is mismatched")
+                    return callback(.Error(err))
+                }
             }
             
-            let pipe = UnsafeMutablePointer<uv_pipe_t>(self.streamPtr)
-            if uv_pipe_pending_count(pipe) <= 0 {
-                let err = SuvError.RuntimeError(message: "No pending count")
-                return callback(.Error(err))
+            callback(result)
+        }
+        
+        streamPtr.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        
+        let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
+            defer {
+                buf.memory.base.destroy()
+                buf.memory.base.dealloc(nread)
             }
             
-            let pending = uv_pipe_pending_type(pipe)
-            if pending != pendingType {
-                let err = SuvError.RuntimeError(message: "Pending pipe type is mismatched")
-                return callback(.Error(err))
+            let stream = unsafeBitCast(queue.memory.data, ReadableStream.self)
+            
+            let result: GenericResult<Pipe>
+            if (nread == Int(UV_EOF.rawValue)) {
+                result = .Error(SuvError.RuntimeError(message: "Connection was closed"))
+            } else if (nread < 0) {
+                result = .Error(SuvError.UVError(code: Int32(nread)))
+            } else {
+                let pipe = Pipe(pipe: UnsafeMutablePointer<uv_pipe_t>(queue))
+                result = .Success(pipe)
             }
             
-            if case .Data = result {
-                callback(result)
-            }
+            stream.onRead2(result)
+        }
+        
+        if r < 0 {
+            callback(.Error(SuvError.UVError(code: r)))
         }
     }
     
@@ -76,7 +101,7 @@ public class ReadableStream: Stream {
         let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
             defer {
                 buf.memory.base.destroy()
-                buf.memory.base.dealloc(1)
+                buf.memory.base.dealloc(nread)
             }
             
             let stream = unsafeBitCast(stream.memory.data, ReadableStream.self)

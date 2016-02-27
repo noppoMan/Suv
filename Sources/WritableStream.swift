@@ -12,7 +12,7 @@ private func destroy_write_req(req: UnsafeMutablePointer<uv_write_t>){
     req.memory.bufs.destroy()
     req.memory.bufs.dealloc(1)
     req.destroy()
-    req.dealloc(1)
+    req.dealloc(sizeof(uv_write_t))
 }
 
 /**
@@ -33,15 +33,13 @@ public class WritableStream: ReadableStream {
             return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        var bytes: [Int8] = [97]
-        var data = uv_buf_init(UnsafeMutablePointer<Int8>(bytes), UInt32(bytes.count))
+        let bytes: [Int8] = [97]
+        var dummy_buf = uv_buf_init(UnsafeMutablePointer<Int8>(bytes), 1)
 
-        withUnsafePointer(&data) {
-            let writeReq = UnsafeMutablePointer<uv_write_t>.alloc(1)
-            let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, UInt32(bytes.count), self.streamPtr) { req, _ in
-                defer {
-                    destroy_write_req(req)
-                }
+        withUnsafePointer(&dummy_buf) {
+            let writeReq = UnsafeMutablePointer<uv_write_t>.alloc(sizeof(uv_write_t))
+            let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, 1, self.streamPtr) { req, _ in
+                destroy_write_req(req)
             }
             
             if r < 0 {

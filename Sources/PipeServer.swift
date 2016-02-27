@@ -26,7 +26,7 @@ public final class PipeServer: ServerType {
     /**
      Type for generic listen method
      */
-    public typealias OnConnectionCallbackType = GenericResult<Int> -> ()
+    public typealias OnConnectionCallbackType = GenericResult<Pipe?> -> ()
     
     /**
      Socket to handle
@@ -73,8 +73,9 @@ public final class PipeServer: ServerType {
      Accept client
      
      - parameter client: Stream extended client instance
+     - parameter queue: Write stream queue from the other process. default is nil and use self socket stream
      */
-    public func accept(client: Stream) throws {
+    public func accept(client: Stream, queue: Stream? = nil) throws {
         let result = uv_accept(socket.streamPtr, client.streamPtr)
         if(result < 0) {
             throw SuvError.UVError(code: result)
@@ -125,7 +126,7 @@ public final class PipeServer: ServerType {
                 return context.memory.onConnection(.Error(err))
             }
             
-            context.memory.onConnection(.Success(Int(status)))
+            context.memory.onConnection(.Success(nil))
         }
         
         if result < 0 {

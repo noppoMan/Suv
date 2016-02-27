@@ -27,7 +27,7 @@ public class Pipe: WritableStream {
     
     private var onConnect: GenericResult<ReadableStream> -> () = {_ in }
     
-    public init(loop: Loop = Loop.defaultLoop, _ pipe: UnsafeMutablePointer<uv_pipe_t>){
+    public init(pipe: UnsafeMutablePointer<uv_pipe_t>){
         super.init(pipe)
     }
     

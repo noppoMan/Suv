@@ -9,9 +9,9 @@
 import CLibUv
 
 internal class ServerContext {
-    var onConnection: GenericResult<Int> -> ()
+    var onConnection: GenericResult<Pipe?> -> ()
     
-    init(onConnection: GenericResult<Int> -> ()){
+    init(onConnection: GenericResult<Pipe?> -> ()){
         self.onConnection = onConnection
     }
 }
@@ -20,14 +20,14 @@ internal class ServerContext {
  The Protocol Server should be confirmed
  */
 public protocol ServerType {
-    typealias BindType
-    typealias OnConnectionCallbackType
+    associatedtype BindType
+    associatedtype OnConnectionCallbackType
     /**
      Accept client
      
      - parameter client: Stream extended client instance
     */
-    func accept(client: Stream) throws
+    func accept(client: Stream, queue: Stream?) throws
     
     /**
      Bind address or socket

@@ -51,12 +51,12 @@ public final class TCPServer: ServerType {
     /**
      Type for generic listen method
      */
-    public typealias OnConnectionCallbackType = GenericResult<Int> -> ()
+    public typealias OnConnectionCallbackType = GenericResult<Pipe?> -> ()
     
     /**
      Socket
     */
-    private let socket: TCP
+    public let socket: WritableStream // TODO Should make SocketType for TCP, UDP and Pipe
     
     /**
      Event loop
@@ -72,7 +72,15 @@ public final class TCPServer: ServerType {
     */
     public init(loop: Loop = Loop.defaultLoop, ipcEnable: Bool = false) {
         self.loop = loop
-        self.socket = TCP(loop: loop, ipcEnable: ipcEnable)
+        
+        if ipcEnable {
+            let queue = Pipe(loop: loop, ipcEnable: true)
+            queue.open(Stdio.CLUSTER_MODE_IPC.rawValue)
+            self.socket = queue
+        } else {
+            self.socket = TCP(loop: loop)
+        }
+        
         self.context = UnsafeMutablePointer<ServerContext>.alloc(1)
         self.context.initialize(ServerContext(onConnection: {_ in}))
     }
@@ -90,20 +98,30 @@ public final class TCPServer: ServerType {
         }
     }
     
+
     /**
      Accept client
      
      - parameter client: Stream extended client instance
+     - parameter queue: Write stream queue from the other process. default is nil and use self socket stream
      */
-    public func accept(client: Stream) throws {
-        let result = uv_accept(socket.streamPtr, client.streamPtr)
+    public func accept(client: Stream, queue: Stream? = nil) throws {
+        let stream: Stream
+        if let queue = queue {
+            stream = queue
+        } else {
+            stream = socket
+        }
+        
+        let result = uv_accept(stream.streamPtr, client.streamPtr)
         if(result < 0) {
             throw SuvError.UVError(code: result)
         }
     }
+
     
     /**
-     Listern TCP Server
+     Listen TCP Server
      
      - parameter backlog: The maximum number of tcp established connection that server can handle
      - parameter onConnection: Completion handler
@@ -118,8 +136,8 @@ public final class TCPServer: ServerType {
             self.socket.read2(UV_TCP) { res in
                 if case .Error(let err) = res {
                     self.context.memory.onConnection(.Error(err))
-                } else if case .Data = res {
-                    self.context.memory.onConnection(.Success(0))
+                } else if case .Success(let queue) = res {
+                    self.context.memory.onConnection(.Success(queue))
                 }
             }
         }
@@ -136,7 +154,7 @@ public final class TCPServer: ServerType {
                 return context.memory.onConnection(.Error(err))
             }
             
-            context.memory.onConnection(.Success(Int(status)))
+            context.memory.onConnection(.Success(nil))
         }
         
         if result < 0 {
