@@ -6,6 +6,8 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
+import CLibUv
+
 private let workerIdKeyName = "SUV_WORKER_ID"
 
 private var workerId = 0
@@ -36,13 +38,13 @@ public class Cluster {
         return !isWorker
     }
     
-    var argv: [String]
+    var execOpts: [String]
     
     /**
      Args for main
     */
-    public init(_ argv: [String]){
-        self.argv = argv
+    public init(_ execOpts: [String] = []){
+        self.execOpts = execOpts
     }
     
     /**
@@ -53,9 +55,6 @@ public class Cluster {
      - parameter silent: Boolean If true, stdin, stdout, and stderr of the child will be piped to the parent, otherwise they will be inherited from the parent
     */
     public func fork(loop: Loop = Loop.defaultLoop, silent: Bool = true) throws -> Worker {
-        let execPath = argv[argv.count-1]
-        let execOpts = Array(argv[1..<argv.count])
-        
         var options = SpawnOptions()
         
         options.cwd = Process.cwd
@@ -85,7 +84,7 @@ public class Cluster {
         // ipc channel
         options.stdio.append(StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true)))
         
-        let childProc = try ChildProcess.spawn(execPath, execOpts, loop: loop, options: options)
+        let childProc = try ChildProcess.spawn(Process.execPath, execOpts, loop: loop, options: options)
         
         let worker = Worker(process: childProc)
         

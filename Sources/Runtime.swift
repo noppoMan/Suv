@@ -38,4 +38,20 @@ public extension Process {
     public static var cwd: String {
         return NSFileManager.defaultManager().currentDirectoryPath
     }
+    
+    /**
+     current execPath
+    */
+    public static var execPath: String {
+        let exepath = UnsafeMutablePointer<Int8>.alloc(Int(PATH_MAX))
+        defer {
+            exepath.destroy()
+            exepath.dealloc(Int(PATH_MAX))
+        }
+        
+        var size = Int(PATH_MAX)
+        uv_exepath(exepath, &size)
+        
+        return String.fromCString(exepath)!
+    }
 }
