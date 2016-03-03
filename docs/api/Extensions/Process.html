@@ -56,6 +56,9 @@
                 <a href="../Classes/Handle.html">Handle</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/Idle.html">Idle</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Loop.html">Loop</a>
               </li>
               <li class="nav-group-task">
@@ -285,7 +288,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>current execPath</p>
+                        <p>Current execPath including file name</p>
 
                       </div>
                       <div class="declaration">
@@ -299,12 +302,135 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFE3SuvOSs7Process5qworkFMS0_FTCS_4Loop8onThreadFT_T_8onFinishFT_T__T_"></a>
+                    <a name="//apple_ref/swift/Method/qwork(_:onThread:onFinish:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFE3SuvOSs7Process5qworkFMS0_FTCS_4Loop8onThreadFT_T_8onFinishFT_T__T_">qwork(_:onThread:onFinish:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a convenience function that allows an application to run a task in a separate thread, and have a callback that is triggered when the task is done.
+You don&rsquo;t call libuv function in the qwork&rsquo;s onThread callback. libuv functions are not thread safe.
+onFinish callback will be called on main loop when the onThread callback is finshied.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">qwork</span><span class="p">(</span><span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">onThread</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(),</span> <span class="nv">onFinish</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">()</span> <span class="o">=</span> <span class="p">{})</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onThread</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Function that want to run in a separate thread</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onFinish</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Function that want to run in a main loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFE3SuvOSs7Process12setImmediateFMS0_FFT_T_T_"></a>
+                    <a name="//apple_ref/swift/Method/setImmediate(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFE3SuvOSs7Process12setImmediateFMS0_FFT_T_T_">setImmediate(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The queue of idle handles are invoked once per event loop. The setImmediate callback can be used to perform some very low priority activity.
+You can make nonblocking recursion with this</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setImmediate</span><span class="p">(</span><span class="nv">queue</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>queue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Function to invoke at the next idle</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-02-28)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-03-04)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
