@@ -8,7 +8,7 @@
 
 import CLibUv
 
-internal class ServerContext {
+internal struct ServerContext {
     var onConnection: GenericResult<Pipe?> -> ()
     
     init(onConnection: GenericResult<Pipe?> -> ()){

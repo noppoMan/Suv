@@ -8,12 +8,8 @@
 
 import CLibUv
 
-class FileStatContext {
+struct FileStatContext {
     var completion: Result -> ()
-    
-    init(completion: Result -> ()){
-        self.completion = completion
-    }
 }
 
 class FileStat {

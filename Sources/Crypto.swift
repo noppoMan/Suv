@@ -8,7 +8,7 @@
 
 import CLibUv
 
-private class CryptoWorkQueueContext {
+private struct CryptoWorkQueueContext {
     var workQueueTask: GenericResult<Buffer> -> ()
     var workQueueFinishedTask: () -> Void
     var cyptionFn: (GenericResult<Buffer> -> ()) -> ()

@@ -43,8 +43,8 @@ internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorType?) -> Void) 
     func _series(current: SeriesCB?) {
         if let cur = current {
             cur { err in
-                if err != nil {
-                    return completion(err)
+                if let e = err {
+                    return completion(e)
                 }
                 index += 1
                 let next: SeriesCB? = index < tasks.count ? tasks[index] : nil

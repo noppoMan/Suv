@@ -14,7 +14,7 @@
 
 import CLibUv
 
-class FileWriterContext {
+private class FileWriterContext {
     var writeReq: UnsafeMutablePointer<uv_fs_t> = nil
     
     var onWrite: GenericResult<Int> -> Void = {_ in }
@@ -49,9 +49,9 @@ class FileWriterContext {
     }
 }
 
-class FileWriter {
+internal class FileWriter {
     
-    var context: UnsafeMutablePointer<FileWriterContext>
+    private var context: UnsafeMutablePointer<FileWriterContext>
     
     init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: GenericResult<Int> -> Void){
         context = UnsafeMutablePointer<FileWriterContext>.alloc(1)
@@ -78,12 +78,12 @@ class FileWriter {
     }
 }
 
-func destroyContext(context: UnsafeMutablePointer<FileWriterContext>){
+private func destroyContext(context: UnsafeMutablePointer<FileWriterContext>){
     context.destroy()
     context.dealloc(1)
 }
 
-func attemptWrite(context: UnsafeMutablePointer<FileWriterContext>){
+private func attemptWrite(context: UnsafeMutablePointer<FileWriterContext>){
     let writeReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
     
     var bytes = context.memory.data.bytes.map { Int8(bitPattern: $0) }
@@ -104,7 +104,7 @@ func attemptWrite(context: UnsafeMutablePointer<FileWriterContext>){
     }
 }
 
-func onWriteEach(req: UnsafeMutablePointer<uv_fs_t>){
+private func onWriteEach(req: UnsafeMutablePointer<uv_fs_t>){
     defer {
         fs_req_cleanup(req)
     }

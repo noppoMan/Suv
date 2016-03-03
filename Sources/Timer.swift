@@ -13,12 +13,8 @@ private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>){
     context.memory.callback()
 }
 
-class TimerContext {
+struct TimerContext {
     let callback: () -> ()
-    
-    init(callback: () -> ()){
-        self.callback = callback
-    }
 }
 
 

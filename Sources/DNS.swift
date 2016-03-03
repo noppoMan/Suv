@@ -34,12 +34,8 @@ public struct AddrInfo {
     }
 }
 
-private class DnsContext {
+private struct DnsContext {
     let completion: GenericResult<[AddrInfo]> -> ()
-    
-    init(completion: GenericResult<[AddrInfo]> -> ()){
-        self.completion = completion
-    }
 }
 
 private func destroy_req(req: UnsafeMutablePointer<uv_getaddrinfo_t>) {

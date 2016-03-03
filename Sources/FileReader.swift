@@ -26,7 +26,7 @@ public enum FsReadResult {
 // TODO should be variable depends on resource availability
 let numOfBytes = (8192/4)
 
-class FileReaderContext {
+private class FileReaderContext {
     var onRead: (FsReadResult) -> Void = {_ in }
     
     var bytesRead: Int64 = 0
@@ -59,9 +59,9 @@ class FileReaderContext {
     }
 }
 
-class FileReader {
+internal class FileReader {
     
-    var context: UnsafeMutablePointer<FileReaderContext>
+    private var context: UnsafeMutablePointer<FileReaderContext>
     
     init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int = 0, length: Int? = nil, position: Int, completion: (FsReadResult) -> Void){
         context = UnsafeMutablePointer<FileReaderContext>.alloc(1)
