@@ -13,9 +13,12 @@
 		B622E6551C5FD0B50042859C /* TCPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B622E6541C5FD0B50042859C /* TCPServer.swift */; };
 		B622E6571C5FD0DA0042859C /* PipeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B622E6561C5FD0DA0042859C /* PipeServer.swift */; };
 		B6262E6A1C70D2E200917437 /* FileStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6262E691C70D2E200917437 /* FileStat.swift */; };
+		B6295E931C870FA90084A684 /* QueueWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6295E921C870FA90084A684 /* QueueWork.swift */; };
 		B630D9C51C54F142006490A9 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C41C54F142006490A9 /* WritableStream.swift */; };
 		B630D9C71C54F14E006490A9 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C61C54F14E006490A9 /* ReadableStream.swift */; };
 		B632F2821C4B75D200EB3BF1 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B632F2811C4B75D200EB3BF1 /* FileReader.swift */; };
+		B63354DC1C8827FA005EA8D9 /* Idle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63354DB1C8827FA005EA8D9 /* Idle.swift */; };
+		B63354DD1C88281B005EA8D9 /* Idle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63354DB1C8827FA005EA8D9 /* Idle.swift */; };
 		B6395E371C821A9100DB3084 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6395E361C821A9100DB3084 /* Handle.swift */; };
 		B6395E381C821D6700DB3084 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6395E361C821A9100DB3084 /* Handle.swift */; };
 		B63C6DA81C707CCE00BBF22C /* FsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C6DA61C707BD500BBF22C /* FsTests.swift */; };
@@ -75,6 +78,10 @@
 		B6B1A0001C7630E100E6C595 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B19FFF1C7630E100E6C595 /* Timer.swift */; };
 		B6BE3A3B1C5E7C0B005CE911 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3A3A1C5E7C0B005CE911 /* Signal.swift */; };
 		B6C0B37B1C6E1B62009D465C /* FileSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F043FC1C6AEA4000102C2E /* FileSystemTests.swift */; };
+		B6C403521C88C71600755509 /* export.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C403501C88C6CC00755509 /* export.swift */; };
+		B6C403531C88C71F00755509 /* QueueWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6295E921C870FA90084A684 /* QueueWork.swift */; };
+		B6C403561C88CD0900755509 /* IdleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C403541C88CD0400755509 /* IdleTests.swift */; };
+		B6C403591C88CF8900755509 /* QueueWorkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C403571C88CF7F00755509 /* QueueWorkerTests.swift */; };
 		B6C90D9E1C70DB8200A4F462 /* TcpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C90D9C1C70DB7E00A4F462 /* TcpTests.swift */; };
 		B6CBB50F1C74E50800F8FCB3 /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBB50E1C74E50800F8FCB3 /* DNS.swift */; };
 		B6CBB5111C74E8B800F8FCB3 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBB5101C74E8B800F8FCB3 /* Result.swift */; };
@@ -114,9 +121,11 @@
 		B622E6541C5FD0B50042859C /* TCPServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPServer.swift; sourceTree = "<group>"; };
 		B622E6561C5FD0DA0042859C /* PipeServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeServer.swift; sourceTree = "<group>"; };
 		B6262E691C70D2E200917437 /* FileStat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStat.swift; sourceTree = "<group>"; };
+		B6295E921C870FA90084A684 /* QueueWork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueWork.swift; sourceTree = "<group>"; };
 		B630D9C41C54F142006490A9 /* WritableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritableStream.swift; sourceTree = "<group>"; };
 		B630D9C61C54F14E006490A9 /* ReadableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadableStream.swift; sourceTree = "<group>"; };
 		B632F2811C4B75D200EB3BF1 /* FileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
+		B63354DB1C8827FA005EA8D9 /* Idle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Idle.swift; sourceTree = "<group>"; };
 		B6395E361C821A9100DB3084 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		B63C6DA61C707BD500BBF22C /* FsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FsTests.swift; sourceTree = "<group>"; };
 		B65785C71C6F3866005B98FB /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -139,6 +148,9 @@
 		B6B19FFF1C7630E100E6C595 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		B6BE3A3A1C5E7C0B005CE911 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		B6C2819C1C6A6B6E00645BEC /* ChildProcessTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildProcessTests.swift; sourceTree = "<group>"; };
+		B6C403501C88C6CC00755509 /* export.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = export.swift; sourceTree = "<group>"; };
+		B6C403541C88CD0400755509 /* IdleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdleTests.swift; sourceTree = "<group>"; };
+		B6C403571C88CF7F00755509 /* QueueWorkerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueWorkerTests.swift; sourceTree = "<group>"; };
 		B6C90D9C1C70DB7E00A4F462 /* TcpTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpTests.swift; sourceTree = "<group>"; };
 		B6CBB50E1C74E50800F8FCB3 /* DNS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 		B6CBB5101C74E8B800F8FCB3 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
@@ -194,6 +206,9 @@
 				B671F16C1C7231FF003BB548 /* PipeTests.swift */,
 				B6F972111C74ECA50010FAEB /* DNSTests.swift */,
 				B68033A81C763B980075C87C /* TimerTests.swift */,
+				B6C403501C88C6CC00755509 /* export.swift */,
+				B6C403541C88CD0400755509 /* IdleTests.swift */,
+				B6C403571C88CF7F00755509 /* QueueWorkerTests.swift */,
 			);
 			name = Tests;
 			path = ../Tests;
@@ -269,6 +284,8 @@
 				B6CBB5101C74E8B800F8FCB3 /* Result.swift */,
 				B6B19FFF1C7630E100E6C595 /* Timer.swift */,
 				B6395E361C821A9100DB3084 /* Handle.swift */,
+				B6295E921C870FA90084A684 /* QueueWork.swift */,
+				B63354DB1C8827FA005EA8D9 /* Idle.swift */,
 			);
 			name = Sources;
 			path = ../Sources;
@@ -399,6 +416,7 @@
 				B6881F421C67D493004F34B1 /* Time.swift in Sources */,
 				B630D9C71C54F14E006490A9 /* ReadableStream.swift in Sources */,
 				B6BE3A3B1C5E7C0B005CE911 /* Signal.swift in Sources */,
+				B63354DC1C8827FA005EA8D9 /* Idle.swift in Sources */,
 				B69D872F1C43A1B6000D4614 /* SuvError.swift in Sources */,
 				B6CBB50F1C74E50800F8FCB3 /* DNS.swift in Sources */,
 				B6EE150B1C5A7CA300FB0CCA /* Runtime.swift in Sources */,
@@ -410,6 +428,7 @@
 				B6B1A0001C7630E100E6C595 /* Timer.swift in Sources */,
 				B68A52C71C456F5F000CC351 /* RunMode.swift in Sources */,
 				B66AFEE41C52AFB600D7609F /* FileSystem.swift in Sources */,
+				B6295E931C870FA90084A684 /* QueueWork.swift in Sources */,
 				B6CBB5111C74E8B800F8FCB3 /* Result.swift in Sources */,
 				B6781B611C5745D700497298 /* Pipe.swift in Sources */,
 				B630D9C51C54F142006490A9 /* WritableStream.swift in Sources */,
@@ -437,6 +456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6599BDF1C73B1E800CD70A2 /* Worker.swift in Sources */,
+				B6C403521C88C71600755509 /* export.swift in Sources */,
 				B6599BDA1C73B1E800CD70A2 /* ChildProcess.swift in Sources */,
 				B68033AB1C763BA00075C87C /* Timer.swift in Sources */,
 				B6599BCD1C73B1E800CD70A2 /* Stream.swift in Sources */,
@@ -449,6 +469,7 @@
 				B6599BE91C73B1E800CD70A2 /* Crypto.swift in Sources */,
 				B6CBB5141C74E97500F8FCB3 /* Result.swift in Sources */,
 				B6599BDE1C73B1E800CD70A2 /* Cluster.swift in Sources */,
+				B6C403531C88C71F00755509 /* QueueWork.swift in Sources */,
 				B6599BD31C73B1E800CD70A2 /* Loop.swift in Sources */,
 				B671F16E1C723226003BB548 /* PipeTests.swift in Sources */,
 				B6599BD71C73B1E800CD70A2 /* FileSystem.swift in Sources */,
@@ -457,6 +478,9 @@
 				B6599BED1C73B1E800CD70A2 /* FileStat.swift in Sources */,
 				B6599BDD1C73B1E800CD70A2 /* support.swift in Sources */,
 				B6599BEB1C73B1E800CD70A2 /* Time.swift in Sources */,
+				B6C403561C88CD0900755509 /* IdleTests.swift in Sources */,
+				B6C403591C88CF8900755509 /* QueueWorkerTests.swift in Sources */,
+				B63354DD1C88281B005EA8D9 /* Idle.swift in Sources */,
 				B6599BD61C73B1E800CD70A2 /* Fs.swift in Sources */,
 				B6599BD11C73B1E800CD70A2 /* SuvError.swift in Sources */,
 				B6599BEA1C73B1E800CD70A2 /* crypto_support.swift in Sources */,
