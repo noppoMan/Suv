@@ -1,0 +1,30 @@
+os:
+  - linux
+  - osx
+language: generic
+sudo: required
+dist: trusty
+osx_image: xcode7.2
+addons:
+  apt:
+    packages:
+    - build-essential
+    - libtool
+    - libssl-dev
+    - git
+env:
+  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-03-01-a
+before_install:
+  # for osx
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libuv openssl && brew link libuv --force && brew link openssl --force; fi
+
+  # libuv
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git clone https://github.com/libuv/libuv.git && cd libuv && sudo sh autogen.sh && sudo ./configure && sudo make && sudo make install ; fi
+
+install:
+  - eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/02090c7ede5a637b76e6df1710e83cd0bbe7dcdf/swiftenv-install.sh)"
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - make debug
+  - make test

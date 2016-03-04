@@ -13,15 +13,28 @@
 #endif
 
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension FsTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                ("testReadFile", testReadFile),
+                ("testWriteFile", testWriteFile),
+                ("testAppendFile", testAppendFile),
+                ("testExists", testExists),
+            ]
+        }
+    }
+#endif
 
 private let targetFile = Process.cwd + "/test.txt"
 
 class FsTests: XCTestCase {
-    
-    override func setUp() {
+
+    func prepare() {
         unlink(targetFile)
-        
+
         waitUntil(description: "setup") { done in
             let fs = FileSystem(path: targetFile)
             fs.open(.W) { res in
@@ -35,10 +48,28 @@ class FsTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
-    override func tearDown(){
+
+    func cleanup(){
         unlink(targetFile)
     }
+
+    #if os(OSX)
+    override func setUp() {
+        prepare()
+    }
+
+    override func tearDown(){
+        cleanup()
+    }
+    #else
+    func setUp() {
+        prepare()
+    }
+
+    func tearDown(){
+        cleanup()
+    }
+    #endif
 
     func testReadFile(){
         waitUntil(description: "readFile") { done in
@@ -51,10 +82,10 @@ class FsTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testWriteFile(){
         waitUntil(description: "writeFile") { done in
-            
+
             Fs.writeFile(targetFile, data: "Hello world") { res in
                 Fs.readFile(targetFile) { res in
                     if case .Success(let buf) = res {
@@ -65,11 +96,11 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            
+
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testAppendFile(){
         waitUntil(description: "appendFile") { done in
             Fs.writeFile(targetFile, data: "foo") { _ in
@@ -84,14 +115,14 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            
+
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testExists(){
         waitUntil(description: "exists") { done in
-            
+
             Fs.exists(targetFile) { yes in
                 XCTAssertTrue(yes)
                 Fs.exists("invalid file path") { yes in
@@ -99,9 +130,9 @@ class FsTests: XCTestCase {
                     done()
                 }
             }
-            
+
             Loop.defaultLoop.run()
         }
     }
-    
+
 }

@@ -24,7 +24,7 @@ public enum FsReadResult {
 
 
 // TODO should be variable depends on resource availability
-let numOfBytes = (8192/4)
+private let numOfBytes = 1024
 
 private class FileReaderContext {
     var onRead: (FsReadResult) -> Void = {_ in }
@@ -90,20 +90,24 @@ private func destroyContext(context: UnsafeMutablePointer<FileReaderContext>){
 private func readNext(context: UnsafeMutablePointer<FileReaderContext>){
     
     let readReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
-    context.memory.buf = uv_buf_init(UnsafeMutablePointer.alloc(numOfBytes), UInt32(numOfBytes))
+    
+    var buf = [Int8](count: numOfBytes, repeatedValue: 0)
+    context.memory.buf = uv_buf_init(&buf, UInt32(numOfBytes))
     
     readReq.memory.data = UnsafeMutablePointer(context)
     
-    let r = uv_fs_read(context.memory.loop.loopPtr, readReq, uv_file(context.memory.fd), &context.memory.buf!, UInt32(context.memory.buf!.len), context.memory.bytesRead) { req in
-        onReadEach(req)
-    }
-    
-    if r < 0 {
-        defer {
-            fs_req_cleanup(readReq)
-            destroyContext(context)
+    withUnsafePointer(&context.memory.buf!) {
+        let r = uv_fs_read(context.memory.loop.loopPtr, readReq, uv_file(context.memory.fd), $0, UInt32(context.memory.buf!.len), context.memory.bytesRead) { req in
+            onReadEach(req)
         }
-        return context.memory.onRead(.Error(SuvError.UVError(code: r)))
+        
+        if r < 0 {
+            defer {
+                fs_req_cleanup(readReq)
+                destroyContext(context)
+            }
+            context.memory.onRead(.Error(SuvError.UVError(code: r)))
+        }
     }
 }
 
@@ -139,8 +143,6 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
         for i in 0.stride(to: req.memory.result, by: 1) {
             buf.append(bytes[i])
         }
-        context.memory.buf!.base.destroy()
-        context.memory.buf!.base.dealloc(req.memory.result)
         context.memory.onRead(.Data(buf))
     }
     

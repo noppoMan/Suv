@@ -1,4 +1,7 @@
-BUILDOPTS=-Xlinker -L/usr/lib
+CLibUv=CLibUv-0.1.0
+COpenSSL=COpenSSL-0.1.0
+
+BUILDOPTS=-Xlinker -L/usr/lib -Xcc -IPackages/$(CLibUv) -Xcc -IPackages/$(COpenSSL)
 
 SWIFTC=swiftc
 SWIFT=swift
@@ -10,6 +13,7 @@ OS := $(shell uname)
 ifeq ($(OS),Darwin)
   SWIFTC=xcrun -sdk macosx swiftc
 	BUILDOPTS=-Xlinker -L/usr/local/lib -Xcc -I/usr/local/include
+	COpenSSL=COpenSSL-OSX-0.1.0
 endif
 
 all: release

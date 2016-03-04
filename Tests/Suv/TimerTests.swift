@@ -6,8 +6,25 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
+
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension TimerTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                       ("testTimerTimeout", testTimerTimeout),
+                       ("testTimerInterval", testTimerInterval),
+            ]
+        }
+    }
+#endif
 
 class TimerTests: XCTestCase {
     

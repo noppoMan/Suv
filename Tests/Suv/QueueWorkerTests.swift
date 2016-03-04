@@ -10,6 +10,16 @@ import XCTest
 import CLibUv
 @testable import Suv
 
+#if os(Linux)
+    extension QueueWorkerTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                       ("testQWork", testQWork)
+            ]
+        }
+    }
+#endif
+
 class QueueWorkerTests: XCTestCase {
     
     func testQWork() {
