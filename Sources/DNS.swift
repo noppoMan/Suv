@@ -77,6 +77,15 @@ func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> Addr
     return nil
 }
 
+extension addrinfo {
+    func walk(f: addrinfo -> Void) -> Void {
+        f(self)
+        if self.ai_next != nil {
+            self.ai_next.memory.walk(f)
+        }
+    }
+}
+
 func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, res: UnsafeMutablePointer<addrinfo>){
     let context = UnsafeMutablePointer<DnsContext>(req.memory.data)
     
@@ -91,10 +100,13 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
     
     var addrInfos = [AddrInfo]()
     
-    for (var info = res; info != nil; info = info.memory.ai_next) {
-        let addrInfo = sockaddr_description(info.memory.ai_addr, length: info.memory.ai_addrlen)
-        if let ai = addrInfo {
-            addrInfos.append(ai)
+    
+    res.memory.walk {
+        if $0.ai_next != nil {
+            let addrInfo = sockaddr_description($0.ai_addr, length: $0.ai_addrlen)
+            if let ai = addrInfo {
+                addrInfos.append(ai)
+            }
         }
     }
     
