@@ -9,6 +9,16 @@
 import XCTest
 @testable import Suv
 
+#if os(Linux)
+    extension IdleTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                       ("testSetImmediate", testSetImmediate)
+            ]
+        }
+    }
+#endif
+
 class IdleTests: XCTestCase {
     
     func testSetImmediate() {

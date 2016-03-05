@@ -192,17 +192,8 @@ public class FileSystem {
      - parameter completion: Completion handler
      */
     public func close(completion: Result -> () = { _ in }){
-        var req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
-        
-        uv_fs_close(loop.loopPtr, req, uv_file(fd)) { req in
-            defer {
-                fs_req_cleanup(req)
-            }
-            
-            if (req.memory.result < 0) {
-                let err = SuvError.UVError(code: Int32(req.memory.result))
-                print(err)
-            }
-        }
+        let req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+        uv_fs_close(loop.loopPtr, req, uv_file(fd), nil)
+        fs_req_cleanup(req)
     }
 }

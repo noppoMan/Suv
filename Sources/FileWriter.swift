@@ -89,18 +89,21 @@ private func attemptWrite(context: UnsafeMutablePointer<FileWriterContext>){
     var bytes = context.memory.data.bytes.map { Int8(bitPattern: $0) }
     context.memory.buf = uv_buf_init(&bytes, UInt32(context.memory.data.bytes.count))
     
-    writeReq.memory.data = UnsafeMutablePointer(context)
-    
-    let r = uv_fs_write(context.memory.loop.loopPtr, writeReq, uv_file(context.memory.fd), &context.memory.buf!, UInt32(context.memory.buf!.len), Int64(context.memory.curPos)) { req in
-        onWriteEach(req)
-    }
-    
-    if r < 0 {
-        defer {
-            fs_req_cleanup(writeReq)
-            destroyContext(context)
+    withUnsafePointer(&context.memory.buf!) {
+        writeReq.memory.data = UnsafeMutablePointer(context)
+        
+        let r = uv_fs_write(context.memory.loop.loopPtr, writeReq, uv_file(context.memory.fd), $0, UInt32(context.memory.buf!.len), Int64(context.memory.curPos)) { req in
+            onWriteEach(req)
         }
-        return context.memory.onWrite(.Error(SuvError.UVError(code: r)))
+        
+        if r < 0 {
+            defer {
+                fs_req_cleanup(writeReq)
+                destroyContext(context)
+            }
+            context.memory.onWrite(.Error(SuvError.UVError(code: r)))
+            return
+        }
     }
 }
 

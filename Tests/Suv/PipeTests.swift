@@ -1,21 +1,39 @@
 //
-//  TcpTests.swift
+//  PipeTests.swift
 //  Suv
 //
-//  Created by Yuki Takei on 2/15/16.
+//  Created by Yuki Takei on 2/16/16.
+//  Copyright © 2016 MikeTOKYO. All rights reserved.
+//
+
+//
+//  Pipe.swift
+//  Suv
+//
+//  Created by Yuki Takei on 2/16/16.
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension PipeTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                       ("testPipeConnect", testPipeConnect)
+            ]
+        }
+    }
+#endif
 
 // Simple Echo Server
-private func launchServer() -> TCPServer {
-    let server = TCPServer()
+private func launchServer() -> PipeServer {
+    let server = PipeServer()
     
-    try! server.bind(Address(host: "127.0.0.1", port: 3000))
+    try! server.bind("/tmp/suv-test.sock")
     
-    try! server.listen(128) { result in
+    try! server.listen(128) {result in
         if case .Error(let error) = result {
             XCTFail("\(error)")
             return server.close()
@@ -38,15 +56,15 @@ private func launchServer() -> TCPServer {
     return server
 }
 
-class TcpTests: XCTestCase {
+class PipeTests: XCTestCase {
     
-    func testTcpConnect(){
-        waitUntil(5, description: "TCPServer Connect") { done in
+    func testPipeConnect(){
+        waitUntil(5, description: "PipeServer Connect") { done in
             let server = launchServer()
             
-            let client = TCP()
+            let client = Pipe()
             
-            client.connect(host: "localhost", port: 3000) { res in
+            client.connect("/tmp/suv-test.sock") { res in
                 client.write(Buffer("Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
@@ -64,3 +82,5 @@ class TcpTests: XCTestCase {
         }
     }
 }
+
+

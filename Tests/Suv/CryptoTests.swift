@@ -7,17 +7,22 @@
 //
 
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension CryptoTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+               ("testHashSync", testHashSync),
+               ("testHash", testHash),
+               ("testRandomBytesSync", testRandomBytesSync),
+               ("testRandomBytes", testRandomBytes)
+            ]
+        }
+    }
+#endif
 
 class CryptoTests: XCTestCase {
-    var allTests: [(String, Void -> Void)] {
-        return [
-            ("testHashSync", testHashSync),
-            ("testHash", testHash)
-        ]
-    }
-    
-    
     var context: [[Any]] {
         let md5 = Crypto(.MD5)
         let sha1 = Crypto(.SHA1)

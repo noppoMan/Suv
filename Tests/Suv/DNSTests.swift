@@ -7,7 +7,17 @@
 //
 
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension DNSTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                       ("testGetAddrInfo", testGetAddrInfo)
+            ]
+        }
+    }
+#endif
 
 private func noop(){}
 

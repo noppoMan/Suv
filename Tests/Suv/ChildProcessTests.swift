@@ -7,7 +7,17 @@
 //
 
 import XCTest
-import Suv
+@testable import Suv
+
+#if os(Linux)
+    extension ChildProcessTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                ("testSpawn", testSpawn)
+            ]
+        }
+    }
+#endif
 
 class ChildProcessTests: XCTestCase {
     func testSpawn(){

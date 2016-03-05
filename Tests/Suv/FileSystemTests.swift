@@ -12,16 +12,33 @@
     import Darwin.C
 #endif
 
+#if os(Linux)
+    extension FileSystemTests: XCTestCaseProvider {
+        var allTests: [(String, () throws -> Void)] {
+            return [
+                ("testRead", testRead),
+                ("testWrite", testWrite),
+                ("testReadAndWrite", testReadAndWrite),
+                ("testTruncateAndWrite", testTruncateAndWrite),
+                ("testTruncateAndWrite", testAppend),
+                ("testStat", testStat),
+                ("testStat", testFtell),
+                ("testErrorFd", testErrorFd)
+            ]
+        }
+    }
+#endif
+
 import XCTest
-import Suv
+@testable import Suv
 
 private let targetFile = Process.cwd + "/test.txt"
 
 class FileSystemTests: XCTestCase {
-    
-    override func setUp() {
+
+    func prepare(){
         unlink(targetFile)
-        
+
         waitUntil(description: "setup") { done in
             let fs = FileSystem(path: targetFile)
             fs.open(.W) { res in
@@ -35,11 +52,29 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
-    override func tearDown(){
+
+    func cleanup() {
         unlink(targetFile)
     }
-    
+
+    #if os(OSX)
+    override func setUp() {
+        prepare()
+    }
+
+    override func tearDown(){
+        cleanup()
+    }
+    #else
+    func setUp() {
+        prepare()
+    }
+
+    func tearDown(){
+        cleanup()
+    }
+    #endif
+
     func testRead() {
         waitUntil(description: "readFile") { done in
             let fs = FileSystem(path: targetFile)
@@ -60,7 +95,7 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testWrite() {
         waitUntil(description: "writeFile") { done in
             let fs = FileSystem(path: targetFile)
@@ -77,13 +112,13 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testReadAndWrite() {
         waitUntil(5, description: "ReadAndWrite") { done in
             let fs = FileSystem(path: targetFile)
             fs.open(.RP) { _ in
                 XCTAssertGreaterThanOrEqual(fs.fd, 0)
-                
+
                 seriesTask([
                     { cb in
                         fs.write(Buffer("test text")) { res in
@@ -117,7 +152,7 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testTruncateAndWrite() {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
@@ -173,7 +208,7 @@ class FileSystemTests: XCTestCase {
         }
     }
 
-    
+
     func testAppend() {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
@@ -214,7 +249,7 @@ class FileSystemTests: XCTestCase {
                             }
                             cb(nil)
                         }
-                        
+
                     }
                 },
                 { cb in
@@ -242,7 +277,7 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testStat(){
         waitUntil(5, description: "stat") { done in
             seriesTask([
@@ -274,25 +309,25 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testFtell(){
         waitUntil(5, description: "fell") { done in
             let fs = FileSystem(path: targetFile)
             fs.open(.WP) { _ in
                 XCTAssertGreaterThanOrEqual(fs.fd, 0)
-                
+
                 let str = "hello world.hello world.hello world.hello world.hello world."
-                
+
                 fs.write(Buffer(str)) { res in
-                    
+
                     if case .Error(let err) = res {
                         fs.close()
                         return XCTFail("\(err)")
                     }
-                    
+
                     fs.rewind()
                     XCTAssertEqual(fs.pos, 0)
-                    
+
                     fs.ftell { pos in
                         fs.close()
                         XCTAssertEqual(pos, str.characters.count)
@@ -303,7 +338,7 @@ class FileSystemTests: XCTestCase {
             Loop.defaultLoop.run()
         }
     }
-    
+
     func testErrorFd() {
         waitUntil(5, description: "ErrorFd") { done in
             seriesTask([
