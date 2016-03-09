@@ -26,7 +26,7 @@ public enum FsReadResult {
 // TODO should be variable depends on resource availability
 private let numOfBytes = 1024
 
-private class FileReaderContext {
+internal class FileReaderContext {
     var onRead: (FsReadResult) -> Void = {_ in }
     
     var bytesRead: Int64 = 0
@@ -61,52 +61,45 @@ private class FileReaderContext {
 
 internal class FileReader {
     
-    private var context: UnsafeMutablePointer<FileReaderContext>
+    private let context: FileReaderContext
     
     init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int = 0, length: Int? = nil, position: Int, completion: (FsReadResult) -> Void){
-        context = UnsafeMutablePointer<FileReaderContext>.alloc(1)
-        context.initialize(
-            FileReaderContext(
-                loop: loop,
-                fd: fd,
-                length: length,
-                position: position,
-                completion: completion
-            )
+        context = FileReaderContext(
+            loop: loop,
+            fd: fd,
+            length: length,
+            position: position,
+            completion: completion
         )
+        
     }
     
     func read(bufferd: Bool = true){
-        self.context.memory.bufferd = bufferd
+        self.context.bufferd = bufferd
         readNext(context)
     }
 }
 
-private func destroyContext(context: UnsafeMutablePointer<FileReaderContext>){
-    context.destroy()
-    context.dealloc(1)
-}
 
-private func readNext(context: UnsafeMutablePointer<FileReaderContext>){
+private func readNext(context: FileReaderContext){
     
     let readReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
     
     var buf = [Int8](count: numOfBytes, repeatedValue: 0)
-    context.memory.buf = uv_buf_init(&buf, UInt32(numOfBytes))
+    context.buf = uv_buf_init(&buf, UInt32(numOfBytes))
     
-    readReq.memory.data = UnsafeMutablePointer(context)
+    readReq.memory.data = retainedVoidPointer(context)
     
-    withUnsafePointer(&context.memory.buf!) {
-        let r = uv_fs_read(context.memory.loop.loopPtr, readReq, uv_file(context.memory.fd), $0, UInt32(context.memory.buf!.len), context.memory.bytesRead) { req in
+    withUnsafePointer(&context.buf!) {
+        let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), $0, UInt32(context.buf!.len), context.bytesRead) { req in
             onReadEach(req)
         }
         
         if r < 0 {
             defer {
                 fs_req_cleanup(readReq)
-                destroyContext(context)
             }
-            context.memory.onRead(.Error(SuvError.UVError(code: r)))
+            context.onRead(.Error(SuvError.UVError(code: r)))
         }
     }
 }
@@ -116,34 +109,26 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
         fs_req_cleanup(req)
     }
     
-    var context = UnsafeMutablePointer<FileReaderContext>(req.memory.data)
+    let context: FileReaderContext = releaseVoidPointer(req.memory.data)!
     
     if(req.memory.result < 0) {
-        defer {
-            destroyContext(context)
-            context = nil
-        }
         let e = SuvError.UVError(code: Int32(req.memory.result))
-        return context.memory.onRead(.Error(e))
+        return context.onRead(.Error(e))
     }
     
     if(req.memory.result == 0) {
-        defer {
-            destroyContext(context)
-            context = nil
-        }
-        return context.memory.onRead(.End(Int(context.memory.bytesRead)))
+        return context.onRead(.End(Int(context.bytesRead)))
     }
     
-    context.memory.bytesRead += req.memory.result
+    context.bytesRead += req.memory.result
     
-    if context.memory.bufferd {
+    if context.bufferd {
         var buf = Buffer()
-        let bytes = UnsafePointer<UInt8>(context.memory.buf!.base)
+        let bytes = UnsafePointer<UInt8>(context.buf!.base)
         for i in 0.stride(to: req.memory.result, by: 1) {
             buf.append(bytes[i])
         }
-        context.memory.onRead(.Data(buf))
+        context.onRead(.Data(buf))
     }
     
     readNext(context)

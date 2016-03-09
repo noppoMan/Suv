@@ -70,6 +70,8 @@ class CryptoTests: XCTestCase {
             seriesTask(tasks) { err in
                 done()
             }
+            
+            Loop.defaultLoop.run()
         }
     }
     
@@ -92,6 +94,7 @@ class CryptoTests: XCTestCase {
                     XCTFail("\(err)")
                 }
             }
+            Loop.defaultLoop.run()
         }
     }
 }

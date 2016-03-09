@@ -275,13 +275,9 @@ public class Time {
      - parameter format: Number that want to add
      */
     public func format(format: String) -> String {
-        let buffer = UnsafeMutablePointer<Int8>.alloc(length)
-        defer {
-            buffer.destroy()
-            buffer.dealloc(length)
-        }
         
-        strftime(buffer, length, format, self.tmInfo)
+        var buffer = [Int8](count: length, repeatedValue: 0)
+        strftime(&buffer, length, format, self.tmInfo)
         
         var buf = Buffer()
         for i in 0..<length {

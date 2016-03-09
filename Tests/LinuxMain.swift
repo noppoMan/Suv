@@ -11,7 +11,6 @@ import XCTest
     
 XCTMain([
     CryptoTests(),
-    FileSystemTests(),
     ChildProcessTests(),
     FsTests(),
     TcpTests(),

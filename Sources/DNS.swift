@@ -39,9 +39,6 @@ private struct DnsContext {
 }
 
 private func destroy_req(req: UnsafeMutablePointer<uv_getaddrinfo_t>) {
-    let context = UnsafeMutablePointer<DnsContext>(req.memory.data)
-    context.destroy()
-    context.dealloc(sizeof(DnsContext))
     req.destroy()
     req.dealloc(sizeof(uv_getaddrinfo_t))
 }
@@ -87,7 +84,7 @@ extension addrinfo {
 }
 
 func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, res: UnsafeMutablePointer<addrinfo>){
-    let context = UnsafeMutablePointer<DnsContext>(req.memory.data)
+    let context: DnsContext = releaseVoidPointer(req.memory.data)!
     
     defer {
         freeaddrinfo(res)
@@ -95,7 +92,7 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
     }
     
     if status < 0 {
-        return context.memory.completion(.Error(SuvError.UVError(code: status)))
+        return context.completion(.Error(SuvError.UVError(code: status)))
     }
     
     var addrInfos = [AddrInfo]()
@@ -110,7 +107,7 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
         }
     }
     
-    context.memory.completion(.Success(addrInfos))
+    context.completion(.Success(addrInfos))
 }
 
 /**
@@ -128,10 +125,9 @@ public class DNS {
     public static func getAddrInfo(loop: Loop = Loop.defaultLoop, fqdn: String, port: String? = nil, completion: GenericResult<[AddrInfo]> -> ()){
         let req = UnsafeMutablePointer<uv_getaddrinfo_t>.alloc(sizeof(uv_getaddrinfo_t))
         
-        let context = UnsafeMutablePointer<DnsContext>.alloc(sizeof(DnsContext))
-        context.initialize(DnsContext(completion: completion))
+        let context = DnsContext(completion: completion)
         
-        req.memory.data = UnsafeMutablePointer(context)
+        req.memory.data = retainedVoidPointer(context)
         
         let r: Int32
         if let port = port {

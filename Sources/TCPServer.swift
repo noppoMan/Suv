@@ -133,7 +133,7 @@ public final class TCPServer: ServerType {
         if !self.socket.ipcEnable {
             try listenServer(backlog)
         } else {
-            self.socket.read2(UV_TCP) { res in
+            self.socket.read2(UV_TCP) { [unowned self] res in
                 if case .Error(let err) = res {
                     self.context.memory.onConnection(.Error(err))
                 } else if case .Success(let queue) = res {

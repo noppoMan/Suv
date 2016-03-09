@@ -129,13 +129,16 @@ public class Timer {
     public func end(){
         if case .End = state { return }
         defer {
-            context.destroy()
-            context.dealloc(1)
             handle.destroy()
             handle.dealloc(1)
         }
         stop()
         unref()
         self.state = .End
+    }
+    
+    deinit {
+        context.destroy()
+        context.dealloc(1)
     }
 }

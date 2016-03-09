@@ -51,57 +51,46 @@ private class FileWriterContext {
 
 internal class FileWriter {
     
-    private var context: UnsafeMutablePointer<FileWriterContext>
+    private var context: FileWriterContext
     
     init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: GenericResult<Int> -> Void){
-        context = UnsafeMutablePointer<FileWriterContext>.alloc(1)
-        context.initialize(
-            FileWriterContext(
-                loop: loop,
-                fd: fd,
-                offset: offset,
-                length: length,
-                position: position,
-                completion: completion
-            )
+        context = FileWriterContext(
+            loop: loop,
+            fd: fd,
+            offset: offset,
+            length: length,
+            position: position,
+            completion: completion
         )
     }
     
     func write(data: Buffer){
         if(data.bytes.count <= 0) {
-            destroyContext(context)
-            context = nil
-            return context.memory.onWrite(.Success(0 + context.memory.offset))
+            return context.onWrite(.Success(0 + context.offset))
         }
-        context.memory.data = data
+        context.data = data
         attemptWrite(context)
     }
 }
 
-private func destroyContext(context: UnsafeMutablePointer<FileWriterContext>){
-    context.destroy()
-    context.dealloc(1)
-}
-
-private func attemptWrite(context: UnsafeMutablePointer<FileWriterContext>){
+private func attemptWrite(context: FileWriterContext){
     let writeReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
     
-    var bytes = context.memory.data.bytes.map { Int8(bitPattern: $0) }
-    context.memory.buf = uv_buf_init(&bytes, UInt32(context.memory.data.bytes.count))
+    var bytes = context.data.bytes.map { Int8(bitPattern: $0) }
+    context.buf = uv_buf_init(&bytes, UInt32(context.data.bytes.count))
     
-    withUnsafePointer(&context.memory.buf!) {
-        writeReq.memory.data = UnsafeMutablePointer(context)
+    withUnsafePointer(&context.buf!) {
+        writeReq.memory.data = retainedVoidPointer(context)
         
-        let r = uv_fs_write(context.memory.loop.loopPtr, writeReq, uv_file(context.memory.fd), $0, UInt32(context.memory.buf!.len), Int64(context.memory.curPos)) { req in
+        let r = uv_fs_write(context.loop.loopPtr, writeReq, uv_file(context.fd), $0, UInt32(context.buf!.len), Int64(context.curPos)) { req in
             onWriteEach(req)
         }
         
         if r < 0 {
             defer {
                 fs_req_cleanup(writeReq)
-                destroyContext(context)
             }
-            context.memory.onWrite(.Error(SuvError.UVError(code: r)))
+            context.onWrite(.Error(SuvError.UVError(code: r)))
             return
         }
     }
@@ -112,33 +101,21 @@ private func onWriteEach(req: UnsafeMutablePointer<uv_fs_t>){
         fs_req_cleanup(req)
     }
     
-    var context = UnsafeMutablePointer<FileWriterContext>(req.memory.data)
+    let context: FileWriterContext = releaseVoidPointer(req.memory.data)!
     
     if(req.memory.result < 0) {
-        defer {
-            destroyContext(context)
-            context = nil
-        }
         let e = SuvError.UVError(code: Int32(req.memory.result))
-        return context.memory.onWrite(.Error(e))
+        return context.onWrite(.Error(e))
     }
     
     if(req.memory.result == 0) {
-        defer {
-            destroyContext(context)
-            context = nil
-        }
-        return context.memory.onWrite(.Success(context.memory.curPos))
+        return context.onWrite(.Success(context.curPos))
     }
     
-    context.memory.bytesWritten += req.memory.result
+    context.bytesWritten += req.memory.result
     
-    if Int(context.memory.bytesWritten) >= Int(context.memory.data.bytes.count) {
-        defer {
-            destroyContext(context)
-            context = nil
-        }
-        return context.memory.onWrite(.Success(context.memory.curPos))
+    if Int(context.bytesWritten) >= Int(context.data.bytes.count) {
+        return context.onWrite(.Success(context.curPos))
     }
     
     attemptWrite(context)
