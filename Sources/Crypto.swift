@@ -8,38 +8,11 @@
 
 import CLibUv
 
-private struct CryptoWorkQueueContext {
-    var workQueueTask: GenericResult<Buffer> -> ()
-    var workQueueFinishedTask: () -> Void
-    var cyptionFn: (GenericResult<Buffer> -> ()) -> ()
-    
-    init(cyptionFn: (GenericResult<Buffer> -> ()) -> (), workQueueTask: GenericResult<Buffer> -> (), workQueueFinishedTask: () -> Void = {}){
-        self.cyptionFn = cyptionFn
-        self.workQueueTask = workQueueTask
-        self.workQueueFinishedTask = workQueueFinishedTask
-    }
-}
-
-func crypto_work_queue_task(req: UnsafeMutablePointer<uv_work_t>){
-    let context = UnsafeMutablePointer<CryptoWorkQueueContext>(req.memory.data)
-    context.memory.cyptionFn { result in
-        context.memory.workQueueTask(result)
-    }
-}
-
-func crypto_work_queue_finished(req: UnsafeMutablePointer<uv_work_t>, status: Int32){
-    let context = UnsafeMutablePointer<CryptoWorkQueueContext>(req.memory.data)
-    context.destroy()
-    context.dealloc(sizeof(CryptoWorkQueueContext))
-    req.destroy()
-    req.dealloc(sizeof(uv_work_t))
-}
-
 /**
  OpenSSL Based Crypto moudle without Foundation dependencies
  
  ```swift
-    let sha256 = Crypto(.SHA256)
+ let sha256 = Crypto(.SHA256)
  ```
  */
 public enum Crypto {
@@ -58,14 +31,14 @@ public enum Crypto {
 
 /**
  Hasher
-*/
+ */
 extension Crypto {
     /**
      Encrypt the Source string synchronously
      
      - parameter src: The Srouce string to encrypt
      - returns:  Encrypted result as Buffer
-    */
+     */
     public func hashSync(src: String) throws -> Buffer {
         switch(self) {
         case .SHA512:
@@ -87,25 +60,27 @@ extension Crypto {
      - parameter callback: Completion handler
      */
     public func hash(src: String, loop: Loop = Loop.defaultLoop, callback: GenericResult<Buffer> -> ()) -> Void {
-        let req = UnsafeMutablePointer<uv_work_t>.alloc(sizeof(uv_work_t))
+        var buf: Buffer? = nil
+        var err: ErrorType? = nil
         
-        let context: UnsafeMutablePointer<CryptoWorkQueueContext>
-        context = UnsafeMutablePointer<CryptoWorkQueueContext>.alloc(1)
-        
-        let cyptionFn = { (callback: GenericResult<Buffer> -> ()) in
+        let onThread = {
             do {
-                let buf = try self.hashSync(src)
-                callback(.Success(buf))
+                buf = try self.hashSync(src)
             } catch {
-                callback(.Error(error))
+                err = error
             }
         }
         
-        context.initialize(CryptoWorkQueueContext(cyptionFn: cyptionFn, workQueueTask: callback))
+        let onFinish = {
+            if let e = err {
+                callback(.Error(e))
+                return
+            }
+            
+            callback(.Success(buf!))
+        }
         
-        req.memory.data = UnsafeMutablePointer<Void>(context)
-        
-        uv_queue_work(loop.loopPtr, req, crypto_work_queue_task, crypto_work_queue_finished)
+        Process.qwork(loop, onThread: onThread, onFinish: onFinish)
     }
 }
 
@@ -116,9 +91,9 @@ extension Crypto {
     
     /**
      Generates cryptographically strong pseudo-random data synchronously.
-    
+     
      - parameter size: A number indicating the number of bytes to generate.
-    */
+     */
     public static func randomBytesSync(size: UInt) throws -> Buffer {
         return try getRandomBytes(size)
     }
@@ -132,24 +107,26 @@ extension Crypto {
      - parameter callback: Completion handler
      */
     public static func randomBytes(loop: Loop = Loop.defaultLoop, size: UInt, callback: GenericResult<Buffer> -> ()) -> Void {
-        let req = UnsafeMutablePointer<uv_work_t>.alloc(sizeof(uv_work_t))
+        var buf: Buffer? = nil
+        var err: ErrorType? = nil
         
-        let context: UnsafeMutablePointer<CryptoWorkQueueContext>
-        context = UnsafeMutablePointer<CryptoWorkQueueContext>.alloc(1)
-        
-        let cyptionFn = { (callback: GenericResult<Buffer> -> ()) in
+        let onThread = {
             do {
-                let buf = try Crypto.randomBytesSync(size)
-                callback(.Success(buf))
+                buf = try Crypto.randomBytesSync(size)
             } catch {
-                callback(.Error(error))
+                err = error
             }
         }
         
-        context.initialize(CryptoWorkQueueContext(cyptionFn: cyptionFn, workQueueTask: callback))
+        let onFinish = {
+            if let e = err {
+                callback(.Error(e))
+                return
+            }
+            
+            callback(.Success(buf!))
+        }
         
-        req.memory.data = UnsafeMutablePointer<Void>(context)
-        
-        uv_queue_work(loop.loopPtr, req, crypto_work_queue_task, crypto_work_queue_finished)
+        Process.qwork(loop, onThread: onThread, onFinish: onFinish)
     }
 }

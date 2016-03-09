@@ -106,7 +106,7 @@ public final class PipeServer: ServerType {
             
             // Unlink sock file
             do {
-                try Fs.unlink(self.sockName!, loop: self.loop)
+                try FS.unlink(self.sockName!, loop: self.loop)
             } catch {
                 beforeExit()
                 exit(1)
@@ -139,7 +139,7 @@ public final class PipeServer: ServerType {
     */
     public func close() {
         if let name = sockName {
-            try! Fs.unlink(name)
+            try! FS.unlink(name)
         }
         self.socket.close()
     }

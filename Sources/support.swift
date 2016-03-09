@@ -57,3 +57,24 @@ internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorType?) -> Void) 
     
     _series(tasks[index])
 }
+
+final class Box<A> {
+    let unbox: A
+    init(_ value: A) { unbox = value }
+}
+
+func retainedVoidPointer<A>(x: A?) -> UnsafeMutablePointer<Void> {
+    guard let value = x else { return UnsafeMutablePointer() }
+    let unmanaged = Unmanaged.passRetained(Box(value))
+    return UnsafeMutablePointer(unmanaged.toOpaque())
+}
+
+func releaseVoidPointer<A>(x: UnsafeMutablePointer<Void>) -> A? {
+    guard x != nil else { return nil }
+    return Unmanaged<Box<A>>.fromOpaque(COpaquePointer(x)).takeRetainedValue().unbox
+}
+
+func unsafeFromVoidPointer<A>(x: UnsafeMutablePointer<Void>) -> A? {
+    guard x != nil else { return nil }
+    return Unmanaged<Box<A>>.fromOpaque(COpaquePointer(x)).takeUnretainedValue().unbox
+}

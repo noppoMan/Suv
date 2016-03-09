@@ -10,6 +10,10 @@ import Foundation
 import CLibUv
 import COpenSSL
 
+public enum SuvErrorMessage: String {
+    case FSPathIsRequired = "Need to initialize FileSystem with withPath argument"
+    case FSInvalidPosition = "Couldn't get current position"
+}
 
 /**
  Common Error enum for Suv
@@ -22,6 +26,8 @@ public enum SuvError: ErrorType, CustomStringConvertible {
     case ArgumentError(message: String)
     
     case RuntimeError(message: String)
+    
+    case FileSystemError(message: SuvErrorMessage)
     
     case TimerError(message: String)
     
@@ -69,6 +75,8 @@ extension SuvError {
             return message
         case .TimerError(let message):
             return message
+        case .FileSystemError(let message):
+            return message.rawValue
         case .OpenSSLError(let code):
             var buf = [Int8](count: 128, repeatedValue: 0)
             ERR_error_string_n(code, &buf, 128)

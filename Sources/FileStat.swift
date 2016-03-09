@@ -14,7 +14,7 @@ struct FileStatContext {
 
 class FileStat {
     
-    let context: UnsafeMutablePointer<FileStatContext>
+    let context: FileStatContext
     
     let path: String
     
@@ -23,39 +23,30 @@ class FileStat {
     init(loop: Loop = Loop.defaultLoop, path: String, completion: Result -> ()){
         self.loop = loop
         self.path = path
-        self.context = UnsafeMutablePointer<FileStatContext>.alloc(1)
-        self.context.initialize(
-            FileStatContext(
-                completion: completion
-            )
-        )
+        self.context = FileStatContext(completion: completion)
     }
     
     func invoke(){
         var req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
-        req.memory.data = UnsafeMutablePointer(context)
+        req.memory.data = retainedVoidPointer(context)
         
         let r = uv_fs_stat(loop.loopPtr, req, path) { req in
-            let context = UnsafeMutablePointer<FileStatContext>(req.memory.data)
+            let context: FileStatContext = releaseVoidPointer(req.memory.data)!
             
             defer {
                 fs_req_cleanup(req)
-                context.destroy()
-                context.dealloc(1)
             }
 
             if(req.memory.result < 0) {
                 let err = SuvError.UVError(code: Int32(req.memory.result))
-                return context.memory.completion(.Error(err))
+                return context.completion(.Error(err))
             }
 
-            context.memory.completion(.Success)
+            context.completion(.Success)
         }
         
         if r < 0 {
-            context.memory.completion(.Error(SuvError.UVError(code: r)))
-            context.destroy()
-            context.dealloc(1)
+            context.completion(.Error(SuvError.UVError(code: r)))
             fs_req_cleanup(req)
         }
     }
