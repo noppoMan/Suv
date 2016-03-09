@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Fs Class Reference</title>
+    <title>FS Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/Fs" class="dashAnchor"></a>
-    <a title="Fs Class Reference"></a>
+    <a name="//apple_ref/swift/Class/FS" class="dashAnchor"></a>
+    <a title="FS Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">Suv Docs</a> (100% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">Suv Reference</a>
         <img id="carat" src="../img/carat.png" />
-        Fs Class Reference
+        FS Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -47,10 +47,7 @@
                 <a href="../Classes/DNS.html">DNS</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FileSystem.html">FileSystem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/Fs.html">Fs</a>
+                <a href="../Classes/FS.html">FS</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Handle.html">Handle</a>
@@ -139,6 +136,9 @@
                 <a href="../Enums/SuvError.html">SuvError</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/SuvErrorMessage.html">SuvErrorMessage</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/TimeZone.html">TimeZone</a>
               </li>
               <li class="nav-group-task">
@@ -187,14 +187,14 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>Fs</h1>
+            <h1>FS</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Fs</span></code></pre>
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">FS</span></code></pre>
 
                 </div>
               </div>
-            <p>Fs is handy file system operation Module based on FileSystem class.</p>
+            <p>The Base of File System Operation class that has Posix Like interface</p>
 
           </section>
           <section class="section task-group-section">
@@ -203,9 +203,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs6unlinkFMS0_FzTSS4loopCS_4Loop_T_"></a>
+                    <a name="/s:ZFC3Suv2FS6unlinkFMS0_FzTSS4loopCS_4Loop_T_"></a>
                     <a name="//apple_ref/swift/Method/unlink(_:loop:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs6unlinkFMS0_FzTSS4loopCS_4Loop_T_">unlink(_:loop:)</a>
+                    <a class="token" href="#/s:ZFC3Suv2FS6unlinkFMS0_FzTSS4loopCS_4Loop_T_">unlink(_:loop:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -213,7 +213,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Alias for FileSystem.unlink</p>
+                        <p>Equivalent to unlink(2).</p>
+
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    SuvError.UVError
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -224,48 +230,15 @@
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>path</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Path affecting the request</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>loop</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Event Loop</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
                     </section>
                   </div>
                 </li>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs6existsFMS0_FTSS4loopCS_4Loop10completionFSbT__T_"></a>
-                    <a name="//apple_ref/swift/Method/exists(_:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs6existsFMS0_FTSS4loopCS_4Loop10completionFSbT__T_">exists(_:loop:completion:)</a>
+                    <a name="/s:ZFC3Suv2FS5ftellFMS0_FTVSs5Int324loopCS_4Loop10completionFSiT__T_"></a>
+                    <a name="//apple_ref/swift/Method/ftell(_:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS5ftellFMS0_FTVSs5Int324loopCS_4Loop10completionFSiT__T_">ftell(_:loop:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -273,14 +246,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Check the Path is exists or not</p>
+                        <p>Returns the current value of the position indicator of the stream.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">ftell</span><span class="p">(</span><span class="nv">fd</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
 
                         </div>
                       </div>
@@ -291,12 +264,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>path</em>
+                                <em>fd</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Path affecting the request</p>
+                                  <p>The file descriptor</p>
 
                                 </div>
                               </td>
@@ -336,9 +309,452 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs10createFileFMS0_FTSS4loopCS_4Loop10completionFGSqPSs9ErrorType__T__T_"></a>
+                    <a name="/s:ZFC3Suv2FS4readFMS0_FTVSs5Int324loopCS_4Loop6lengthGSqSi_8positionSi10completionFOS_12FsReadResultT__T_"></a>
+                    <a name="//apple_ref/swift/Method/read(_:loop:length:position:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS4readFMS0_FTVSs5Int324loopCS_4Loop6lengthGSqSi_8positionSi10completionFOS_12FsReadResultT__T_">read(_:loop:length:position:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the current value of the position indicator of the stream.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">read</span><span class="p">(</span><span class="nv">fd</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">position</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt">FsReadResult</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file descriptor</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>length</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Not implemented yet</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>position</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Not implemented yet</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS5writeFMS0_FTVSs5Int324loopCS_4Loop4dataVS_6Buffer6offsetSi6lengthGSqSi_8positionSi10completionFGOS_13GenericResultSi_T__T_"></a>
+                    <a name="//apple_ref/swift/Method/write(_:loop:data:offset:length:position:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS5writeFMS0_FTVSs5Int324loopCS_4Loop4dataVS_6Buffer6offsetSi6lengthGSqSi_8positionSi10completionFGOS_13GenericResultSi_T__T_">write(_:loop:data:offset:length:position:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the current value of the position indicator of the stream.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">write</span><span class="p">(</span><span class="nv">fd</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Buffer</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">position</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">GenericResult</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file descriptor</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>buffer to write</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Not implemented yet</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>length</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Not implemented yet</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>position</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Position to start writing</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS4openFMS0_FTSS4loopCS_4Loop5flagsOS_8OpenFlag4modeGSqVSs5Int32_10completionFGOS_13GenericResultS3__T__T_"></a>
+                    <a name="//apple_ref/swift/Method/open(_:loop:flags:mode:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS4openFMS0_FTSS4loopCS_4Loop5flagsOS_8OpenFlag4modeGSqVSs5Int32_10completionFGOS_13GenericResultS3__T__T_">open(_:loop:flags:mode:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Equivalent to open(2).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">flags</span><span class="p">:</span> <span class="kt">OpenFlag</span> <span class="o">=</span> <span class="o">.</span><span class="kt">R</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">GenericResult</span><span class="o">&lt;</span><span class="kt">Int32</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>flag</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>flag for uv_fs_open</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>mode for uv_fs_open</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS4statFMS0_FTSS4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="//apple_ref/swift/Method/stat(_:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS4statFMS0_FTSS4loopCS_4Loop10completionFOS_6ResultT__T_">stat(_:loop:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Take file stat</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">stat</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS5closeFMS0_FTVSs5Int324loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="//apple_ref/swift/Method/close(_:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS5closeFMS0_FTVSs5Int324loopCS_4Loop10completionFOS_6ResultT__T_">close(_:loop:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Equivalent to close(2).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">fd</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt">Result</span> <span class="o">-&gt;</span> <span class="p">()</span> <span class="o">=</span> <span class="p">{</span> <span class="n">_</span> <span class="k">in</span> <span class="p">})</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file descriptor</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS10createFileFMS0_FTSS4loopCS_4Loop10completionFGSqPSs9ErrorType__T__T_"></a>
                     <a name="//apple_ref/swift/Method/createFile(_:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs10createFileFMS0_FTSS4loopCS_4Loop10completionFGSqPSs9ErrorType__T__T_">createFile(_:loop:completion:)</a>
+                    <a class="token" href="#/s:ZFC3Suv2FS10createFileFMS0_FTSS4loopCS_4Loop10completionFGSqPSs9ErrorType__T__T_">createFile(_:loop:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -409,9 +825,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs8readFileFMS0_FTSS4loopCS_4Loop10completionFGOS_13GenericResultVS_6Buffer_T__T_"></a>
+                    <a name="/s:ZFC3Suv2FS8readFileFMS0_FTSS4loopCS_4Loop10completionFGOS_13GenericResultVS_6Buffer_T__T_"></a>
                     <a name="//apple_ref/swift/Method/readFile(_:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs8readFileFMS0_FTSS4loopCS_4Loop10completionFGOS_13GenericResultVS_6Buffer_T__T_">readFile(_:loop:completion:)</a>
+                    <a class="token" href="#/s:ZFC3Suv2FS8readFileFMS0_FTSS4loopCS_4Loop10completionFGOS_13GenericResultVS_6Buffer_T__T_">readFile(_:loop:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -482,181 +898,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs10appendFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
-                    <a name="//apple_ref/swift/Method/appendFile(_:data:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs10appendFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_">appendFile(_:data:loop:completion:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Equivalent to FileSystem&rsquo;s open(.AP), read and write</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">appendFile</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>path</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Path affecting the request</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>data</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>String value to write</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>loop</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Event Loop</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Completion handler</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:ZFC3Suv2Fs10appendFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
-                    <a name="//apple_ref/swift/Method/appendFile(_:data:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs10appendFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_">appendFile(_:data:loop:completion:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Equivalent to FileSystem&rsquo;s open(.AP), read and write</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">appendFile</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Buffer</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>path</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Path affecting the request</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>data</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Buffer to write</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>loop</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Event Loop</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Completion handler</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:ZFC3Suv2Fs9writeFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="/s:ZFC3Suv2FS9writeFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
                     <a name="//apple_ref/swift/Method/writeFile(_:data:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs9writeFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_">writeFile(_:data:loop:completion:)</a>
+                    <a class="token" href="#/s:ZFC3Suv2FS9writeFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_">writeFile(_:data:loop:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -740,9 +984,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFC3Suv2Fs9writeFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="/s:ZFC3Suv2FS9writeFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
                     <a name="//apple_ref/swift/Method/writeFile(_:data:loop:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFC3Suv2Fs9writeFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_">writeFile(_:data:loop:completion:)</a>
+                    <a class="token" href="#/s:ZFC3Suv2FS9writeFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_">writeFile(_:data:loop:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -823,12 +1067,257 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS10appendFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="//apple_ref/swift/Method/appendFile(_:data:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS10appendFileFMS0_FTSS4dataSS4loopCS_4Loop10completionFOS_6ResultT__T_">appendFile(_:data:loop:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Equivalent to FileSystem&rsquo;s open(.AP), read and write</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">appendFile</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Path affecting the request</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String value to write</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS10appendFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_"></a>
+                    <a name="//apple_ref/swift/Method/appendFile(_:data:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS10appendFileFMS0_FTSS4dataVS_6Buffer4loopCS_4Loop10completionFOS_6ResultT__T_">appendFile(_:data:loop:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Equivalent to FileSystem&rsquo;s open(.AP), read and write</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">appendFile</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Buffer</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Path affecting the request</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Buffer to write</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC3Suv2FS6existsFMS0_FTSS4loopCS_4Loop10completionFSbT__T_"></a>
+                    <a name="//apple_ref/swift/Method/exists(_:loop:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC3Suv2FS6existsFMS0_FTSS4loopCS_4Loop10completionFSbT__T_">exists(_:loop:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check the Path is exists or not</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">loop</span><span class="p">:</span> <span class="kt">Loop</span> <span class="o">=</span> <span class="kt">Loop</span><span class="o">.</span><span class="n">defaultLoop</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Path affecting the request</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>loop</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event Loop</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-03-04)</p>
+          <p>&copy; 2016 <a class="link" href="https://github.com/noppoMan/Suv" target="_blank" rel="external">Yuki</a>. All rights reserved. (Last updated: 2016-03-10)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
