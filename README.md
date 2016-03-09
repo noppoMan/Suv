@@ -5,74 +5,32 @@ This is built with [libuv](https://github.com/libuv/libuv) as core architecture 
 
 Suv is also core engine of [Slimane](https://github.com/noppoMan/slimane.git)
 
-### A Work In Progress
+## A Work In Progress
 Recently Suv doesn't have coveragge for all of libuv apis.
 
 ## Features
-- [x] TCP Stream/Server
-- [x] Pipe Stream/Server
-- [ ] UDP Stream/Server
-- [ ] File System(40%)
+- [x] TCP Server/Client
+- [x] Pipe Server/Client
+- [x] File System(40%)
 - [x] Child Process
 - [x] Cluster and Worker(IPC based)
 - [x] Signal handling
 - [x] Timer
 - [x] DNS
-- [ ] Threads
-- [ ] Asynchronous Encryption
-- [ ] Documents
+- [x] Threads
+- [x] Utility
+- [x] Encryption(10%)
 
-### Requirements
+## Requirements
 * [libuv](https://github.com/libuv/libuv)
 * [openssl](https://www.openssl.org/)
 
-## Installation
-
-### Ubuntu
-```sh
-# Install build tools and libssl-dev
-apt-get install build-essential libtool libssl-dev
-
-# build and install libuv
-git clone https://github.com/libuv/libuv.git
-cd libuv
-sh autogen.sh
-./configure
-make
-make install
-```
-
-### Other Linux
-Install the libuv and openssl to follow the guideline for those
-
-### Mac OS X
-```sh
-brew install libuv openssl
-brew link libuv --force
-brew link openssl --force
-```
-
 
 ## Documentaion
-* [TCP Server](https://github.com/noppoMan/Suv/blob/master/docs/tcp-server.md)
-* [File System](https://github.com/noppoMan/Suv/blob/master/docs/fs.md)
-* [Child Process](https://github.com/noppoMan/Suv/blob/master/docs/child-process.md)
-* [Suv Cluster](https://github.com/noppoMan/Suv/blob/master/docs/cluster.md)
+Check out the [Wiki](https://github.com/noppoMan/Suv/wiki) to start using.
 
 ## API Reference
-Full Api Reference is [here](http://rawgit.com/noppoMan/Suv/master/docs/api/index.html)
-
-## Package.swift
-```swift
-import PackageDescription
-
-let package = Package(
-	name: "MyPackage",
-	dependencies: [
-    .Package(url: "https://github.com/noppoMan/Suv", majorVersion: 0, minor: 1),
-  ]
-)
-```
+Check out the [Api Reference](http://rawgit.com/noppoMan/Suv/master/docs/api/index.html)
 
 ## License
 
