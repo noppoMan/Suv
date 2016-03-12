@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CLibUv
 @testable import Suv
 
 #if os(Linux)
@@ -25,7 +26,7 @@ private func launchServer() -> TCPServer {
     
     try! server.bind(Address(host: "127.0.0.1", port: 3000))
     
-    try! server.listen(128) { result in
+    try! server.listen(128) { [unowned server] result in
         if case .Error(let error) = result {
             XCTFail("\(error)")
             return server.close()
@@ -56,7 +57,7 @@ class TcpTests: XCTestCase {
             
             let client = TCP()
             
-            client.connect(host: "localhost", port: 3000) { res in
+            client.connect(host: "localhost", port: 3000) { [unowned client] res in
                 client.write(Buffer("Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {

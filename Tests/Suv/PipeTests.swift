@@ -33,7 +33,7 @@ private func launchServer() -> PipeServer {
     
     try! server.bind("/tmp/suv-test.sock")
     
-    try! server.listen(128) {result in
+    try! server.listen(128) { [unowned server] result in
         if case .Error(let error) = result {
             XCTFail("\(error)")
             return server.close()
@@ -64,7 +64,7 @@ class PipeTests: XCTestCase {
             
             let client = Pipe()
             
-            client.connect("/tmp/suv-test.sock") { res in
+            client.connect("/tmp/suv-test.sock") { [unowned client] res in
                 client.write(Buffer("Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
