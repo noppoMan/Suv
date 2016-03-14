@@ -29,16 +29,25 @@ private let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "
 /**
  Time handle class without NSDate
  */
-public class Time {
+public class Time: CustomStringConvertible {
     let length = 80
     
     var tmInfo: UnsafeMutablePointer<tm>
     
+    public let tz: TimeZone
+    
     /**
      - parameter tz: TimeZone
-    */
-    public init(tz: TimeZone = .Local){
-        var timer: time_t = time(nil)
+     */
+    public init(tz: TimeZone = .Local, unixtime: Int? = nil){
+        var timer: time_t
+        if var unix = unixtime {
+            timer = time(&unix)
+        } else {
+            timer = time(nil)
+        }
+        
+        self.tz = tz
         
         if case .UTC = tz {
             self.tmInfo = gmtime(&timer)
@@ -51,7 +60,7 @@ public class Time {
      Returns rfc822 formated date string
      
      https://hackage.haskell.org/package/time-http-0.5/docs/Data-Time-Format-RFC822.html
-    */
+     */
     public static var rfc822: String {
         return Time(tz: .UTC).rfc822
     }
@@ -87,21 +96,21 @@ public class Time {
     
     /**
      Returns unixtime
-    */
+     */
     public var unixtime: Int {
         return Int(mktime(tmInfo))
     }
     
     /**
      Returns "%A, %B %d %Y %X" formated date string
-    */
-    public var string: String {
+     */
+    public var description: String {
         return format("%A, %B %d %Y %X")
     }
     
     /**
      days since Sunday (from 0)
-    */
+     */
     public var week: Int {
         return Int(tmInfo.memory.tm_wday)
     }
@@ -115,28 +124,28 @@ public class Time {
     
     /**
      month of the year (from 0)
-    */
+     */
     public var month: Int {
         return Int(tmInfo.memory.tm_mon)
     }
     
     /**
      day of the year (from 0)
-    */
+     */
     public var yday: Int {
         return Int(tmInfo.memory.tm_yday)
     }
     
     /**
      day of the month (from 1)
-    */
+     */
     public var day: Int {
         return Int(tmInfo.memory.tm_mday)
     }
     
     /**
      hour of the day (from 0)
-    */
+     */
     public var hour: Int {
         return Int(tmInfo.memory.tm_hour)
     }
@@ -158,9 +167,10 @@ public class Time {
     /**
      add x day
      - parameter x: Number that want to add
-    */
+     */
     public func addDay(x: Int) -> Time {
         self.tmInfo.memory.tm_mday += Int32(x)
+        mktime(self.tmInfo)
         return self
     }
     
@@ -170,6 +180,7 @@ public class Time {
      */
     public func addHour(x: Int) -> Time {
         self.tmInfo.memory.tm_hour += Int32(x)
+        mktime(self.tmInfo)
         return self
     }
     
@@ -179,6 +190,7 @@ public class Time {
      */
     public func addMin(x: Int) -> Time {
         self.tmInfo.memory.tm_min += Int32(x)
+        mktime(self.tmInfo)
         return self
     }
     
@@ -188,6 +200,7 @@ public class Time {
      */
     public func addSec(x: Int) -> Time {
         self.tmInfo.memory.tm_sec += Int32(x)
+        mktime(self.tmInfo)
         return self
     }
     
