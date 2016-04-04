@@ -8,7 +8,7 @@
 
 import CLibUv
 
-private let workerIdKeyName = "SUV_WORKER_ID"
+internal let workerIdKeyName = "SUV_WORKER_ID"
 
 private var workerId = 0
 
@@ -38,15 +38,6 @@ public class Cluster {
         return !isWorker
     }
     
-    var execOpts: [String]
-    
-    /**
-     Args for main
-    */
-    public init(_ execOpts: [String] = []){
-        self.execOpts = execOpts
-    }
-    
     /**
      Special case of ChildProcess.spawn()
      The returned Worker will have an additional communication channel built-in that allows messages to be passed back and forth between the parent and child(Currently channel is implemented for only sharing connection)
@@ -54,7 +45,13 @@ public class Cluster {
      - parameter loop: Event loop
      - parameter silent: Boolean If true, stdin, stdout, and stderr of the child will be piped to the parent, otherwise they will be inherited from the parent
     */
-    public func fork(loop: Loop = Loop.defaultLoop, silent: Bool = true) throws -> Worker {
+    public static func fork(
+        loop: Loop = Loop.defaultLoop,
+        exexPath: String? = nil,
+        execOpts: [String] = Array(Process.arguments[1..<Process.arguments.count]),
+        silent: Bool = true
+    ) throws -> Worker {
+        
         var options = SpawnOptions()
         
         options.cwd = Process.cwd
@@ -81,16 +78,24 @@ public class Cluster {
             ]
         }
         
-        // ipc channel
-        options.stdio.append(StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true)))
+        // ipc channels
+        options.stdio.appendContentsOf([
+            // For sending handle
+            StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true)),
+            
+            // ipc message writer
+            StdioOption(flags: .CreateWritablePipe, pipe: Pipe(loop: loop, ipcEnable: true)),
+            
+            // ipc message reader
+            StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true))
+        ])
         
-        let childProc = try ChildProcess.spawn(Process.execPath, execOpts, loop: loop, options: options)
+        let childProc = try ChildProcess.spawn(exexPath ?? Process.execPath, execOpts, loop: loop, options: options)
         
-        let worker = Worker(process: childProc)
+        let worker = Worker(process: childProc, workerId: workerId)
         
         Cluster.workers.append(worker)
     
         return worker
     }
-    
 }

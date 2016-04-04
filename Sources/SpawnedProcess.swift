@@ -19,16 +19,6 @@ public class SpawnedProcess {
     public internal(set) var pid: Int32? = nil
     
     /**
-     Signal that got at exit
-     */
-    public internal(set) var signal: Int32? = nil
-    
-    /**
-     Status that got at status
-     */
-    public internal(set) var status: Int64? = nil
-    
-    /**
      Options that is used spawn
      */
     public let stdio: [StdioOption]
@@ -48,7 +38,7 @@ public class SpawnedProcess {
      */
     public let stderr: ReadableStream?
 
-    internal var onExitCallback: () -> () = {_ in }
+    internal var onExitCallback: (Int64) -> () = {_ in }
     
     /**
      - parameter stdio: A StdioOption instance
@@ -67,7 +57,7 @@ public class SpawnedProcess {
      
      - parameter callback: Completion handler
      */
-    public func onExit(callback: () -> ()){
+    public func onExit(callback: (Int64) -> ()){
         self.onExitCallback = callback
     }
 
@@ -77,15 +67,6 @@ public class SpawnedProcess {
      - parameter sig: signal for kill
      */
     public func kill(sig: Int32) throws {
-        for io in stdio {
-            if let readableStream = io.pipe {
-                readableStream.close()
-            }
-
-            if let writableStream = io.pipe {
-                writableStream.close()
-            }
-        }
         uv_kill(self.pid!, sig)
     }
 }

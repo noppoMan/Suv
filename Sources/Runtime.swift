@@ -83,3 +83,50 @@ public extension Process {
         idle.append(queue)
     }
 }
+
+private var writeChannel: Pipe?
+private var readChannel: Pipe?
+
+// Inter process communication
+extension Process {
+    
+    /**
+     Send a message to a master
+     
+     - parameter event: An event that want to send a master
+    */
+    public static func send(event: InterProcessEvent){
+        if Cluster.isMaster { return }
+        
+        if writeChannel == nil {
+            writeChannel = Pipe().open(5)
+        }
+        
+        writeChannel?.send(event)
+    }
+    
+    /**
+     Event listener for receiving event from master
+     
+     - parameter callback: Handler for receiving event from a master
+     */
+    public static func on(callback: InterProcessEvent -> ()){
+        if Cluster.isMaster { return }
+        
+        if readChannel == nil {
+            readChannel = Pipe().open(4)
+        }
+        
+        readChannel?.on { ev in
+            // Online and Exit events should not be got at the worker.
+            if case .Online = ev {
+                return
+            }
+            else if case .Exit = ev {
+                return
+            }
+            
+            callback(ev)
+        }
+    }
+}
