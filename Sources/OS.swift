@@ -9,11 +9,11 @@
 import CLibUv
 
 func getCpuCount() -> Int32 {
-    var info = UnsafeMutablePointer<uv_cpu_info_t>.alloc(sizeof(uv_cpu_info_t))
-    let cpuCount = UnsafeMutablePointer<Int32>.alloc(sizeof(Int32))
-    uv_cpu_info(&info, cpuCount)
-    uv_free_cpu_info(info, cpuCount.memory)
-    return cpuCount.memory
+    var info = UnsafeMutablePointer<uv_cpu_info_t>(allocatingCapacity: sizeof(uv_cpu_info_t))
+    var cpuCount: Int32 = 0
+    uv_cpu_info(&info, &cpuCount)
+    uv_free_cpu_info(info, cpuCount)
+    return cpuCount
 }
 
 private let _cpuCount = getCpuCount()

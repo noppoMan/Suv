@@ -15,67 +15,63 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension TimerTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                       ("testTimerTimeout", testTimerTimeout),
-                       ("testTimerInterval", testTimerInterval),
-            ]
-        }
-    }
-#endif
-
 class TimerTests: XCTestCase {
+    static var allTests: [(String, TimerTests -> () throws -> Void)] {
+        return [
+            ("testTimerTimeout", testTimerTimeout),
+            ("testTimerInterval", testTimerInterval)
+        ]
+    }
     
     func testTimerTimeout() {
-        waitUntil(2, description: "Timer Timout") { done in
-            var timer: Timer? = Timer(mode: .Timeout, tick: 1000)
-            XCTAssertEqual(timer!.state, TimerState.Pause)
+        waitUntil(5, description: "TimerInterval") { done in
+            let timer = Timer(mode: .Timeout, tick: 1000)
+            XCTAssertEqual(timer.state, TimerState.Pause)
 
             let start = Time().unixtime
             
-            timer!.start {
+            timer.start {
                 XCTAssertGreaterThan(Time().unixtime - start, 0)
-                timer!.end()
-                XCTAssertEqual(timer!.state, TimerState.End)
+                timer.end()
+                XCTAssertEqual(timer.state, TimerState.End)
                 Loop.defaultLoop.stop()
                 done()
-                timer = nil
             }
-            
-            Loop.defaultLoop.run()
         }
     }
     
     func testTimerInterval() {
-        waitUntil(5, description: "Timer Interval") { done in
-            var timer: Timer? = Timer(mode: .Interval, tick: 500)
-            XCTAssertEqual(timer!.state, TimerState.Pause)
+        waitUntil(5, description: "TimerInterval") { done in
+            let timer: Timer = Timer(mode: .Interval, tick: 500)
+            XCTAssertEqual(timer.state, TimerState.Pause)
             
             var intervalCounter = 0
             
-            timer!.start {
-                XCTAssertEqual(timer!.state, TimerState.Running)
+            timer.start {
+                XCTAssertEqual(timer.state, TimerState.Running)
                 intervalCounter+=1
                 if intervalCounter >= 3 {
-                    timer!.end()
-                    XCTAssertEqual(timer!.state, TimerState.End)
-                    Loop.defaultLoop.stop()
+                    timer.end()
+                    XCTAssertEqual(timer.state, TimerState.End)
                     done()
-                    timer = nil
+                    Loop.defaultLoop.stop()
                 }
             }
             
-            sleep(1)
-            timer!.stop()
+            let t2 = Timer(tick: 1000)
             
-            sleep(2)
-            XCTAssertEqual(timer!.state, TimerState.Stop)
-            timer!.resume()
-            XCTAssertEqual(timer!.state, TimerState.Running)
+            t2.start {
+                t2.end()
+                timer.stop()
+            }
             
-            Loop.defaultLoop.run()
+            let t3 = Timer(tick: 2000)
+            t3.start {
+                t3.end()
+                XCTAssertEqual(timer.state, TimerState.Stop)
+                timer.resume()
+                XCTAssertEqual(timer.state, TimerState.Running)
+            }
         }
     }
     

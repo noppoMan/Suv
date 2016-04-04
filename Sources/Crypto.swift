@@ -61,7 +61,7 @@ extension Crypto {
      */
     public func hash(src: String, loop: Loop = Loop.defaultLoop, callback: GenericResult<Buffer> -> ()) -> Void {
         var buf: Buffer? = nil
-        var err: ErrorType? = nil
+        var err: ErrorProtocol? = nil
         
         let onThread = {
             do {
@@ -108,7 +108,7 @@ extension Crypto {
      */
     public static func randomBytes(loop: Loop = Loop.defaultLoop, size: UInt, callback: GenericResult<Buffer> -> ()) -> Void {
         var buf: Buffer? = nil
-        var err: ErrorType? = nil
+        var err: ErrorProtocol? = nil
         
         let onThread = {
             do {

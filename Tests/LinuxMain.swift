@@ -7,16 +7,19 @@
 //
 
 import XCTest
-@testable import Suvtest
+@testable import SuvTestSuite
     
 XCTMain([
-    CryptoTests(),
-    ChildProcessTests(),
-    FsTests(),
-    TcpTests(),
-    PipeTests(),
-    DNSTests(),
-    TimerTests(),
-    QueueWorkerTests(),
-    IdleTests()
+    testCase(CryptoTests.allTests),
+    testCase(ChildProcessTests.allTests),
+    testCase(FsTests.allTests),
+    testCase(TcpTests.allTests),
+    testCase(PipeTests.allTests),
+    testCase(DNSTests.allTests),
+    testCase(TimerTests.allTests),
+    testCase(QueueWorkerTests.allTests),
+    testCase(IdleTests.allTests),
+    testCase(OSTests.allTests),
+    testCase(ClusterTests.allTests),
+    testCase(BufferTests.allTests)
 ])

@@ -81,8 +81,8 @@ public final class TCPServer: ServerType {
             self.socket = TCP(loop: loop)
         }
         
-        self.context = UnsafeMutablePointer<ServerContext>.alloc(1)
-        self.context.initialize(ServerContext(onConnection: {_ in}))
+        self.context = UnsafeMutablePointer<ServerContext>(allocatingCapacity: 1)
+        self.context.initialize(with: ServerContext(onConnection: {_ in}))
     }
     
     /**
@@ -128,33 +128,33 @@ public final class TCPServer: ServerType {
     */
     
     public func listen(backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws -> () {
-        self.context.memory.onConnection = onConnection
+        self.context.pointee.onConnection = onConnection
         
         if !self.socket.ipcEnable {
             try listenServer(backlog)
         } else {
             self.socket.read2(UV_TCP) { [unowned self] res in
                 if case .Error(let err) = res {
-                    self.context.memory.onConnection(.Error(err))
+                    self.context.pointee.onConnection(.Error(err))
                 } else if case .Success(let queue) = res {
-                    self.context.memory.onConnection(.Success(queue))
+                    self.context.pointee.onConnection(.Success(queue))
                 }
             }
         }
     }
     
     private func listenServer(backlog: UInt = 128) throws -> () {
-        socket.streamPtr.memory.data = UnsafeMutablePointer(context)
+        socket.streamPtr.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(socket.streamPtr, Int32(backlog)) { stream, status in
-            let context = UnsafeMutablePointer<ServerContext>(stream.memory.data)
+            let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data)
             
             guard status >= 0 else {
                 let err = SuvError.UVError(code: status)
-                return context.memory.onConnection(.Error(err))
+                return context.pointee.onConnection(.Error(err))
             }
             
-            context.memory.onConnection(.Success(nil))
+            context.pointee.onConnection(.Success(nil))
         }
         
         if result < 0 {
@@ -170,7 +170,7 @@ public final class TCPServer: ServerType {
     }
     
     deinit {
-        self.context.destroy()
-        self.context.dealloc(1)
+        self.context.deinitialize()
+        self.context.deallocateCapacity(1)
     }
 }

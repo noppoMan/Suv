@@ -17,8 +17,8 @@ import CLibUv
 
 func fs_req_cleanup(req: UnsafeMutablePointer<uv_fs_t>) {
     uv_fs_req_cleanup(req)
-    req.destroy()
-    req.dealloc(sizeof(uv_fs_t))
+    req.deinitialize()
+    req.deallocateCapacity(sizeof(uv_fs_t))
 }
 
 public typealias FileOperationResultTask = Result -> ()
@@ -38,7 +38,7 @@ public class FS {
      - Throws: SuvError.UVError
      */
     public static func unlink(path: String, loop: Loop = Loop.defaultLoop) throws {
-        let req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+        let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
         let r = uv_fs_unlink(loop.loopPtr, req, path, nil)
         fs_req_cleanup(req)
         if r < 0 {
@@ -125,21 +125,21 @@ public class FS {
         
         let context = FSContext(onOpen: completion)
         
-        var req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
-        req.memory.data = retainedVoidPointer(context)
+        var req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
+        req.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_open(loop.loopPtr, req, path, flags.rawValue, mode != nil ? mode! : flags.mode) { req in
-            let ctx: FSContext = releaseVoidPointer(req.memory.data)!
+            let ctx: FSContext = releaseVoidPointer(req.pointee.data)!
             defer {
                 fs_req_cleanup(req)
             }
             
-            if(req.memory.result < 0) {
-                let err = SuvError.UVError(code: Int32(req.memory.result))
+            if(req.pointee.result < 0) {
+                let err = SuvError.UVError(code: Int32(req.pointee.result))
                 return ctx.onOpen(.Error(err))
             }
             
-            ctx.onOpen(.Success(Int32(req.memory.result)))
+            ctx.onOpen(.Success(Int32(req.pointee.result)))
         }
         
         if r < 0 {
@@ -169,7 +169,7 @@ public class FS {
      - parameter completion: Completion handler
      */
     public static func close(fd: Int32, loop: Loop = Loop.defaultLoop, completion: Result -> () = { _ in }){
-        let req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+        let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
         uv_fs_close(loop.loopPtr, req, uv_file(fd), nil)
         fs_req_cleanup(req)
     }
@@ -182,7 +182,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func createFile(path: String, loop: Loop = Loop.defaultLoop, completion: ErrorType? -> ()) {
+    public static func createFile(path: String, loop: Loop = Loop.defaultLoop, completion: ErrorProtocol? -> ()) {
         FS.open(path, flags: .W) { res in
             if case .Error(let err) = res {
                 return completion(err)

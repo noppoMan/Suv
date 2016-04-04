@@ -9,19 +9,14 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension DNSTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                       ("testGetAddrInfo", testGetAddrInfo)
-            ]
-        }
-    }
-#endif
-
 private func noop(){}
 
 class DNSTests: XCTestCase {
+    static var allTests: [(String, DNSTests -> () throws -> Void)] {
+        return [
+            ("testGetAddrInfo", testGetAddrInfo)
+        ]
+    }
     
     func testGetAddrInfo() {
         waitUntil(5, description: "GetAddrInfo") { done in
@@ -37,7 +32,6 @@ class DNSTests: XCTestCase {
                     done()
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
 }

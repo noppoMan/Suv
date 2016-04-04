@@ -31,15 +31,16 @@ public class Signal {
     
     public init(loop: Loop = Loop.defaultLoop){
         self.loop = loop
-        self.signalPtr = UnsafeMutablePointer<uv_signal_t>.alloc(sizeof(uv_signal_t))
+        self.signalPtr = UnsafeMutablePointer<uv_signal_t>(allocatingCapacity: sizeof(uv_signal_t))
         uv_signal_init(loop.loopPtr, signalPtr)
     }
     
     public func start(sig: Int32, signalHandler: (Int32) -> ()){
         self.signalHandler = signalHandler
-        signalPtr.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        
+        signalPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         uv_signal_start(signalPtr, { handle, sig in
-            let _signal = unsafeBitCast(handle.memory.data, Signal.self)
+            let _signal = unsafeBitCast(handle.pointee.data, to: Signal.self)
             _signal.signalHandler(sig)
         }, sig)
     }

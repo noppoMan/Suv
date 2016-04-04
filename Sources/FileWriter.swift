@@ -74,13 +74,13 @@ internal class FileWriter {
 }
 
 private func attemptWrite(context: FileWriterContext){
-    let writeReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+    var writeReq = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
     
     var bytes = context.data.bytes.map { Int8(bitPattern: $0) }
     context.buf = uv_buf_init(&bytes, UInt32(context.data.bytes.count))
     
     withUnsafePointer(&context.buf!) {
-        writeReq.memory.data = retainedVoidPointer(context)
+        writeReq.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_write(context.loop.loopPtr, writeReq, uv_file(context.fd), $0, UInt32(context.buf!.len), Int64(context.curPos)) { req in
             onWriteEach(req)
@@ -101,18 +101,18 @@ private func onWriteEach(req: UnsafeMutablePointer<uv_fs_t>){
         fs_req_cleanup(req)
     }
     
-    let context: FileWriterContext = releaseVoidPointer(req.memory.data)!
+    let context: FileWriterContext = releaseVoidPointer(req.pointee.data)!
     
-    if(req.memory.result < 0) {
-        let e = SuvError.UVError(code: Int32(req.memory.result))
+    if(req.pointee.result < 0) {
+        let e = SuvError.UVError(code: Int32(req.pointee.result))
         return context.onWrite(.Error(e))
     }
     
-    if(req.memory.result == 0) {
+    if(req.pointee.result == 0) {
         return context.onWrite(.Success(context.curPos))
     }
     
-    context.bytesWritten += req.memory.result
+    context.bytesWritten += req.pointee.result
     
     if Int(context.bytesWritten) >= Int(context.data.bytes.count) {
         return context.onWrite(.Success(context.curPos))

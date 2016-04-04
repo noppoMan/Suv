@@ -9,8 +9,8 @@
 import CLibUv
 
 private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>){
-    let context = UnsafeMutablePointer<TimerContext>(handle.memory.data)
-    context.memory.callback()
+    let context = UnsafeMutablePointer<TimerContext>(handle.pointee.data)
+    context.pointee.callback()
 }
 
 struct TimerContext {
@@ -63,7 +63,7 @@ public class Timer {
     public init(loop: Loop = Loop.defaultLoop, mode: TimerMode = .Timeout, tick: UInt64){
         self.mode = mode
         self.tick = tick
-        self.handle = UnsafeMutablePointer<uv_timer_t>.alloc(1)
+        self.handle = UnsafeMutablePointer<uv_timer_t>(allocatingCapacity: sizeof(uv_timer_t))
         uv_timer_init(loop.loopPtr, handle)
     }
     
@@ -97,10 +97,10 @@ public class Timer {
         if case .End = state { return }
         if initalized { return }
         
-        context = UnsafeMutablePointer<TimerContext>.alloc(1)
-        context.initialize(TimerContext(callback: callback))
+        context = UnsafeMutablePointer<TimerContext>(allocatingCapacity: 1)
+        context.initialize(with: TimerContext(callback: callback))
         
-        handle.memory.data = UnsafeMutablePointer(context)
+        handle.pointee.data = UnsafeMutablePointer(context)
         
         switch(mode) {
         case .Timeout:
@@ -129,8 +129,8 @@ public class Timer {
     public func end(){
         if case .End = state { return }
         defer {
-            handle.destroy()
-            handle.dealloc(1)
+            handle.deinitialize()
+            handle.deallocateCapacity(1)
         }
         stop()
         unref()
@@ -138,7 +138,7 @@ public class Timer {
     }
     
     deinit {
-        context.destroy()
-        context.dealloc(1)
+        context.deinitialize()
+        context.deallocateCapacity(1)
     }
 }

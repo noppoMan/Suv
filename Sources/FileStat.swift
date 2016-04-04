@@ -27,18 +27,18 @@ class FileStat {
     }
     
     func invoke(){
-        var req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
-        req.memory.data = retainedVoidPointer(context)
+        var req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
+        req.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_stat(loop.loopPtr, req, path) { req in
-            let context: FileStatContext = releaseVoidPointer(req.memory.data)!
+            let context: FileStatContext = releaseVoidPointer(req.pointee.data)!
             
             defer {
                 fs_req_cleanup(req)
             }
 
-            if(req.memory.result < 0) {
-                let err = SuvError.UVError(code: Int32(req.memory.result))
+            if(req.pointee.result < 0) {
+                let err = SuvError.UVError(code: Int32(req.pointee.result))
                 return context.completion(.Error(err))
             }
 

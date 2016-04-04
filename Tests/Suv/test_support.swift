@@ -8,10 +8,11 @@
 
 import XCTest
 import Foundation
+@testable import Suv
 
 private class AsynchronousTestSupporter {
 
-    init(timeout: NSTimeInterval, description: String, callback: (() -> ()) -> ()){
+    init(timeout: Int, description: String, callback: (() -> ()) -> ()){
         print("Starting the \(description) test")
 
         var breakFlag = false
@@ -21,27 +22,28 @@ private class AsynchronousTestSupporter {
         }
 
         callback(done)
-
-        let runLoop = NSRunLoop.currentRunLoop()
-        let timeoutDate = NSDate(timeIntervalSinceNow: timeout)
-
-        while NSDate().compare(timeoutDate) == NSComparisonResult.OrderedAscending {
-            if(breakFlag) {
-                break
+        
+        let endts = Time().addSec(timeout).unixtime
+        
+        let t = Timer(mode: .Interval, tick: 100)
+        t.start {
+            if Time().unixtime > endts {
+                XCTFail("Test is timed out")
             }
-            runLoop.runUntilDate(NSDate(timeIntervalSinceNow: 0.01))
+            
+            if(breakFlag) {
+                t.end()
+            }
         }
-
-        if(!breakFlag) {
-            XCTFail("Test is timed out")
-        }
+        t.unref()
     }
 }
 
 
 extension XCTestCase {
-    func waitUntil(timeout: NSTimeInterval = 1, description: String, callback: (() -> ()) -> ()){
+    func waitUntil(timeout: Int = 1, description: String, callback: (() -> ()) -> ()){
         let _ = AsynchronousTestSupporter(timeout: timeout, description: description, callback: callback)
+        Loop.defaultLoop.run()
 
         // Should restore if the https://github.com/apple/swift-corelibs-xctest/pull/43 is merged
 //        let expectation = expectationWithDescription("readFile")

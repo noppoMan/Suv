@@ -9,10 +9,10 @@
 import CLibUv
 
 private func destroy_write_req(req: UnsafeMutablePointer<uv_write_t>){
-    req.memory.bufs.destroy()
-    req.memory.bufs.dealloc(1)
-    req.destroy()
-    req.dealloc(sizeof(uv_write_t))
+    req.pointee.bufs.deinitialize()
+    req.pointee.bufs.deallocateCapacity(1)
+    req.deinitialize()
+    req.deallocateCapacity(sizeof(uv_write_t))
 }
 
 /**
@@ -37,7 +37,7 @@ public class WritableStream: ReadableStream {
         var dummy_buf = uv_buf_init(UnsafeMutablePointer<Int8>(bytes), 1)
 
         withUnsafePointer(&dummy_buf) {
-            let writeReq = UnsafeMutablePointer<uv_write_t>.alloc(sizeof(uv_write_t))
+            let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
             let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, 1, self.streamPtr) { req, _ in
                 destroy_write_req(req)
             }
@@ -80,11 +80,11 @@ public class WritableStream: ReadableStream {
         self.onWrite = onWrite
         
         withUnsafePointer(&data) {
-            let writeReq = UnsafeMutablePointer<uv_write_t>.alloc(1)
-            writeReq.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+            let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
+            writeReq.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
             
             let r = uv_write(writeReq, streamPtr, $0, 1) { req, _ in
-                let stream = unsafeBitCast(req.memory.data, WritableStream.self)
+                let stream = unsafeBitCast(req.pointee.data, to: WritableStream.self)
                 destroy_write_req(req)
                 stream.onWrite(.Success)
             }

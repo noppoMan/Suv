@@ -39,7 +39,7 @@ public class TCP: WritableStream {
      */
     public init(loop: Loop = Loop.defaultLoop){
         self.loop = loop
-        let socket = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+        let socket = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
         uv_tcp_init(loop.loopPtr, socket)
         let stream = UnsafeMutablePointer<uv_stream_t>(socket)
         super.init(stream)
@@ -57,7 +57,7 @@ public class TCP: WritableStream {
      Enable / disable Nagle’s algorithm.
     */
     public func setNoDelay(enable: Bool) throws {
-        if streamPtr.memory.type != UV_TCP {
+        if streamPtr.pointee.type != UV_TCP {
             throw SuvError.RuntimeError(message: "Handle type is not UV_TCP")
         }
         
@@ -76,7 +76,7 @@ public class TCP: WritableStream {
      - parameter delay: the initial delay in seconds, ignored when disable.
      */
     public func setKeepAlive(enable: Bool, delay: UInt) throws {
-        if streamPtr.memory.type != UV_TCP {
+        if streamPtr.pointee.type != UV_TCP {
             throw SuvError.RuntimeError(message: "Handle type is not UV_TCP")
         }
         
@@ -94,15 +94,15 @@ public class TCP: WritableStream {
      - parameter completion: Completion handler
      */
     public func connect(host host: String, port: Int, completion: Result -> ()) {
-        if streamPtr.memory.type != UV_TCP {
+        if streamPtr.pointee.type != UV_TCP {
             let err = SuvError.RuntimeError(message: "Handle type is not UV_TCP")
             return completion(.Error(err))
         }
         
         self.onConnect = completion
         
-        con = UnsafeMutablePointer<uv_connect_t>.alloc(sizeof(uv_connect_t))
-        con.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        con = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
+        con.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
         DNS.getAddrInfo(self.loop, fqdn: host, port: String(port)) { result in
             if case .Error(let error) = result {
@@ -115,11 +115,11 @@ public class TCP: WritableStream {
                 let addr = Address(host: a.host, port: Int(a.service)!)
                 
                 let r = uv_tcp_connect(self.con, self.socket, addr.address) { connection, status in
-                    let tcp = unsafeBitCast(connection.memory.data, TCP.self)
+                    let tcp = unsafeBitCast(connection.pointee.data, to: TCP.self)
                     
                     defer {
-                        connection.destroy()
-                        connection.dealloc(sizeof(uv_connect_t))
+                        connection.deinitialize()
+                        connection.deallocateCapacity(sizeof(uv_connect_t))
                     }
                     
                     if status < 0 {

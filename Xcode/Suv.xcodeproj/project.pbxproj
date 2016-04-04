@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B6082BA81CB2CDC600F58B14 /* OsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6082BA61CB2CD6100F58B14 /* OsTests.swift */; };
+		B6082BC51CB2E6CB00F58B14 /* BufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6082BC31CB2E65900F58B14 /* BufferTests.swift */; };
 		B61B0DE81C56AF54001C73D3 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61B0DE71C56AF54001C73D3 /* String.swift */; };
 		B61CF8B41C554D5500CF6C50 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61CF8B31C554D5500CF6C50 /* Cluster.swift */; };
 		B61CF8B61C554D7B00CF6C50 /* OS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61CF8B51C554D7B00CF6C50 /* OS.swift */; };
@@ -14,16 +16,12 @@
 		B622E6571C5FD0DA0042859C /* PipeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B622E6561C5FD0DA0042859C /* PipeServer.swift */; };
 		B6262E6A1C70D2E200917437 /* FileStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6262E691C70D2E200917437 /* FileStat.swift */; };
 		B6295E931C870FA90084A684 /* QueueWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6295E921C870FA90084A684 /* QueueWork.swift */; };
-		B630D9C51C54F142006490A9 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C41C54F142006490A9 /* WritableStream.swift */; };
-		B630D9C71C54F14E006490A9 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C61C54F14E006490A9 /* ReadableStream.swift */; };
 		B632F2821C4B75D200EB3BF1 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B632F2811C4B75D200EB3BF1 /* FileReader.swift */; };
 		B63354DC1C8827FA005EA8D9 /* Idle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63354DB1C8827FA005EA8D9 /* Idle.swift */; };
 		B63354DD1C88281B005EA8D9 /* Idle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63354DB1C8827FA005EA8D9 /* Idle.swift */; };
 		B6395E371C821A9100DB3084 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6395E361C821A9100DB3084 /* Handle.swift */; };
 		B6395E381C821D6700DB3084 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6395E361C821A9100DB3084 /* Handle.swift */; };
 		B6599BCD1C73B1E800CD70A2 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F20B811C438C6300A270CF /* Stream.swift */; };
-		B6599BCE1C73B1E800CD70A2 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C61C54F14E006490A9 /* ReadableStream.swift */; };
-		B6599BCF1C73B1E800CD70A2 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630D9C41C54F142006490A9 /* WritableStream.swift */; };
 		B6599BD01C73B1E800CD70A2 /* Tcp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F20B851C438C7300A270CF /* Tcp.swift */; };
 		B6599BD11C73B1E800CD70A2 /* SuvError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D872E1C43A1B6000D4614 /* SuvError.swift */; };
 		B6599BD21C73B1E800CD70A2 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A52C21C456F0A000CC351 /* Address.swift */; };
@@ -57,9 +55,14 @@
 		B6635D1F1C555FB600D8EE19 /* ChildProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6635D1E1C555FB600D8EE19 /* ChildProcess.swift */; };
 		B66AFEE41C52AFB600D7609F /* FS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66AFEE31C52AFB600D7609F /* FS.swift */; };
 		B66AFEE61C52B15600D7609F /* FileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66AFEE51C52B15600D7609F /* FileWriter.swift */; };
+		B66C66531CB26A010066F97D /* ClusterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */; };
 		B6781B611C5745D700497298 /* Pipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6781B601C5745D700497298 /* Pipe.swift */; };
 		B68033AB1C763BA00075C87C /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B19FFF1C7630E100E6C595 /* Timer.swift */; };
 		B6881F421C67D493004F34B1 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6881F411C67D493004F34B1 /* Time.swift */; };
+		B68A23921CAEFA2200D75386 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23901CAEFA2200D75386 /* ReadableStream.swift */; };
+		B68A23931CAEFA2200D75386 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23911CAEFA2200D75386 /* WritableStream.swift */; };
+		B68A23941CB1912A00D75386 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23901CAEFA2200D75386 /* ReadableStream.swift */; };
+		B68A23951CB1912D00D75386 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23911CAEFA2200D75386 /* WritableStream.swift */; };
 		B68A52C31C456F0A000CC351 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A52C21C456F0A000CC351 /* Address.swift */; };
 		B68A52C51C456F11000CC351 /* Loop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A52C41C456F11000CC351 /* Loop.swift */; };
 		B68A52C71C456F5F000CC351 /* RunMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A52C61C456F5F000CC351 /* RunMode.swift */; };
@@ -109,6 +112,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B6082BA61CB2CD6100F58B14 /* OsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OsTests.swift; sourceTree = "<group>"; };
+		B6082BC31CB2E65900F58B14 /* BufferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferTests.swift; sourceTree = "<group>"; };
 		B61B0DE71C56AF54001C73D3 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		B61CF8B31C554D5500CF6C50 /* Cluster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
 		B61CF8B51C554D7B00CF6C50 /* OS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OS.swift; sourceTree = "<group>"; };
@@ -116,10 +121,9 @@
 		B622E6561C5FD0DA0042859C /* PipeServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeServer.swift; sourceTree = "<group>"; };
 		B6262E691C70D2E200917437 /* FileStat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStat.swift; sourceTree = "<group>"; };
 		B6295E921C870FA90084A684 /* QueueWork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueWork.swift; sourceTree = "<group>"; };
-		B630D9C41C54F142006490A9 /* WritableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritableStream.swift; sourceTree = "<group>"; };
-		B630D9C61C54F14E006490A9 /* ReadableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadableStream.swift; sourceTree = "<group>"; };
 		B632F2811C4B75D200EB3BF1 /* FileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
 		B63354DB1C8827FA005EA8D9 /* Idle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Idle.swift; sourceTree = "<group>"; };
+		B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterTests.swift; sourceTree = "<group>"; };
 		B6395E361C821A9100DB3084 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		B65785C71C6F3866005B98FB /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		B662AEB31C65F82100994706 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
@@ -128,6 +132,8 @@
 		B66AFEE51C52B15600D7609F /* FileWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWriter.swift; sourceTree = "<group>"; };
 		B6781B601C5745D700497298 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
 		B6881F411C67D493004F34B1 /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
+		B68A23901CAEFA2200D75386 /* ReadableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadableStream.swift; sourceTree = "<group>"; };
+		B68A23911CAEFA2200D75386 /* WritableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritableStream.swift; sourceTree = "<group>"; };
 		B68A52C21C456F0A000CC351 /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		B68A52C41C456F11000CC351 /* Loop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loop.swift; sourceTree = "<group>"; };
 		B68A52C61C456F5F000CC351 /* RunMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunMode.swift; sourceTree = "<group>"; };
@@ -208,6 +214,9 @@
 				B6E992C01C89E2AA00867A5D /* TcpTests.swift */,
 				B6E992C21C89E2AA00867A5D /* TimerTests.swift */,
 				B6E992C11C89E2AA00867A5D /* test_support.swift */,
+				B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */,
+				B6082BA61CB2CD6100F58B14 /* OsTests.swift */,
+				B6082BC31CB2E65900F58B14 /* BufferTests.swift */,
 			);
 			path = Suv;
 			sourceTree = "<group>";
@@ -246,8 +255,6 @@
 			isa = PBXGroup;
 			children = (
 				B6F20B811C438C6300A270CF /* Stream.swift */,
-				B630D9C61C54F14E006490A9 /* ReadableStream.swift */,
-				B630D9C41C54F142006490A9 /* WritableStream.swift */,
 				B6F20B851C438C7300A270CF /* Tcp.swift */,
 				B69D872E1C43A1B6000D4614 /* SuvError.swift */,
 				B68A52C21C456F0A000CC351 /* Address.swift */,
@@ -266,6 +273,8 @@
 				B61CF8B51C554D7B00CF6C50 /* OS.swift */,
 				B61B0DE71C56AF54001C73D3 /* String.swift */,
 				B6781B601C5745D700497298 /* Pipe.swift */,
+				B68A23901CAEFA2200D75386 /* ReadableStream.swift */,
+				B68A23911CAEFA2200D75386 /* WritableStream.swift */,
 				B6EE150A1C5A7CA300FB0CCA /* Runtime.swift */,
 				B6BE3A3A1C5E7C0B005CE911 /* Signal.swift */,
 				B622E6541C5FD0B50042859C /* TCPServer.swift */,
@@ -411,11 +420,12 @@
 				B662AEB41C65F82100994706 /* Crypto.swift in Sources */,
 				B6262E6A1C70D2E200917437 /* FileStat.swift in Sources */,
 				B6881F421C67D493004F34B1 /* Time.swift in Sources */,
-				B630D9C71C54F14E006490A9 /* ReadableStream.swift in Sources */,
 				B6BE3A3B1C5E7C0B005CE911 /* Signal.swift in Sources */,
 				B63354DC1C8827FA005EA8D9 /* Idle.swift in Sources */,
+				B68A23931CAEFA2200D75386 /* WritableStream.swift in Sources */,
 				B69D872F1C43A1B6000D4614 /* SuvError.swift in Sources */,
 				B6CBB50F1C74E50800F8FCB3 /* DNS.swift in Sources */,
+				B68A23921CAEFA2200D75386 /* ReadableStream.swift in Sources */,
 				B6EE150B1C5A7CA300FB0CCA /* Runtime.swift in Sources */,
 				B61CF8B61C554D7B00CF6C50 /* OS.swift in Sources */,
 				B632F2821C4B75D200EB3BF1 /* FileReader.swift in Sources */,
@@ -428,7 +438,6 @@
 				B6295E931C870FA90084A684 /* QueueWork.swift in Sources */,
 				B6CBB5111C74E8B800F8FCB3 /* Result.swift in Sources */,
 				B6781B611C5745D700497298 /* Pipe.swift in Sources */,
-				B630D9C51C54F142006490A9 /* WritableStream.swift in Sources */,
 				B61B0DE81C56AF54001C73D3 /* String.swift in Sources */,
 				B6FB922C1C664890002D941E /* crypto_support.swift in Sources */,
 				B6ECE5CD1C53647500D5D2C3 /* support.swift in Sources */,
@@ -462,6 +471,7 @@
 				B6599BE91C73B1E800CD70A2 /* Crypto.swift in Sources */,
 				B6CBB5141C74E97500F8FCB3 /* Result.swift in Sources */,
 				B6599BDE1C73B1E800CD70A2 /* Cluster.swift in Sources */,
+				B68A23941CB1912A00D75386 /* ReadableStream.swift in Sources */,
 				B6C403531C88C71F00755509 /* QueueWork.swift in Sources */,
 				B6599BD31C73B1E800CD70A2 /* Loop.swift in Sources */,
 				B6599BD71C73B1E800CD70A2 /* FS.swift in Sources */,
@@ -483,8 +493,11 @@
 				B6599BD01C73B1E800CD70A2 /* Tcp.swift in Sources */,
 				B6599BE81C73B1E800CD70A2 /* Base64.swift in Sources */,
 				B6395E381C821D6700DB3084 /* Handle.swift in Sources */,
+				B6082BC51CB2E6CB00F58B14 /* BufferTests.swift in Sources */,
 				B6599BD91C73B1E800CD70A2 /* FileWriter.swift in Sources */,
+				B68A23951CB1912D00D75386 /* WritableStream.swift in Sources */,
 				B6599BE51C73B1E800CD70A2 /* TCPServer.swift in Sources */,
+				B6082BA81CB2CDC600F58B14 /* OsTests.swift in Sources */,
 				B6599BE01C73B1E800CD70A2 /* OS.swift in Sources */,
 				B6599BE71C73B1E800CD70A2 /* ServerType.swift in Sources */,
 				B6E992D81C89E2B700867A5D /* TcpTests.swift in Sources */,
@@ -493,13 +506,12 @@
 				B6E992CF1C89E2B700867A5D /* ChildProcessTests.swift in Sources */,
 				B6F972101C74EB1D0010FAEB /* DNS.swift in Sources */,
 				B6599BE31C73B1E800CD70A2 /* Runtime.swift in Sources */,
+				B66C66531CB26A010066F97D /* ClusterTests.swift in Sources */,
 				B6599BD41C73B1E800CD70A2 /* RunMode.swift in Sources */,
 				B6E992D51C89E2B700867A5D /* IdleTests.swift in Sources */,
 				B6E992D01C89E2B700867A5D /* CryptoTests.swift in Sources */,
-				B6599BCE1C73B1E800CD70A2 /* ReadableStream.swift in Sources */,
 				B6E992D71C89E2B700867A5D /* QueueWorkerTests.swift in Sources */,
 				B6599BD21C73B1E800CD70A2 /* Address.swift in Sources */,
-				B6599BCF1C73B1E800CD70A2 /* WritableStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,14 +10,18 @@ import Foundation
 
 extension String {
     func splitBy(separator: Character, allowEmptySlices: Bool = false, maxSplit: Int) -> [String] {
-        return characters.split(maxSplit, allowEmptySlices: allowEmptySlices) { $0 == separator }.map { String($0) }
+        return characters.split(separator: separator, maxSplits: maxSplit, omittingEmptySubsequences: allowEmptySlices).map { String($0) }
     }
     
     func splitBy(separator: Character, allowEmptySlices: Bool = false) -> [String] {
-        return characters.split(allowEmptySlices: allowEmptySlices) { $0 == separator }.map { String($0) }
+        return characters.split(separator: separator, omittingEmptySubsequences: allowEmptySlices).map { String($0) }
     }
     
     var buffer: UnsafePointer<Int8> {
+#if os(Linux)
         return NSString(string: self).UTF8String
+#else
+        return NSString(string: self).utf8String
+#endif
     }
 }

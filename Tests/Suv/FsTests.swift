@@ -15,30 +15,25 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension FsTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                ("testReadFile", testReadFile),
-                ("testWriteFile", testWriteFile),
-                ("testAppendFile", testAppendFile),
-                ("testExists", testExists),
-                ("testRead", testRead),
-                ("testWrite", testWrite),
-                ("testReadAndWrite", testReadAndWrite),
-                ("testTruncateAndWrite", testTruncateAndWrite),
-                ("testAppend", testAppend),
-                ("testStat", testStat),
-                ("testStat", testFtell),
-                ("testErrorFd", testErrorFd)
-            ]
-        }
-    }
-#endif
-
 private let targetFile = Process.cwd + "/test.txt"
 
 class FsTests: XCTestCase {
+    static var allTests: [(String, FsTests -> () throws -> Void)] {
+        return [
+            ("testReadFile", testReadFile),
+            ("testWriteFile", testWriteFile),
+            ("testAppendFile", testAppendFile),
+            ("testExists", testExists),
+            ("testRead", testRead),
+            ("testWrite", testWrite),
+            ("testReadAndWrite", testReadAndWrite),
+            ("testTruncateAndWrite", testTruncateAndWrite),
+            ("testAppend", testAppend),
+            ("testStat", testStat),
+            ("testStat", testFtell),
+            ("testErrorFd", testErrorFd)
+        ]
+    }
 
     func prepare() {
         unlink(targetFile)
@@ -52,8 +47,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            
-            Loop.defaultLoop.run()
         }
     }
 
@@ -61,7 +54,6 @@ class FsTests: XCTestCase {
         unlink(targetFile)
     }
 
-    #if os(OSX)
     override func setUp() {
         prepare()
     }
@@ -69,15 +61,6 @@ class FsTests: XCTestCase {
     override func tearDown(){
         cleanup()
     }
-    #else
-    func setUp() {
-        prepare()
-    }
-
-    func tearDown(){
-        cleanup()
-    }
-    #endif
     
     func testReadFile(){
         waitUntil(description: "readFile") { done in
@@ -87,7 +70,6 @@ class FsTests: XCTestCase {
                 }
                 done()
             }
-            Loop.defaultLoop.run()
         }
     }
 
@@ -109,7 +91,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -125,7 +106,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -144,7 +124,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -184,8 +163,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            
-            Loop.defaultLoop.run()
         }
     }
 
@@ -243,7 +220,6 @@ class FsTests: XCTestCase {
                 }
                 done()
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -261,8 +237,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-
-            Loop.defaultLoop.run()
         }
     }
     
@@ -334,8 +308,6 @@ class FsTests: XCTestCase {
                 }
                 done()
             }
-            
-            Loop.defaultLoop.run()
         }
     }
     
@@ -362,7 +334,6 @@ class FsTests: XCTestCase {
                     }
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -392,7 +363,6 @@ class FsTests: XCTestCase {
                 }
                 done()
             }
-            Loop.defaultLoop.run()
         }
     }
 
@@ -405,7 +375,6 @@ class FsTests: XCTestCase {
                     done()
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
     
@@ -459,7 +428,6 @@ class FsTests: XCTestCase {
                 }
                 done()
             }
-            Loop.defaultLoop.run()
         }
     }
 }

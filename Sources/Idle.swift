@@ -9,10 +9,10 @@
 import CLibUv
 
 private func idle_cb(handle: UnsafeMutablePointer<uv_idle_t>) {
-    let ctx = UnsafeMutablePointer<IdleContext>(handle.memory.data)
-    if ctx.memory.queues.count <= 0 { return }
-    let lastIndex = ctx.memory.queues.count - 1
-    let queue = ctx.memory.queues.removeAtIndex(lastIndex)
+    let ctx = UnsafeMutablePointer<IdleContext>(handle.pointee.data)
+    if ctx.pointee.queues.count <= 0 { return }
+    let lastIndex = ctx.pointee.queues.count - 1
+    let queue = ctx.pointee.queues.remove(at: lastIndex)
     queue()
 }
 
@@ -28,15 +28,15 @@ public class Idle {
     public private(set) var isStarted = false
     
     public init(loop: Loop = Loop.defaultLoop){
-        handle = UnsafeMutablePointer<uv_idle_t>.alloc(sizeof(uv_idle_t))
-        ctx = UnsafeMutablePointer<IdleContext>.alloc(1)
-        ctx.initialize(IdleContext())
-        handle.memory.data = UnsafeMutablePointer(ctx)
+        handle = UnsafeMutablePointer<uv_idle_t>(allocatingCapacity: sizeof(uv_idle_t))
+        ctx = UnsafeMutablePointer<IdleContext>(allocatingCapacity: 1)
+        ctx.initialize(with: IdleContext())
+        handle.pointee.data = UnsafeMutablePointer(ctx)
         uv_idle_init(loop.loopPtr, handle)
     }
     
     public func append(queue: () -> ()){
-        ctx.memory.queues.append(queue)
+        ctx.pointee.queues.append(queue)
     }
     
     public func start(){
@@ -46,9 +46,9 @@ public class Idle {
     
     public func stop(){
         uv_idle_stop(handle)
-        handle.memory.data.destroy()
-        handle.memory.data.dealloc(1)
-        handle.destroy()
-        handle.dealloc(sizeof(uv_idle_t))
+        handle.pointee.data.deinitialize()
+        handle.pointee.data.deallocateCapacity(1)
+        handle.deinitialize()
+        handle.deallocateCapacity(sizeof(uv_idle_t))
     }
 }

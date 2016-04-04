@@ -17,13 +17,13 @@ import CLibUv
  */
 public enum ReadStreamResult {
     case Data(Buffer)
-    case Error(ErrorType)
+    case Error(ErrorProtocol)
     case EOF
 }
 
 private func destroy_shoutdown_req(req: UnsafeMutablePointer<uv_shutdown_t>){
-    req.destroy()
-    req.dealloc(sizeof(uv_shutdown_t))
+    req.deinitialize()
+    req.deallocateCapacity(sizeof(uv_shutdown_t))
 }
 
 public enum SocketState {
@@ -39,7 +39,7 @@ public class Stream: Handle {
      Returns true if the pipe is ipc, 0 otherwise.
     */
     public var ipcEnable: Bool {
-        return pipe.memory.ipc == 1
+        return pipe.pointee.ipc == 1
     }
     
     /**
@@ -106,10 +106,10 @@ public class Stream: Handle {
             self.onShutDown = onShutDown
         }
         
-        let req = UnsafeMutablePointer<uv_shutdown_t>.alloc(sizeof(uv_shutdown_t))
-        req.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        let req = UnsafeMutablePointer<uv_shutdown_t>(allocatingCapacity: sizeof(uv_shutdown_t))
+        req.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         uv_shutdown(req, streamPtr) { req, status in
-            let stream = unsafeBitCast(req.memory.data, Stream.self)
+            let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
             stream.onShutDown()
             destroy_shoutdown_req(req)
         }

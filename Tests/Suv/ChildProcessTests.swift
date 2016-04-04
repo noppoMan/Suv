@@ -9,27 +9,21 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension ChildProcessTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                ("testSpawn", testSpawn)
-            ]
-        }
-    }
-#endif
-
 class ChildProcessTests: XCTestCase {
+    static var allTests: [(String, ChildProcessTests -> () throws -> Void)] {
+        return [
+            ("testSpawn", testSpawn)
+        ]
+    }
+    
     func testSpawn(){
         waitUntil(description: "spawn") { done in
             let ls = try! ChildProcess.spawn("ls", ["-la", "/usr/local"])
             
-            ls.onExit {
-                XCTAssertEqual(ls.status, 0)
+            ls.onExit { status in
+                XCTAssertEqual(status, 0)
                 done()
             }
-            
-            Loop.defaultLoop.run()
         }
     }
 }

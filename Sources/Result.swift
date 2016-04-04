@@ -18,7 +18,7 @@ public enum Result {
     /**
      Will be called when processing is failed
      */
-    case Error(ErrorType)
+    case Error(ErrorProtocol)
 }
 
 /**
@@ -33,5 +33,5 @@ public enum GenericResult<T> {
     /**
      Will be called when processing is failed
      */
-    case Error(ErrorType)
+    case Error(ErrorProtocol)
 }

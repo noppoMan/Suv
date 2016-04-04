@@ -19,7 +19,7 @@ import CLibUv
 public enum FsReadResult {
     case Data(Buffer)
     case End(Int)
-    case Error(ErrorType)
+    case Error(ErrorProtocol)
 }
 
 
@@ -83,12 +83,12 @@ internal class FileReader {
 
 private func readNext(context: FileReaderContext){
     
-    let readReq = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+    let readReq = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
     
-    var buf = [Int8](count: numOfBytes, repeatedValue: 0)
+    var buf = [Int8](repeating: 0, count: numOfBytes)
     context.buf = uv_buf_init(&buf, UInt32(numOfBytes))
     
-    readReq.memory.data = retainedVoidPointer(context)
+    readReq.pointee.data = retainedVoidPointer(context)
     
     withUnsafePointer(&context.buf!) {
         let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), $0, UInt32(context.buf!.len), context.bytesRead) { req in
@@ -109,23 +109,23 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
         fs_req_cleanup(req)
     }
     
-    let context: FileReaderContext = releaseVoidPointer(req.memory.data)!
+    let context: FileReaderContext = releaseVoidPointer(req.pointee.data)!
     
-    if(req.memory.result < 0) {
-        let e = SuvError.UVError(code: Int32(req.memory.result))
+    if(req.pointee.result < 0) {
+        let e = SuvError.UVError(code: Int32(req.pointee.result))
         return context.onRead(.Error(e))
     }
     
-    if(req.memory.result == 0) {
+    if(req.pointee.result == 0) {
         return context.onRead(.End(Int(context.bytesRead)))
     }
     
-    context.bytesRead += req.memory.result
+    context.bytesRead += req.pointee.result
     
     if context.bufferd {
         var buf = Buffer()
         let bytes = UnsafePointer<UInt8>(context.buf!.base)
-        for i in 0.stride(to: req.memory.result, by: 1) {
+        for i in stride(from: 0, to: req.pointee.result, by: 1) {
             buf.append(bytes[i])
         }
         context.onRead(.Data(buf))

@@ -9,20 +9,16 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension CryptoTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-               ("testHashSync", testHashSync),
-               ("testHash", testHash),
-               ("testRandomBytesSync", testRandomBytesSync),
-               ("testRandomBytes", testRandomBytes)
-            ]
-        }
-    }
-#endif
-
 class CryptoTests: XCTestCase {
+    static var allTests: [(String, CryptoTests -> () throws -> Void)] {
+        return [
+            ("testHashSync", testHashSync),
+            ("testHash", testHash),
+            ("testRandomBytesSync", testRandomBytesSync),
+            ("testRandomBytes", testRandomBytes)
+        ]
+    }
+    
     var context: [[Any]] {
         let md5 = Crypto(.MD5)
         let sha1 = Crypto(.SHA1)
@@ -70,8 +66,6 @@ class CryptoTests: XCTestCase {
             seriesTask(tasks) { err in
                 done()
             }
-            
-            Loop.defaultLoop.run()
         }
     }
     
@@ -94,7 +88,6 @@ class CryptoTests: XCTestCase {
                     XCTFail("\(err)")
                 }
             }
-            Loop.defaultLoop.run()
         }
     }
 }

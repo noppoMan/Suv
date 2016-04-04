@@ -1,184 +1,133 @@
+// Base64.swift
 //
-//  Base64.swift
-//  Suv
+// The MIT License (MIT)
 //
-//  Created by Yuki Takei on 2/6/16.
-//  Copyright © 2016 MikeTOKYO. All rights reserved.
+// Copyright (c) 2015 Zewo
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-private class Base64Encoder {
-    
-    enum Step { case A, B, C }
-    
-    static let paddingChar: UInt8 = 0x3D // =
-    static let newlineChar: UInt8 = 0x0A // \n
-    
-    let chars: [UnicodeScalar]
-    
-    var step: Step = .A
-    var result: UInt8 = 0
-    
-    var charsPerLine: Int?
-    var stepcount: Int = 0
-    
-    let bytes: [UInt8]
-    
-    var offset = 0
-    var output: [UInt8] = []
-    
-    init(bytes: [UInt8], charsPerLine: Int? = nil, specialChars: String? = nil) {
-        self.charsPerLine = charsPerLine
-        self.bytes = bytes
-        self.chars = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".unicodeScalars) + Array((specialChars ?? "+/").unicodeScalars)
-        guard bytes.count > 0 else { return }
-        encodeBlock()
-    }
-    
-    func encodeValue(value: UInt8) -> UInt8 {
-        guard value <= 64 else { return Base64Encoder.paddingChar }
-        return UInt8(chars[Int(value)].value)
-    }
-    
-    func encodeBlock() {
-        let fragment = bytes[offset]
-        offset+=1
+public struct Base64 {
+    public static func decode(string: String) throws -> Buffer {
+        let ascii: [UInt8] = [
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 62, 64, 63,
+            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 64, 64, 64, 64, 64, 64,
+            64, 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14,
+            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 64, 64, 64, 64, 63,
+            64, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+        ]
         
-        switch step {
-        case .A:
-            result = (fragment & 0x0fc) >> 2
-            output.append(encodeValue(result))
-            result = (fragment & 0x003) << 4
-            step = .B
-        case .B:
-            result |= (fragment & 0x0f0) >> 4
-            output.append(encodeValue(result))
-            result = (fragment & 0x00f) << 2
-            step = .C
-        case .C:
-            result |= (fragment & 0x0c0) >> 6
-            output.append(encodeValue(result))
-            result  = (fragment & 0x03f) >> 0
-            output.append(encodeValue(result))
-            if let charsPerLine = self.charsPerLine {
-                stepcount+=1
-                if stepcount == charsPerLine/4 {
-                    output.append(Base64Encoder.newlineChar)
-                    stepcount = 0
-                }
+        var decoded = Buffer()
+        var unreadBytes = 0
+        
+        for character in string.utf8 {
+            if ascii[Int(character)] > 63 {
+                break
             }
-            step = .A
+            
+            unreadBytes += 1
         }
         
-        if offset < bytes.count {
-            encodeBlock()
-        } else {
-            encodeBlockEnd()
-        }
-    }
-    
-    func encodeBlockEnd() {
-        switch step {
-        case .A:
-            break
-        case .B:
-            output.append(encodeValue(result))
-            output.append(Base64Encoder.paddingChar)
-            output.append(Base64Encoder.paddingChar)
-        case .C:
-            output.append(encodeValue(result))
-            output.append(Base64Encoder.paddingChar)
-        }
-        if let _ = self.charsPerLine {
-            output.append(Base64Encoder.newlineChar)
-        }
-    }
-    
-}
-
-private class Base64Decoder {
-    
-    enum Step { case A, B, C, D }
-    
-    static let decoding: [Int8] = [62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
-    
-    static func decodeValue(value: UInt8) -> Int8 {
-        let tmp = Int(value - 43)
-        guard tmp >= 0 && tmp < Base64Decoder.decoding.count else { return -1 }
-        return Base64Decoder.decoding[tmp]
-    }
-    
-    var step: Step = .A
-    
-    let bytes: [UInt8]
-    var offset = 0
-    
-    var output: [UInt8]
-    var outputOffset = 0
-    
-    init(bytes: [UInt8]) {
-        self.bytes = bytes
-        self.output = [UInt8](count: bytes.count, repeatedValue: 0)
-        guard bytes.count > 0 else { return }
-        decodeBlock()
-    }
-    
-    func decodeBlock() {
-        var tmpFragment: Int8
-        repeat {
-            guard offset < bytes.count else { return }
-            let byte = bytes[offset]
-            offset+=1
-            tmpFragment = Base64Decoder.decodeValue(byte)
-        } while (tmpFragment < 0);
-        let fragment = UInt8(bitPattern: tmpFragment)
-        
-        switch step {
-        case .A:
-            output[outputOffset]	 = (fragment & 0x03f) << 2
-            step = .B
-        case .B:
-            output[outputOffset]	|= (fragment & 0x030) >> 4
-            outputOffset+=1
-            output[outputOffset]	 = (fragment & 0x00f) << 4
-            step = .C
-        case .C:
-            output[outputOffset]	|= (fragment & 0x03c) >> 2
-            outputOffset+=1
-            output[outputOffset]	 = (fragment & 0x003) << 6
-            step = .D
-        case .D:
-            output[outputOffset]	|= (fragment & 0x03f)
-            outputOffset+=1
-            step = .A
+        func byte(index: Int) -> Int {
+            return Int(Array(string.utf8)[index])
         }
         
-        decodeBlock()
-    }
-}
-
-/**
- Base64 Encoder/Decoder
- */
-public final class Base64 {
-    
-    /**
-     Encode buffered string to base64
-     
-     - parameter data: Buffer
-    */
-    public static func encodedString(data: Buffer, charsPerLine: Int? = nil, specialChars: String? = nil) -> String? {
-        let encoder = Base64Encoder(bytes: data.bytes, charsPerLine: charsPerLine, specialChars: specialChars)
-        return Buffer(encoder.output).toString()
-    }
-    
-    /**
-     Decode buffered base64 string
-     
-     - parameter data: Buffer
-     */
-    public static func decodedString(data: Buffer) -> String? {
-        let decoder = Base64Decoder(bytes: data.bytes)
-        return Buffer(decoder.output).toString()
+        // let encodedBytes = string.utf8.map { Int($0) }
+        var index = 0
+        
+        while unreadBytes > 4 {
+            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+            index += 4
+            unreadBytes -= 4
+        }
+        
+        if unreadBytes > 1 {
+            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+        }
+        
+        if unreadBytes > 2 {
+            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+        }
+        
+        if unreadBytes > 3 {
+            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+        }
+        
+        return decoded
     }
     
+    public static func encode(data: Buffer, specialChars: String = "+/", paddingChar: Character? = "=") throws -> String {
+        
+        let base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + specialChars
+        var encoded: String = ""
+        
+        func appendCharacterFromBase(character: Int) {
+            encoded.append(base64[base64.startIndex.advanced(by: character)])
+        }
+        
+        func byte(index: Int) -> Int {
+            return  Int(data.bytes[index])
+        }
+        
+        let decodedBytes = data.bytes.map { Int($0) }
+        
+        var i = 0
+        
+        while i < decodedBytes.count - 2 {
+            appendCharacterFromBase(( byte(i) >> 2) & 0x3F)
+            appendCharacterFromBase(((byte(i)       & 0x3) << 4) | ((byte(i + 1) & 0xF0) >> 4))
+            appendCharacterFromBase(((byte(i + 1)   & 0xF) << 2) | ((byte(i + 2) & 0xC0) >> 6))
+            appendCharacterFromBase(  byte(i + 2)   & 0x3F)
+            i += 3
+        }
+        
+        if i < decodedBytes.count {
+            appendCharacterFromBase((byte(i) >> 2) & 0x3F)
+            
+            if i == decodedBytes.count - 1 {
+                appendCharacterFromBase(((byte(i) & 0x3) << 4))
+                if let paddingChar = paddingChar {
+                    encoded.append(paddingChar)
+                }
+            } else {
+                appendCharacterFromBase(((byte(i)     & 0x3) << 4) | ((byte(i + 1) & 0xF0) >> 4))
+                appendCharacterFromBase(((byte(i + 1) & 0xF) << 2))
+            }
+            
+            if let paddingChar = paddingChar {
+                encoded.append(paddingChar)
+            }
+        }
+        
+        return encoded
+    }
 }

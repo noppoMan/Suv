@@ -18,7 +18,7 @@ public enum SuvErrorMessage: String {
 /**
  Common Error enum for Suv
  */
-public enum SuvError: ErrorType, CustomStringConvertible {
+public enum SuvError: ErrorProtocol, CustomStringConvertible {
     // Error from libuv's errorno
     case UVError(code: Int32)
     
@@ -78,9 +78,13 @@ extension SuvError {
         case .FileSystemError(let message):
             return message.rawValue
         case .OpenSSLError(let code):
-            var buf = [Int8](count: 128, repeatedValue: 0)
+            var buf = [Int8](repeating: 0, count: 128)
             ERR_error_string_n(code, &buf, 128)
+#if os(Linux)
             return String(CString: &buf, encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
+#else
+            return String(utf8String: &buf) ?? "UNKNOWN"
+#endif
         }
     }
     

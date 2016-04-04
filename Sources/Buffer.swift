@@ -34,7 +34,7 @@ public struct Buffer {
      Initialize with UInt8 Array bytes
      */
     public init(_ bytes: [UInt8]){
-        self.bytes.appendContentsOf(bytes)
+        self.bytes.append(contentsOf: bytes)
     }
     
     /**
@@ -50,7 +50,7 @@ public struct Buffer {
      - paramater size: Size for initialize
      */
     public init(size: Int) {
-        for _ in 0.stride(to: size, by: 1) {
+        for _ in stride(from: 0, to: size, by: 1) {
             self.bytes.append(0)
         }
         assert(size == self.bytes.count)
@@ -122,7 +122,7 @@ public struct Buffer {
      */
     public mutating func append(bytes: UnsafePointer<UInt8>, length: Int) {
         var byteArray: [UInt8] = []
-        for i in 0.stride(to: length, by: 1) {
+        for i in stride(from: 0, to: length, by: 1) {
             byteArray.append(bytes[i])
         }
         self.append(byteArray)
@@ -144,28 +144,30 @@ extension Buffer {
 
     private func toStringWithEncoding(encoding: Encoding) -> String? {
         switch encoding {
-        case .Base64:    
-            return Base64.encodedString(self)
+        case .Base64:
+            do {
+                return try Base64.encode(self)
+            } catch {
+                return nil
+            }
         
         case .Hex:
-            return self.bytes.map { String(NSString(format:"%02hhx", $0)) }.joinWithSeparator("")
+            return self.bytes.map { String(NSString(format:"%02hhx", $0)) }.joined(separator: "")
             
         // UTF8
         default:
             var encodedString = ""
             var decoder = UTF8()
-            var generator = self.bytes.generate()
-            var decoded: UnicodeDecodingResult
-            repeat {
-                decoded = decoder.decode(&generator)
-
-                switch decoded {
-                case .Result(let unicodeScalar):
-                    encodedString.append(unicodeScalar)
-                default:
-                    break
+            var generator = self.bytes.makeIterator()
+            
+            loop: while true {
+                switch decoder.decode(&generator) {
+                case .scalarValue(let char): encodedString.append(char)
+                case .emptyInput: break loop
+                case .error: break loop
                 }
-            } while (!decoded.isEmptyInput())
+            }
+            
             return encodedString
         }
     }
