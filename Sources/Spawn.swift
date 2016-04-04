@@ -105,9 +105,7 @@ private func exit_cb(req: UnsafeMutablePointer<uv_process_t>, status: Int64, sig
 
     let context = Unmanaged<SpawnedProcess>.fromOpaque(COpaquePointer(req.memory.data)).takeRetainedValue()
 
-    context.signal = signal
-    context.status = status
-    context.onExitCallback()
+    context.onExitCallback(status)
 }
 
 internal class Spawn {
