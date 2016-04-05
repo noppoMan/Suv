@@ -17,23 +17,12 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension PipeTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                       ("testPipeConnect", testPipeConnect)
-            ]
-        }
-    }
-#endif
-
 // Simple Echo Server
 private func launchServer() -> PipeServer {
-    let server = PipeServer()
-    
+    let server = PipeServer()    
     try! server.bind("/tmp/suv-test.sock")
     
-    try! server.listen(128) { [unowned server] result in
+    try! server.listen(128) { result in
         if case .Error(let error) = result {
             XCTFail("\(error)")
             return server.close()
@@ -57,6 +46,11 @@ private func launchServer() -> PipeServer {
 }
 
 class PipeTests: XCTestCase {
+    static var allTests: [(String, PipeTests -> () throws -> Void)] {
+        return [
+            ("testPipeConnect", testPipeConnect)
+        ]
+    }
     
     func testPipeConnect(){
         waitUntil(5, description: "PipeServer Connect") { done in
@@ -64,7 +58,7 @@ class PipeTests: XCTestCase {
             
             let client = Pipe()
             
-            client.connect("/tmp/suv-test.sock") { [unowned client] res in
+            client.connect("/tmp/suv-test.sock") { res in
                 client.write(Buffer("Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
@@ -77,8 +71,6 @@ class PipeTests: XCTestCase {
                     }
                 }
             }
-            
-            Loop.defaultLoop.run()
         }
     }
 }

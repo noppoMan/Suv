@@ -50,8 +50,8 @@ public final class PipeServer: ServerType {
     public init(loop: Loop = Loop.defaultLoop, ipcEnable: Bool = false) {
         self.loop = loop
         self.socket = Pipe(loop: loop, ipcEnable: ipcEnable)
-        self.context = UnsafeMutablePointer<ServerContext>.alloc(1)
-        self.context.initialize(ServerContext(onConnection: {_ in}))
+        self.context = UnsafeMutablePointer<ServerContext>(allocatingCapacity: 1)
+        self.context.initialize(with: ServerContext(onConnection: {_ in}))
     }
     
     /**
@@ -89,19 +89,19 @@ public final class PipeServer: ServerType {
      - parameter backlog: The maximum number of tcp established connection that server can handle
      */
     public func listen(backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws {
-        self.context.memory.onConnection = onConnection
+        self.context.pointee.onConnection = onConnection
         if self.sockName == nil {
             throw SuvError.RuntimeError(message: "Could not call listen without bind sock")
         }
         
         let sig = Signal(loop: loop)
         sig.start(SIGINT) { [unowned self] _ in
-            let req = UnsafeMutablePointer<uv_fs_t>.alloc(sizeof(uv_fs_t))
+            let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
             
             let beforeExit = {
                 sig.stop()
-                req.destroy()
-                req.dealloc(sizeof(uv_fs_t))
+                req.deinitialize()
+                req.deallocateCapacity(sizeof(uv_fs_t))
             }
             
             // Unlink sock file
@@ -116,17 +116,17 @@ public final class PipeServer: ServerType {
         }
         
         let stream = UnsafeMutablePointer<uv_stream_t>(socket.pipe)
-        stream.memory.data = UnsafeMutablePointer(context)
+        stream.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(stream, Int32(backlog)) { stream, status in
-            let context = UnsafeMutablePointer<ServerContext>(stream.memory.data)
+            let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data)
             
             guard status >= 0 else {
                 let err = SuvError.UVError(code: status)
-                return context.memory.onConnection(.Error(err))
+                return context.pointee.onConnection(.Error(err))
             }
             
-            context.memory.onConnection(.Success(nil))
+            context.pointee.onConnection(.Success(nil))
         }
         
         if result < 0 {
@@ -145,7 +145,7 @@ public final class PipeServer: ServerType {
     }
     
     deinit {
-        self.context.destroy()
-        self.context.dealloc(1)
+        self.context.deinitialize()
+        self.context.deallocateCapacity(1)
     }
 }

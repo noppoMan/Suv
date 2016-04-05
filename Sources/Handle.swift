@@ -74,21 +74,21 @@ public class Handle {
      Returne true if handle_type is TCP
     */
     public var typeIsTcp: Bool {
-        return handlePtr.memory.type == UV_TCP
+        return handlePtr.pointee.type == UV_TCP
     }
     
     /**
      Returne true if handle_type is UDP
      */
     public var typeIsUdp: Bool {
-        return handlePtr.memory.type == UV_UDP
+        return handlePtr.pointee.type == UV_UDP
     }
     
     /**
      Returne true if handle_type is UV_NAMED_PIPE
      */
     public var typeIsNamedPipe: Bool {
-        return handlePtr.memory.type == UV_NAMED_PIPE
+        return handlePtr.pointee.type == UV_NAMED_PIPE
     }
     
 }

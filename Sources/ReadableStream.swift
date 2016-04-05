@@ -57,15 +57,15 @@ public class ReadableStream: Stream {
             callback(result)
         }
         
-        streamPtr.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
             defer {
-                buf.memory.base.destroy()
-                buf.memory.base.dealloc(nread)
+                buf.pointee.base.deinitialize()
+                buf.pointee.base.deallocateCapacity(nread)
             }
             
-            let stream = unsafeBitCast(queue.memory.data, ReadableStream.self)
+            let stream = unsafeBitCast(queue.pointee.data, to: ReadableStream.self)
             
             let result: GenericResult<Pipe>
             if (nread == Int(UV_EOF.rawValue)) {
@@ -96,15 +96,15 @@ public class ReadableStream: Stream {
         }
         
         onRead = callback
-        streamPtr.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
             defer {
-                buf.memory.base.destroy()
-                buf.memory.base.dealloc(nread)
+                buf.pointee.base.deinitialize()
+                buf.pointee.base.deallocateCapacity(nread)
             }
             
-            let stream = unsafeBitCast(stream.memory.data, ReadableStream.self)
+            let stream = unsafeBitCast(stream.pointee.data, to: ReadableStream.self)
             
             let data: ReadStreamResult
             if (nread == Int(UV_EOF.rawValue)) {
@@ -113,7 +113,7 @@ public class ReadableStream: Stream {
                 data = .Error(SuvError.UVError(code: Int32(nread)))
             } else {
                 var buffer = Buffer()
-                buffer.append(UnsafePointer<UInt8>(buf.memory.base), length: nread)
+                buffer.append(UnsafePointer<UInt8>(buf.pointee.base), length: nread)
                 data = .Data(buffer)
             }
             

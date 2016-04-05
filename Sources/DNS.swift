@@ -39,8 +39,8 @@ private struct DnsContext {
 }
 
 private func destroy_req(req: UnsafeMutablePointer<uv_getaddrinfo_t>) {
-    req.destroy()
-    req.dealloc(sizeof(uv_getaddrinfo_t))
+    req.deinitialize()
+    req.deallocateCapacity(sizeof(uv_getaddrinfo_t))
 }
 
 // TODO Should implement with uv_queue_work or uv_getnameinfo
@@ -49,8 +49,8 @@ func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> Addr
     var host : String?
     var service : String?
     
-    var hostBuffer = [CChar](count: Int(NI_MAXHOST), repeatedValue: 0)
-    var serviceBuffer = [CChar](count: Int(NI_MAXSERV), repeatedValue: 0)
+    var hostBuffer = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+    var serviceBuffer = [CChar](repeating: 0, count: Int(NI_MAXSERV))
     
     let r = getnameinfo(
         addr,
@@ -63,8 +63,8 @@ func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> Addr
     )
     
     if r == 0 {
-        host = String.fromCString(hostBuffer)
-        service = String.fromCString(serviceBuffer)
+        host = String(validatingUTF8: hostBuffer)
+        service = String(validatingUTF8: serviceBuffer)
     }
     
     if let h = host, let s = service {
@@ -78,13 +78,13 @@ extension addrinfo {
     func walk(f: addrinfo -> Void) -> Void {
         f(self)
         if self.ai_next != nil {
-            self.ai_next.memory.walk(f)
+            self.ai_next.pointee.walk(f)
         }
     }
 }
 
 func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, res: UnsafeMutablePointer<addrinfo>){
-    let context: DnsContext = releaseVoidPointer(req.memory.data)!
+    let context: DnsContext = releaseVoidPointer(req.pointee.data)!
     
     defer {
         freeaddrinfo(res)
@@ -98,7 +98,7 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
     var addrInfos = [AddrInfo]()
     
     
-    res.memory.walk {
+    res.pointee.walk {
         if $0.ai_next != nil {
             let addrInfo = sockaddr_description($0.ai_addr, length: $0.ai_addrlen)
             if let ai = addrInfo {
@@ -123,11 +123,11 @@ public class DNS {
      - parameter port: The port number(String) to resolve
     */
     public static func getAddrInfo(loop: Loop = Loop.defaultLoop, fqdn: String, port: String? = nil, completion: GenericResult<[AddrInfo]> -> ()){
-        let req = UnsafeMutablePointer<uv_getaddrinfo_t>.alloc(sizeof(uv_getaddrinfo_t))
+        let req = UnsafeMutablePointer<uv_getaddrinfo_t>(allocatingCapacity: sizeof(uv_getaddrinfo_t))
         
         let context = DnsContext(completion: completion)
         
-        req.memory.data = retainedVoidPointer(context)
+        req.pointee.data = retainedVoidPointer(context)
         
         let r: Int32
         if let port = port {

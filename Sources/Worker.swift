@@ -6,7 +6,7 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
-import CLibUv
+import Foundation
 
 /**
  Enum that are used in ipc
@@ -90,11 +90,16 @@ struct InternalMessageParser {
             return
         }
         
-        let value = message.substringToIndex(message.startIndex.advancedBy(length))
+        let to = message.startIndex.advanced(by: length)
+#if os(Linux)
+        let value = message.substringToIndex(to)
+#else
+        let value = message.substring(to: to)
+#endif
         
         let event: InterProcessEvent
         
-        switch cmd.lowercaseString {
+        switch cmd.lowercased() {
         case "online":
             event = .Online
         case "exit":
@@ -108,9 +113,14 @@ struct InternalMessageParser {
         }
     
         self.completion(event)
-        
-        // process next parsing
-        let nextMessage = message.substringFromIndex(message.startIndex.advancedBy(length))
+      
+        // Go next parsing
+        let from = message.startIndex.advanced(by: length)
+#if os(Linux)
+        let nextMessage = message.substringFromIndex(from)
+#else
+        let nextMessage = message.substring(from: from)
+#endif
         self.reset()
         
         if nextMessage.isEmpty {
@@ -173,9 +183,9 @@ public class Worker: Equatable {
         
         // Register onExit
         process.onExit { [unowned self] status in
-            for (index, element) in Cluster.workers.enumerate() {
+            for (index, element) in Cluster.workers.enumerated() {
                 if(element == self) {
-                    Cluster.workers.removeAtIndex(index)
+                    Cluster.workers.remove(at:index)
                     break
                 }
             }
@@ -218,8 +228,8 @@ extension Worker {
         }
         
         self.onEventCallback = callback
-        
-        readChannel?.on { [unowned self] ev in
+
+        readChannel?.on { ev in
             callback(ev)
         }
     }

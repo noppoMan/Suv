@@ -45,16 +45,16 @@ public extension Process {
      Current execPath including file name
     */
     public static var execPath: String {
-        let exepath = UnsafeMutablePointer<Int8>.alloc(Int(PATH_MAX))
+        let exepath = UnsafeMutablePointer<Int8>(allocatingCapacity: Int(PATH_MAX))
         defer {
-            exepath.destroy()
-            exepath.dealloc(Int(PATH_MAX))
+            exepath.deinitialize()
+            exepath.deallocateCapacity(Int(PATH_MAX))
         }
         
         var size = Int(PATH_MAX)
         uv_exepath(exepath, &size)
         
-        return String.fromCString(exepath)!
+        return String(validatingUTF8: exepath)!
     }
     
     /**

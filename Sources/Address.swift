@@ -19,7 +19,7 @@ import CLibUv
  Currently only supported ipv4
  */
 public class Address {
-    private var sockAddrInPtr = UnsafeMutablePointer<sockaddr_in>.alloc(1)
+    private var sockAddrInPtr = UnsafeMutablePointer<sockaddr_in>(allocatingCapacity: 1)
     
     public private(set) var host: String
     
@@ -42,7 +42,7 @@ public class Address {
     }
     
     deinit {
-        sockAddrInPtr.destroy()
-        sockAddrInPtr.dealloc(1)
+        sockAddrInPtr.deinitialize()
+        sockAddrInPtr.deallocateCapacity(1)
     }
 }

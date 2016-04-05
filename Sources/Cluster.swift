@@ -12,6 +12,17 @@ internal let workerIdKeyName = "SUV_WORKER_ID"
 
 private var workerId = 0
 
+private var onlined = false
+
+
+func exexOptions() -> [String] {
+    if Process.arguments.count > 1 {
+        return Array(Process.arguments[1..<Process.arguments.count])
+    }
+    
+    return []
+}
+
 /**
  Cluster handle type
  */
@@ -43,15 +54,12 @@ public class Cluster {
      The returned Worker will have an additional communication channel built-in that allows messages to be passed back and forth between the parent and child(Currently channel is implemented for only sharing connection)
      
      - parameter loop: Event loop
+     - parameter exexPath: Path for executable
+     - parameter execOpts: Options for executable
      - parameter silent: Boolean If true, stdin, stdout, and stderr of the child will be piped to the parent, otherwise they will be inherited from the parent
     */
-    public static func fork(
-        loop: Loop = Loop.defaultLoop,
-        exexPath: String? = nil,
-        execOpts: [String] = Array(Process.arguments[1..<Process.arguments.count]),
-        silent: Bool = true
+    public static func fork(loop: Loop = Loop.defaultLoop, exexPath: String? = nil, execOpts: [String] = exexOptions(), silent: Bool = true
     ) throws -> Worker {
-        
         var options = SpawnOptions()
         
         options.cwd = Process.cwd
@@ -79,7 +87,7 @@ public class Cluster {
         }
         
         // ipc channels
-        options.stdio.appendContentsOf([
+        options.stdio.append(contentsOf:[
             // For sending handle
             StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true)),
             

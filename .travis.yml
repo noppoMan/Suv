@@ -4,7 +4,7 @@ os:
 language: generic
 sudo: required
 dist: trusty
-osx_image: xcode7.2
+osx_image: xcode7.3
 addons:
   apt:
     packages:
@@ -13,7 +13,7 @@ addons:
     - libssl-dev
     - git
 env:
-  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-03-01-a
+  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-03-24-a
 before_install:
   # for osx
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
@@ -25,6 +25,10 @@ before_install:
 install:
   - eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/02090c7ede5a637b76e6df1710e83cd0bbe7dcdf/swiftenv-install.sh)"
 script:
+  # build test app
+  - git clone https://github.com/noppoMan/Suv-Test-App.git && cd Suv-Test-App && make debug
+
+  # test
   - cd $TRAVIS_BUILD_DIR
   - make debug
   - make test

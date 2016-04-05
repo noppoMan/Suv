@@ -32,7 +32,7 @@ public class Pipe: WritableStream {
     }
     
     public init(loop: Loop = Loop.defaultLoop, ipcEnable: Bool = false){
-        let pipe = UnsafeMutablePointer<uv_pipe_t>.alloc(sizeof(uv_pipe_t))
+        let pipe = UnsafeMutablePointer<uv_pipe_t>(allocatingCapacity: sizeof(uv_pipe_t))
         uv_pipe_init(loop.loopPtr, pipe, ipcEnable ? 1 : 0)
         super.init(pipe)
     }
@@ -65,12 +65,12 @@ public class Pipe: WritableStream {
      */
     public func connect(sockName: String, onConnect: GenericResult<ReadableStream> -> ()){
         self.onConnect = onConnect
-        let req = UnsafeMutablePointer<uv_connect_t>.alloc(sizeof(uv_connect_t))
+        let req = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
         
-        req.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        req.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
         uv_pipe_connect(req, pipe, sockName) { req, status in
-            let pipe = unsafeBitCast(req.memory.data, Pipe.self)
+            let pipe = unsafeBitCast(req.pointee.data, to: Pipe.self)
             if status < 0 {
                 let err = SuvError.UVError(code: status)
                 return pipe.onConnect(.Error(err))

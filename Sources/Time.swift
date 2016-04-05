@@ -112,56 +112,56 @@ public class Time: CustomStringConvertible {
      days since Sunday (from 0)
      */
     public var week: Int {
-        return Int(tmInfo.memory.tm_wday)
+        return Int(tmInfo.pointee.tm_wday)
     }
     
     /**
      years since 1900 (from 0)
      */
     public var year: Int {
-        return Int(tmInfo.memory.tm_year)
+        return Int(tmInfo.pointee.tm_year)
     }
     
     /**
      month of the year (from 0)
      */
     public var month: Int {
-        return Int(tmInfo.memory.tm_mon)
+        return Int(tmInfo.pointee.tm_mon)
     }
     
     /**
      day of the year (from 0)
      */
     public var yday: Int {
-        return Int(tmInfo.memory.tm_yday)
+        return Int(tmInfo.pointee.tm_yday)
     }
     
     /**
      day of the month (from 1)
      */
     public var day: Int {
-        return Int(tmInfo.memory.tm_mday)
+        return Int(tmInfo.pointee.tm_mday)
     }
     
     /**
      hour of the day (from 0)
      */
     public var hour: Int {
-        return Int(tmInfo.memory.tm_hour)
+        return Int(tmInfo.pointee.tm_hour)
     }
     
     /**
      minutes after the hour (from 0)
      */
     public var min: Int {
-        return Int(tmInfo.memory.tm_min)
+        return Int(tmInfo.pointee.tm_min)
     }
     
     /**
      seconds after the minute (from 0)
      */
     public var sec: Int {
-        return Int(tmInfo.memory.tm_sec)
+        return Int(tmInfo.pointee.tm_sec)
     }
     
     /**
@@ -169,7 +169,7 @@ public class Time: CustomStringConvertible {
      - parameter x: Number that want to add
      */
     public func addDay(x: Int) -> Time {
-        self.tmInfo.memory.tm_mday += Int32(x)
+        self.tmInfo.pointee.tm_mday += Int32(x)
         mktime(self.tmInfo)
         return self
     }
@@ -179,7 +179,7 @@ public class Time: CustomStringConvertible {
      - parameter x: Number that want to add
      */
     public func addHour(x: Int) -> Time {
-        self.tmInfo.memory.tm_hour += Int32(x)
+        self.tmInfo.pointee.tm_hour += Int32(x)
         mktime(self.tmInfo)
         return self
     }
@@ -189,7 +189,7 @@ public class Time: CustomStringConvertible {
      - parameter x: Number that want to add
      */
     public func addMin(x: Int) -> Time {
-        self.tmInfo.memory.tm_min += Int32(x)
+        self.tmInfo.pointee.tm_min += Int32(x)
         mktime(self.tmInfo)
         return self
     }
@@ -199,7 +199,7 @@ public class Time: CustomStringConvertible {
      - parameter x: Number that want to add
      */
     public func addSec(x: Int) -> Time {
-        self.tmInfo.memory.tm_sec += Int32(x)
+        self.tmInfo.pointee.tm_sec += Int32(x)
         mktime(self.tmInfo)
         return self
     }
@@ -288,8 +288,7 @@ public class Time: CustomStringConvertible {
      - parameter format: Number that want to add
      */
     public func format(format: String) -> String {
-        
-        var buffer = [Int8](count: length, repeatedValue: 0)
+        var buffer = [Int8](repeating: 0, count: length)
         strftime(&buffer, length, format, self.tmInfo)
         
         var buf = Buffer()

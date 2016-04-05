@@ -9,16 +9,15 @@
 import CLibUv
 
 let alloc_buffer: @convention(c) (UnsafeMutablePointer<uv_handle_t>, ssize_t, UnsafeMutablePointer<uv_buf_t>) -> Void = { (handle, suggestedSize, buf) in
-    buf.memory = uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize))
+    buf.pointee = uv_buf_init(UnsafeMutablePointer(allocatingCapacity: suggestedSize), UInt32(suggestedSize))
 }
 
 internal func close_handle<T>(req: UnsafeMutablePointer<T>){
     if uv_is_closing(UnsafeMutablePointer(req)) == 1 { return }
     
     uv_close(UnsafeMutablePointer<uv_handle_t>(req)) { handle in        
-        handle.destroy()
-        handle.dealloc(sizeof(uv_handle_t))
-        
+        handle.deinitialize()
+        handle.deallocateCapacity(sizeof(uv_handle_t))
     }
 }
 
@@ -30,9 +29,9 @@ internal func dict2ArrayWithEqualSeparator(dict: [String: String]) -> [String] {
     return envs
 }
 
-internal typealias SeriesCB = ((ErrorType?) -> ()) -> ()
+internal typealias SeriesCB = ((ErrorProtocol?) -> ()) -> ()
 
-internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorType?) -> Void) {
+internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Void) {
     if tasks.count == 0 {
         completion(nil)
         return
@@ -64,17 +63,17 @@ final class Box<A> {
 }
 
 func retainedVoidPointer<A>(x: A?) -> UnsafeMutablePointer<Void> {
-    guard let value = x else { return UnsafeMutablePointer() }
-    let unmanaged = Unmanaged.passRetained(Box(value))
-    return UnsafeMutablePointer(unmanaged.toOpaque())
+    guard let value = x else { return UnsafeMutablePointer<Void>(allocatingCapacity: 0) }
+    let unmanaged = OpaquePointer(bitPattern: Unmanaged.passRetained(Box(value)))
+    return UnsafeMutablePointer(unmanaged)
 }
 
 func releaseVoidPointer<A>(x: UnsafeMutablePointer<Void>) -> A? {
     guard x != nil else { return nil }
-    return Unmanaged<Box<A>>.fromOpaque(COpaquePointer(x)).takeRetainedValue().unbox
+    return Unmanaged<Box<A>>.fromOpaque(OpaquePointer(x)).takeRetainedValue().unbox
 }
 
 func unsafeFromVoidPointer<A>(x: UnsafeMutablePointer<Void>) -> A? {
     guard x != nil else { return nil }
-    return Unmanaged<Box<A>>.fromOpaque(COpaquePointer(x)).takeUnretainedValue().unbox
+    return Unmanaged<Box<A>>.fromOpaque(OpaquePointer(x)).takeUnretainedValue().unbox
 }

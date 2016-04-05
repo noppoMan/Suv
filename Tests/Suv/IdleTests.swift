@@ -9,17 +9,12 @@
 import XCTest
 @testable import Suv
 
-#if os(Linux)
-    extension IdleTests: XCTestCaseProvider {
-        var allTests: [(String, () throws -> Void)] {
-            return [
-                       ("testSetImmediate", testSetImmediate)
-            ]
-        }
-    }
-#endif
-
 class IdleTests: XCTestCase {
+    static var allTests: [(String, IdleTests -> () throws -> Void)] {
+        return [
+            ("testSetImmediate", testSetImmediate)
+        ]
+    }
     
     func testSetImmediate() {
         waitUntil(description: "Process.setImmediate") { done in
@@ -33,8 +28,6 @@ class IdleTests: XCTestCase {
             
             cnt += 1
             XCTAssertEqual(cnt, 1)
-            
-            Loop.defaultLoop.run()
         }
     }
 }
