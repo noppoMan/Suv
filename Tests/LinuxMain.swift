@@ -10,7 +10,6 @@ import XCTest
 @testable import SuvTestSuite
     
 XCTMain([
-    testCase(CryptoTests.allTests),
     testCase(ChildProcessTests.allTests),
     testCase(FsTests.allTests),
     testCase(TcpTests.allTests),
