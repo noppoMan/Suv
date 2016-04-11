@@ -136,9 +136,4 @@ public class Timer {
         unref()
         self.state = .End
     }
-    
-    deinit {
-        context.deinitialize()
-        context.deallocateCapacity(1)
-    }
 }
