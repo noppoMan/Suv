@@ -46,12 +46,9 @@
 		B6599BE61C73B1E800CD70A2 /* PipeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B622E6561C5FD0DA0042859C /* PipeServer.swift */; };
 		B6599BE71C73B1E800CD70A2 /* ServerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697FF2C1C5C7C8B00D14C3E /* ServerType.swift */; };
 		B6599BE81C73B1E800CD70A2 /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ED36EF1C65DEB2005F5986 /* Base64.swift */; };
-		B6599BE91C73B1E800CD70A2 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B662AEB31C65F82100994706 /* Crypto.swift */; };
-		B6599BEA1C73B1E800CD70A2 /* crypto_support.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FB922B1C664890002D941E /* crypto_support.swift */; };
 		B6599BEB1C73B1E800CD70A2 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6881F411C67D493004F34B1 /* Time.swift */; };
 		B6599BEC1C73B1E800CD70A2 /* OpenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */; };
 		B6599BED1C73B1E800CD70A2 /* FileStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6262E691C70D2E200917437 /* FileStat.swift */; };
-		B662AEB41C65F82100994706 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B662AEB31C65F82100994706 /* Crypto.swift */; };
 		B6635D1F1C555FB600D8EE19 /* ChildProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6635D1E1C555FB600D8EE19 /* ChildProcess.swift */; };
 		B66AFEE41C52AFB600D7609F /* FS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66AFEE31C52AFB600D7609F /* FS.swift */; };
 		B66AFEE61C52B15600D7609F /* FileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66AFEE51C52B15600D7609F /* FileWriter.swift */; };
@@ -77,7 +74,6 @@
 		B6CBB5141C74E97500F8FCB3 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBB5101C74E8B800F8FCB3 /* Result.swift */; };
 		B6E900621C5670E900795F6B /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E900611C5670E900795F6B /* Worker.swift */; };
 		B6E992CF1C89E2B700867A5D /* ChildProcessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E992B71C89E2AA00867A5D /* ChildProcessTests.swift */; };
-		B6E992D01C89E2B700867A5D /* CryptoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E992B81C89E2AA00867A5D /* CryptoTests.swift */; };
 		B6E992D11C89E2B700867A5D /* DNSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E992B91C89E2AA00867A5D /* DNSTests.swift */; };
 		B6E992D41C89E2B700867A5D /* FsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E992BC1C89E2AA00867A5D /* FsTests.swift */; };
 		B6E992D51C89E2B700867A5D /* IdleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E992BD1C89E2AA00867A5D /* IdleTests.swift */; };
@@ -95,7 +91,6 @@
 		B6F20B861C438C7300A270CF /* Tcp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F20B851C438C7300A270CF /* Tcp.swift */; };
 		B6F57F8B1C6F97DF00E9A7B5 /* OpenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */; };
 		B6F972101C74EB1D0010FAEB /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBB50E1C74E50800F8FCB3 /* DNS.swift */; };
-		B6FB922C1C664890002D941E /* crypto_support.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FB922B1C664890002D941E /* crypto_support.swift */; };
 		B6FD25A41C46C3D300A08245 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD25A31C46C3D300A08245 /* Buffer.swift */; };
 		B6FD25C01C46D58100A08245 /* SuvTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD25BF1C46D58100A08245 /* SuvTests.swift */; };
 		B6FD25C21C46D58100A08245 /* Suv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F20B661C438BFA00A270CF /* Suv.framework */; };
@@ -126,7 +121,6 @@
 		B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterTests.swift; sourceTree = "<group>"; };
 		B6395E361C821A9100DB3084 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		B65785C71C6F3866005B98FB /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
-		B662AEB31C65F82100994706 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		B6635D1E1C555FB600D8EE19 /* ChildProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildProcess.swift; sourceTree = "<group>"; };
 		B66AFEE31C52AFB600D7609F /* FS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FS.swift; sourceTree = "<group>"; };
 		B66AFEE51C52B15600D7609F /* FileWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWriter.swift; sourceTree = "<group>"; };
@@ -146,7 +140,6 @@
 		B6CBB5101C74E8B800F8FCB3 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		B6E900611C5670E900795F6B /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		B6E992B71C89E2AA00867A5D /* ChildProcessTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildProcessTests.swift; sourceTree = "<group>"; };
-		B6E992B81C89E2AA00867A5D /* CryptoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CryptoTests.swift; sourceTree = "<group>"; };
 		B6E992B91C89E2AA00867A5D /* DNSTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSTests.swift; sourceTree = "<group>"; };
 		B6E992BC1C89E2AA00867A5D /* FsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FsTests.swift; sourceTree = "<group>"; };
 		B6E992BD1C89E2AA00867A5D /* IdleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdleTests.swift; sourceTree = "<group>"; };
@@ -165,7 +158,6 @@
 		B6F20B811C438C6300A270CF /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		B6F20B851C438C7300A270CF /* Tcp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tcp.swift; sourceTree = "<group>"; };
 		B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenFlag.swift; sourceTree = "<group>"; };
-		B6FB922B1C664890002D941E /* crypto_support.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = crypto_support.swift; sourceTree = "<group>"; };
 		B6FD25A31C46C3D300A08245 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		B6FD25BD1C46D58100A08245 /* Suv.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Suv.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6FD25BF1C46D58100A08245 /* SuvTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuvTests.swift; sourceTree = "<group>"; };
@@ -205,7 +197,6 @@
 			isa = PBXGroup;
 			children = (
 				B6E992B71C89E2AA00867A5D /* ChildProcessTests.swift */,
-				B6E992B81C89E2AA00867A5D /* CryptoTests.swift */,
 				B6E992B91C89E2AA00867A5D /* DNSTests.swift */,
 				B6E992BC1C89E2AA00867A5D /* FsTests.swift */,
 				B6E992BD1C89E2AA00867A5D /* IdleTests.swift */,
@@ -281,8 +272,6 @@
 				B622E6561C5FD0DA0042859C /* PipeServer.swift */,
 				B697FF2C1C5C7C8B00D14C3E /* ServerType.swift */,
 				B6ED36EF1C65DEB2005F5986 /* Base64.swift */,
-				B662AEB31C65F82100994706 /* Crypto.swift */,
-				B6FB922B1C664890002D941E /* crypto_support.swift */,
 				B6881F411C67D493004F34B1 /* Time.swift */,
 				B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */,
 				B6262E691C70D2E200917437 /* FileStat.swift */,
@@ -417,7 +406,6 @@
 			files = (
 				B697FF2D1C5C7C8B00D14C3E /* ServerType.swift in Sources */,
 				B66AFEE61C52B15600D7609F /* FileWriter.swift in Sources */,
-				B662AEB41C65F82100994706 /* Crypto.swift in Sources */,
 				B6262E6A1C70D2E200917437 /* FileStat.swift in Sources */,
 				B6881F421C67D493004F34B1 /* Time.swift in Sources */,
 				B6BE3A3B1C5E7C0B005CE911 /* Signal.swift in Sources */,
@@ -439,7 +427,6 @@
 				B6CBB5111C74E8B800F8FCB3 /* Result.swift in Sources */,
 				B6781B611C5745D700497298 /* Pipe.swift in Sources */,
 				B61B0DE81C56AF54001C73D3 /* String.swift in Sources */,
-				B6FB922C1C664890002D941E /* crypto_support.swift in Sources */,
 				B6ECE5CD1C53647500D5D2C3 /* support.swift in Sources */,
 				B6E900621C5670E900795F6B /* Worker.swift in Sources */,
 				B6AE6D2E1C52C7F800E5192F /* SpawnedProcess.swift in Sources */,
@@ -468,7 +455,6 @@
 				B6FD25C01C46D58100A08245 /* SuvTests.swift in Sources */,
 				B6599BD51C73B1E800CD70A2 /* Buffer.swift in Sources */,
 				B6599BE61C73B1E800CD70A2 /* PipeServer.swift in Sources */,
-				B6599BE91C73B1E800CD70A2 /* Crypto.swift in Sources */,
 				B6CBB5141C74E97500F8FCB3 /* Result.swift in Sources */,
 				B6599BDE1C73B1E800CD70A2 /* Cluster.swift in Sources */,
 				B68A23941CB1912A00D75386 /* ReadableStream.swift in Sources */,
@@ -484,7 +470,6 @@
 				B63354DD1C88281B005EA8D9 /* Idle.swift in Sources */,
 				B6E992D61C89E2B700867A5D /* PipeTests.swift in Sources */,
 				B6599BD11C73B1E800CD70A2 /* SuvError.swift in Sources */,
-				B6599BEA1C73B1E800CD70A2 /* crypto_support.swift in Sources */,
 				B6599BDC1C73B1E800CD70A2 /* Spawn.swift in Sources */,
 				B6599BDB1C73B1E800CD70A2 /* SpawnedProcess.swift in Sources */,
 				B6599BE21C73B1E800CD70A2 /* Pipe.swift in Sources */,
@@ -509,7 +494,6 @@
 				B66C66531CB26A010066F97D /* ClusterTests.swift in Sources */,
 				B6599BD41C73B1E800CD70A2 /* RunMode.swift in Sources */,
 				B6E992D51C89E2B700867A5D /* IdleTests.swift in Sources */,
-				B6E992D01C89E2B700867A5D /* CryptoTests.swift in Sources */,
 				B6E992D71C89E2B700867A5D /* QueueWorkerTests.swift in Sources */,
 				B6599BD21C73B1E800CD70A2 /* Address.swift in Sources */,
 			);

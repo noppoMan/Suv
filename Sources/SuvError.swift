@@ -8,7 +8,6 @@
 
 import Foundation
 import CLibUv
-import COpenSSL
 
 public enum SuvErrorMessage: String {
     case FSPathIsRequired = "Need to initialize FileSystem with withPath argument"
@@ -30,8 +29,6 @@ public enum SuvError: ErrorProtocol, CustomStringConvertible {
     case FileSystemError(message: SuvErrorMessage)
     
     case TimerError(message: String)
-    
-    case OpenSSLError(code: UInt)
 }
 
 extension SuvError {
@@ -54,8 +51,6 @@ extension SuvError {
         switch(self) {
         case .UVError(let code):
             return String(CString: uv_err_name(code), encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
-        case .OpenSSLError(let code):
-            return "Open SSL ERR \(code)"
             
         default:
             return self.description
@@ -77,14 +72,6 @@ extension SuvError {
             return message
         case .FileSystemError(let message):
             return message.rawValue
-        case .OpenSSLError(let code):
-            var buf = [Int8](repeating: 0, count: 128)
-            ERR_error_string_n(code, &buf, 128)
-#if os(Linux)
-            return String(CString: &buf, encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
-#else
-            return String(utf8String: &buf) ?? "UNKNOWN"
-#endif
         }
     }
     

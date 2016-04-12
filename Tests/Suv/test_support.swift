@@ -44,20 +44,5 @@ extension XCTestCase {
     func waitUntil(timeout: Int = 1, description: String, callback: (() -> ()) -> ()){
         let _ = AsynchronousTestSupporter(timeout: timeout, description: description, callback: callback)
         Loop.defaultLoop.run()
-
-        // Should restore if the https://github.com/apple/swift-corelibs-xctest/pull/43 is merged
-//        let expectation = expectationWithDescription("readFile")
-//
-//        let done = {
-//            expectation.fulfill()
-//        }
-//
-//        callback(done)
-//
-//        waitForExpectationsWithTimeout(timeout) { error in
-//            if let error = error {
-//                print("Error: \(error.localizedDescription)")
-//            }
-//        }
     }
 }
