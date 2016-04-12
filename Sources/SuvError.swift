@@ -6,7 +6,6 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
-import Foundation
 import CLibUv
 
 public enum SuvErrorMessage: String {
@@ -50,7 +49,7 @@ extension SuvError {
     public var type: String {
         switch(self) {
         case .UVError(let code):
-            return String(CString: uv_err_name(code), encoding: NSUTF8StringEncoding) ?? "UNKNOWN"
+            return String(validatingUTF8: uv_err_name(code)) ??  "UNKNOWN"
             
         default:
             return self.description
@@ -63,7 +62,7 @@ extension SuvError {
     public var message: String {
         switch(self) {
         case .UVError(let code):
-            return String(CString: uv_strerror(code), encoding: NSUTF8StringEncoding) ?? "Unknow Error"
+            return String(validatingUTF8: uv_strerror(code)) ?? "Unknow Error"
         case .ArgumentError(let message):
             return message
         case .RuntimeError(let message):

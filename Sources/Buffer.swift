@@ -6,8 +6,6 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
-import Foundation // should remove when Swift String support
-
 /**
  Encoding for Buffer.toString()
  */
@@ -152,7 +150,7 @@ extension Buffer {
             }
         
         case .Hex:
-            return self.bytes.map { String(NSString(format:"%02hhx", $0)) }.joined(separator: "")
+            return self.bytes.map { String($0, radix: 16) }.joined(separator: "")
             
         // UTF8
         default:

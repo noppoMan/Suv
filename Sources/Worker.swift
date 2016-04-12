@@ -6,8 +6,6 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
-import Foundation
-
 /**
  Enum that are used in ipc
  */
