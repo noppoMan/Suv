@@ -13,6 +13,7 @@
 #endif
 
 import XCTest
+import Time
 @testable import Suv
 
 class TimerTests: XCTestCase {
@@ -22,14 +23,14 @@ class TimerTests: XCTestCase {
             ("testTimerInterval", testTimerInterval)
         ]
     }
-    
+
     func testTimerTimeout() {
-        waitUntil(5, description: "TimerInterval") { done in
+        waitUntil(5, description: "TimerTimeout") { done in
             let timer = Timer(mode: .Timeout, tick: 1000)
             XCTAssertEqual(timer.state, TimerState.Pause)
 
             let start = Time().unixtime
-            
+
             timer.start {
                 XCTAssertGreaterThan(Time().unixtime - start, 0)
                 timer.end()
@@ -39,14 +40,14 @@ class TimerTests: XCTestCase {
             }
         }
     }
-    
+
     func testTimerInterval() {
         waitUntil(5, description: "TimerInterval") { done in
             let timer: Timer = Timer(mode: .Interval, tick: 500)
             XCTAssertEqual(timer.state, TimerState.Pause)
-            
+
             var intervalCounter = 0
-            
+
             timer.start {
                 XCTAssertEqual(timer.state, TimerState.Running)
                 intervalCounter+=1
@@ -57,14 +58,14 @@ class TimerTests: XCTestCase {
                     Loop.defaultLoop.stop()
                 }
             }
-            
+
             let t2 = Timer(tick: 1000)
-            
+
             t2.start {
                 t2.end()
                 timer.stop()
             }
-            
+
             let t3 = Timer(tick: 2000)
             t3.start {
                 t3.end()
@@ -74,5 +75,5 @@ class TimerTests: XCTestCase {
             }
         }
     }
-    
+
 }

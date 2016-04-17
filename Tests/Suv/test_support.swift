@@ -8,6 +8,7 @@
 
 import XCTest
 import Foundation
+import Time
 @testable import Suv
 
 private class AsynchronousTestSupporter {
@@ -22,15 +23,15 @@ private class AsynchronousTestSupporter {
         }
 
         callback(done)
-        
+
         let endts = Time().addSec(timeout).unixtime
-        
+
         let t = Timer(mode: .Interval, tick: 100)
         t.start {
             if Time().unixtime > endts {
                 XCTFail("Test is timed out")
             }
-            
+
             if(breakFlag) {
                 t.end()
             }

@@ -1,7 +1,6 @@
 CLibUv=CLibUv-*
-COpenSSL=COpenSSL-*
 
-BUILDOPTS=-Xlinker -L/usr/lib -Xcc -IPackages/$(CLibUv) -Xcc -IPackages/$(COpenSSL)
+BUILDOPTS=-Xlinker -L/usr/lib -Xcc -IPackages/$(CLibUv)
 
 SWIFTC=swiftc
 SWIFT=swift
