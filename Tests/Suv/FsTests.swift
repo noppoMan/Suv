@@ -114,7 +114,7 @@ class FsTests: XCTestCase {
             FS.open(targetFile, flags: .W) { result in
                 if case .Success(let fd) = result {
                     XCTAssertGreaterThanOrEqual(fd, 0)
-                    FS.write(fd, data: Buffer("test text")) { result in
+                    FS.write(fd, data: Buffer(string: "test text")) { result in
                         if case .Error(let err) = result {
                             return XCTFail("\(err)")
                         }
@@ -134,7 +134,7 @@ class FsTests: XCTestCase {
                     XCTAssertGreaterThanOrEqual(fd, 0)
                     seriesTask([
                        { cb in
-                            FS.write(fd, data: Buffer("test text")) { res in
+                            FS.write(fd, data: Buffer(string: "test text")) { res in
                                 if case .Error(let err) = res {
                                     return cb(err)
                                 }
@@ -173,7 +173,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .W) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("foofoofoo")) { res in
+                            FS.write(fd, data: Buffer(string: "foofoofoo")) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     cb(err)
@@ -187,7 +187,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .WP) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("bar")) { res in
+                            FS.write(fd, data: Buffer(string: "bar")) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     cb(err)
@@ -247,7 +247,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .W) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("foo")) { res in
+                            FS.write(fd, data: Buffer(string: "foo")) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     cb(err)
@@ -261,7 +261,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .A) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("bar"), position: 3) { res in
+                            FS.write(fd, data: Buffer(string: "bar"), position: 3) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     cb(err)
@@ -275,7 +275,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .AP) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("baz"), position: 6) { res in
+                            FS.write(fd, data: Buffer(string: "baz"), position: 6) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     cb(err)
@@ -318,7 +318,7 @@ class FsTests: XCTestCase {
                     XCTAssertGreaterThanOrEqual(fd, 0)
                     let str = "hello world.hello world.hello world.hello world.hello world."
                     
-                    FS.write(fd, data: Buffer(str)) { res in
+                    FS.write(fd, data: Buffer(string: str)) { res in
                         if case .Error(let err) = res {
                             FS.close(fd)
                             return XCTFail("\(err)")
@@ -385,7 +385,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .R) { res in
                         if case .Success(let fd) = res {
                             XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, data: Buffer("foo")) { res in
+                            FS.write(fd, data: Buffer(string: "foo")) { res in
                                 FS.close(fd)
                                 if case .Error(let err) = res {
                                     XCTAssertNotNil(err)

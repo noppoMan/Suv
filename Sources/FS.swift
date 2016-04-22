@@ -212,7 +212,7 @@ public class FS {
                         FS.close(fd)
                         completion(.Error(err))
                     } else if case .Data(let buf) = result {
-                        bufferdContent.append(buf)
+                        bufferdContent += buf
                     } else {
                         FS.close(fd)
                         completion(.Success(bufferdContent))
@@ -231,7 +231,7 @@ public class FS {
      - parameter completion: Completion handler
      */
     public static func writeFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
-        writeFile(path, data: Buffer(data), loop: loop, completion: completion)
+        writeFile(path, data: Buffer(string: data), loop: loop, completion: completion)
     }
     
     /**
@@ -271,7 +271,7 @@ public class FS {
      - parameter completion: Completion handler
      */
     public static func appendFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
-        appendFile(path, data: Buffer(data), loop: loop, completion: completion)
+        appendFile(path, data: Buffer(string: data), loop: loop, completion: completion)
     }
     
     

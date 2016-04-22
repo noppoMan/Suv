@@ -138,7 +138,7 @@ struct InternalMessageParser {
 
 extension Pipe {
     internal func send(event: InterProcessEvent){
-        self.write(Buffer("Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
+        self.write(Buffer(string: "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
     }
     
     internal func on(callback: InterProcessEvent -> ()){
