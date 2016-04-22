@@ -56,7 +56,7 @@ public final class TCPServer: ServerType {
     /**
      Socket
     */
-    public let socket: WritableStream // TODO Should make SocketType for TCP, UDP and Pipe
+    public let socket: Stream // TODO Should make SocketType for TCP, UDP and Pipe
     
     /**
      Event loop

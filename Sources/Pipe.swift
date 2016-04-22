@@ -21,20 +21,20 @@ public enum Stdio: Int32 {
 /**
  Pipe handle type
  */
-public class Pipe: WritableStream {
+public class Pipe: Stream {
     
     private var onListen: GenericResult<Int> -> ()  = { _ in }
     
-    private var onConnect: GenericResult<ReadableStream> -> () = {_ in }
+    private var onConnect: GenericResult<Stream> -> () = {_ in }
     
     public init(pipe: UnsafeMutablePointer<uv_pipe_t>){
-        super.init(pipe)
+        super.init(UnsafeMutablePointer<uv_stream_t>(pipe))
     }
     
     public init(loop: Loop = Loop.defaultLoop, ipcEnable: Bool = false){
         let pipe = UnsafeMutablePointer<uv_pipe_t>(allocatingCapacity: sizeof(uv_pipe_t))
         uv_pipe_init(loop.loopPtr, pipe, ipcEnable ? 1 : 0)
-        super.init(pipe)
+        super.init(UnsafeMutablePointer<uv_stream_t>(pipe))
     }
     
     /**
@@ -43,7 +43,7 @@ public class Pipe: WritableStream {
      - parameter stdio: Number of fd to open (Stdio)
     */
     public func open(stdio: Stdio = Stdio.STDIN) -> Pipe {
-        uv_pipe_open(pipe, stdio.rawValue)
+        uv_pipe_open(pipePtr, stdio.rawValue)
         return self
     }
     
@@ -53,7 +53,7 @@ public class Pipe: WritableStream {
      - parameter stdio: Number of fd to open (Int32)
      */
     public func open(stdio: Int32) -> Pipe {
-        uv_pipe_open(pipe, stdio)
+        uv_pipe_open(pipePtr, stdio)
         return self
     }
     
@@ -63,20 +63,20 @@ public class Pipe: WritableStream {
      - parameter sockName: Socket name to connect
      - parameter onConnect: Will be called when the connection is succeeded or failed
      */
-    public func connect(sockName: String, onConnect: GenericResult<ReadableStream> -> ()){
+    public func connect(sockName: String, onConnect: GenericResult<Stream> -> ()){
         self.onConnect = onConnect
         let req = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
         
         req.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
-        uv_pipe_connect(req, pipe, sockName) { req, status in
+        uv_pipe_connect(req, pipePtr, sockName) { req, status in
             let pipe = unsafeBitCast(req.pointee.data, to: Pipe.self)
             if status < 0 {
                 let err = SuvError.UVError(code: status)
                 return pipe.onConnect(.Error(err))
             }
             
-            pipe.onConnect(.Success(ReadableStream(UnsafeMutablePointer<uv_stream_t>(req))))
+            pipe.onConnect(.Success(Stream(UnsafeMutablePointer<uv_stream_t>(req))))
         }
     }
 }

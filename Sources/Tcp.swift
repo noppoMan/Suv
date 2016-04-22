@@ -17,7 +17,7 @@ import CLibUv
 /**
  Stream handle type for TCP reading/writing
  */
-public class TCP: WritableStream {
+public class TCP: Stream {
     private var onListen: GenericResult<Int> -> ()  = { _ in }
     
     private var onConnect: Result -> () = { _ in }
