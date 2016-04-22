@@ -52,7 +52,7 @@ class TcpTests: XCTestCase {
             let client = TCP()
             
             client.connect(host: "localhost", port: 9999) { res in
-                client.write(Buffer("Hi!")) { res in
+                client.write(Buffer(string: "Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
                             XCTAssertEqual(buf.toString()!, "Hi!")

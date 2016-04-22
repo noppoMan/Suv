@@ -291,7 +291,7 @@ extension Stream {
                 data = .Error(SuvError.UVError(code: Int32(nread)))
             } else {
                 var buffer = Buffer()
-                buffer.append(UnsafePointer<UInt8>(buf.pointee.base), length: nread)
+                buffer.append(buffer: UnsafePointer<UInt8>(buf.pointee.base), length: nread)
                 data = .Data(buffer)
             }
             

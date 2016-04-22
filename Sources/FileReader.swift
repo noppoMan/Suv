@@ -108,7 +108,7 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
 
     var buf = Buffer()
     for i in stride(from: 0, to: req.pointee.result, by: 1) {
-        buf.append(context.buf!.base[i])
+        buf.append(signedByte: context.buf!.base[i])
     }
     context.onRead(.Data(buf))
     context.bytesRead += req.pointee.result

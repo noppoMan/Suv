@@ -31,15 +31,15 @@ public struct Buffer {
     /**
      Initialize with UInt8 Array bytes
      */
-    public init(_ bytes: [UInt8]){
+    public init(bytes: [UInt8]){
         self.bytes.append(contentsOf: bytes)
     }
     
     /**
      Initialize with Swift String Type
      */
-    public init(_ str: String){
-        self.bytes += ([UInt8](str.utf8))
+    public init(string: String){
+        self.bytes += ([UInt8](string.utf8))
     }
     
     /**
@@ -53,36 +53,14 @@ public struct Buffer {
         }
         assert(size == self.bytes.count)
     }
-    
-    /**
-     Concatenate Other Buffer Instance
-     
-     - parameter buf: Buffer to concat
-     - returns: Concatenated buffer
-    */
-    public func concat(buf: Buffer) -> Buffer {
-        var newBuf = Buffer()
-        newBuf.append(bytes)
-        newBuf.append(buf.bytes)
-        return newBuf
-    }
 
     /**
      Append UInt8 Array bytes to buffer
      
      - parameter bytes: UInt8 Array bytes
      */
-    public mutating func append(bytes: [UInt8]) {
+    public mutating func append(bytes bytes: [UInt8]) {
         self.bytes += bytes
-    }
-    
-    /**
-     Append buffer.bytes to buffer
-     
-     - parameter buf: Buffer
-     */
-    public mutating func append(buf: Buffer) {
-        self.bytes += buf.bytes
     }
     
     /**
@@ -90,7 +68,7 @@ public struct Buffer {
      
      - parameter byte: A UInt8 byte
      */
-    public mutating func append(byte: UInt8) {
+    public mutating func append(byte byte: UInt8) {
         self.bytes.append(byte)
     }
     
@@ -99,7 +77,7 @@ public struct Buffer {
      
      - parameter bytes: Int8 Array bytes
      */
-    public mutating func append(bytes: [Int8]) {
+    public mutating func append(signedByte bytes: [Int8]) {
         self.bytes += bytes.map { UInt8(bitPattern: $0) }
     }
     
@@ -108,7 +86,7 @@ public struct Buffer {
      
      - parameter byte: A UInt8 byte
      */
-    public mutating func append(byte: Int8) {
+    public mutating func append(signedByte byte: Int8) {
         self.bytes.append(UInt8(bitPattern: byte))
     }
 
@@ -118,12 +96,12 @@ public struct Buffer {
      - parameter buffer: UnsafePointer<UInt8> buffer
      - parameter length: length for buffer
      */
-    public mutating func append(bytes: UnsafePointer<UInt8>, length: Int) {
-        var byteArray: [UInt8] = []
+    public mutating func append(buffer buffer: UnsafePointer<UInt8>, length: Int) {
+        var bytes: [UInt8] = []
         for i in stride(from: 0, to: length, by: 1) {
-            byteArray.append(bytes[i])
+            bytes.append(buffer[i])
         }
-        self.append(byteArray)
+        self.append(bytes: bytes)
     }
 }
 
@@ -169,4 +147,12 @@ extension Buffer {
             return encodedString
         }
     }
+}
+
+public func +(left: Buffer, right: Buffer) -> Buffer {
+    return Buffer(bytes: left.bytes + right.bytes)
+}
+
+public func +=(left: inout Buffer, right: Buffer) {
+    left.append(bytes: right.bytes)
 }

@@ -59,7 +59,7 @@ class PipeTests: XCTestCase {
             let client = Pipe()
             
             client.connect("/tmp/suv-test.sock") { res in
-                client.write(Buffer("Hi!")) { res in
+                client.write(Buffer(string: "Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
                             XCTAssertEqual(buf.toString()!, "Hi!")

@@ -63,23 +63,23 @@ public struct Base64 {
         var index = 0
         
         while unreadBytes > 4 {
-            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
-            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
-            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+            decoded.append(byte: ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+            decoded.append(byte: ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+            decoded.append(byte: ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
             index += 4
             unreadBytes -= 4
         }
         
         if unreadBytes > 1 {
-            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+            decoded.append(byte: ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
         }
         
         if unreadBytes > 2 {
-            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+            decoded.append(byte: ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
         }
         
         if unreadBytes > 3 {
-            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+            decoded.append(byte: ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
         }
         
         return decoded
