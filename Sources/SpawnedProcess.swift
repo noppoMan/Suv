@@ -26,17 +26,17 @@ public class SpawnedProcess {
     /**
      stdin stream handle
      */
-    public let stdin: WritableStream?
+    public let stdin: Stream?
     
     /**
      stdout stream handle
      */
-    public let stdout: ReadableStream?
+    public let stdout: Stream?
     
     /**
      stderr stream handle
      */
-    public let stderr: ReadableStream?
+    public let stderr: Stream?
 
     internal var onExitCallback: (Int64) -> () = {_ in }
     

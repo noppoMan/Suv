@@ -62,7 +62,7 @@ public final class PipeServer: ServerType {
      */
     public func bind(sockName: BindType) throws {
         self.sockName = sockName
-        let r = uv_pipe_bind(socket.pipe, sockName)
+        let r = uv_pipe_bind(socket.pipePtr, sockName)
         
         if r < 0 {
             throw SuvError.UVError(code: r)
@@ -114,7 +114,7 @@ public final class PipeServer: ServerType {
             exit(0)
         }
         
-        let stream = UnsafeMutablePointer<uv_stream_t>(socket.pipe)
+        let stream = UnsafeMutablePointer<uv_stream_t>(socket.pipePtr)
         stream.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(stream, Int32(backlog)) { stream, status in

@@ -30,11 +30,29 @@ public enum SocketState {
  */
 public class Stream: Handle {
     
+    private var onRead: ReadStreamResult -> () = { _ in}
+    
+    private var onRead2: GenericResult<Pipe> -> () = { _ in }
+    
+    private var onWrite: Result -> () = {_ in }
+    
+    private var onShutDown: () -> () = {}
+    
+    /**
+     Initialize with Pointer of the uv_stream_t
+     - parameter stream: Pointer of the uv_stream_t
+     */
+    public init(_ stream: UnsafeMutablePointer<uv_stream_t>){
+        super.init(UnsafeMutablePointer<uv_handle_t>(stream))
+    }
+}
+
+extension Stream {
     /**
      Returns true if the pipe is ipc, 0 otherwise.
-    */
+     */
     public var ipcEnable: Bool {
-        return pipe.pointee.ipc == 1
+        return pipePtr.pointee.ipc == 1
     }
     
     /**
@@ -44,24 +62,8 @@ public class Stream: Handle {
         return UnsafeMutablePointer<uv_stream_t>(handlePtr)
     }
     
-    internal var pipe: UnsafeMutablePointer<uv_pipe_t> {
+    internal var pipePtr: UnsafeMutablePointer<uv_pipe_t> {
         return UnsafeMutablePointer<uv_pipe_t>(handlePtr)
-    }
-    
-    /**
-     Initialize with Pointer of the uv_stream_t
-     - parameter stream: Pointer of the uv_stream_t
-     */
-    public init(_ stream: UnsafeMutablePointer<uv_stream_t>){
-        super.init(UnsafeMutablePointer<uv_handle_t>(stream))
-    }
-    
-    /**
-     Initialize with Pointer of the uv_pipe_t
-     - parameter pipe: Pointer of the uv_pipe_t
-     */
-    public init(_ pipe: UnsafeMutablePointer<uv_pipe_t>){
-        super.init(UnsafeMutablePointer<uv_handle_t>(pipe))
     }
     
     /**
@@ -87,10 +89,9 @@ public class Stream: Handle {
         
         return false
     }
-    
-    
-    private var onShutDown: () -> () = {}
-    
+}
+
+extension Stream {
     /**
      shoutdown connection
      */
@@ -107,6 +108,198 @@ public class Stream: Handle {
             let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
             stream.onShutDown()
             dealloc(req)
+        }
+    }
+}
+
+private func destroy_write_req(req: UnsafeMutablePointer<uv_write_t>){
+    dealloc(req.pointee.bufs, capacity: 1)
+    dealloc(req)
+}
+
+extension Stream {
+    /**
+     Extended write function for sending handles over a pipe
+     
+     - parameter ipcPipe: Pipe Instance for ipc
+     - paramter  data: Buffer to write
+     - parameter onWrite: Completion handler(Not implemented yet)
+     */
+    public func write2(ipcPipe: Pipe, onWrite: Result -> () = { _ in }){
+        if isClosing() {
+            return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
+        }
+        
+        let bytes: [Int8] = [97]
+        var dummy_buf = uv_buf_init(UnsafeMutablePointer<Int8>(bytes), 1)
+        
+        withUnsafePointer(&dummy_buf) {
+            let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
+            let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, 1, self.streamPtr) { req, _ in
+                destroy_write_req(req)
+            }
+            
+            if r < 0 {
+                destroy_write_req(writeReq)
+                onWrite(.Error(SuvError.UVError(code: r)))
+            }
+        }
+    }
+    
+    /**
+     Write data to stream. Buffers are written in order
+     
+     - parameter data: Int8 Array bytes to write
+     - parameter onWrite: Completion handler
+     */
+    public func write(data: [Int8], onWrite: Result -> () = { _ in }) {
+        let bytes = UnsafeMutablePointer<Int8>(data)
+        writeBytes(bytes, length: UInt32(data.count), onWrite: onWrite)
+    }
+    
+    /**
+     Write data to stream. Buffers are written in order
+     
+     - parameter data: Buffer to write
+     - parameter onWrite: Completion handler
+     */
+    public func write(data: Buffer, onWrite: Result -> () = { _ in }) {
+        let bytes = UnsafeMutablePointer<Int8>(data.bytes)
+        writeBytes(bytes, length: UInt32(data.length), onWrite: onWrite)
+    }
+    
+    private func writeBytes(bytes: UnsafeMutablePointer<Int8>, length: UInt32, onWrite: Result -> () = { _ in }){
+        if isClosing() {
+            return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
+        }
+        
+        var data = uv_buf_init(bytes, length)
+        self.onWrite = onWrite
+        
+        withUnsafePointer(&data) {
+            let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
+            writeReq.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+            
+            let r = uv_write(writeReq, streamPtr, $0, 1) { req, _ in
+                let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
+                destroy_write_req(req)
+                stream.onWrite(.Success)
+            }
+            
+            if r < 0 {
+                destroy_write_req(writeReq)
+                onWrite(.Error(SuvError.UVError(code: r)))
+            }
+        }
+    }
+}
+
+
+extension Stream {
+    /**
+     Stop reading data from the stream
+     */
+    public func stop() throws {
+        if isClosing() { return }
+        
+        let r = uv_read_stop(streamPtr)
+        if r < 0 {
+            throw SuvError.UVError(code: r)
+        }
+    }
+    
+    /**
+     Extended read function for reading handles over a pipe
+     
+     - parameter pendingType: uv_handle_type
+     - parameter callback: Completion handler
+     */
+    public func read2(pendingType: uv_handle_type, callback: GenericResult<Pipe> -> ()) {
+        if isClosing() {
+            return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
+        }
+        
+        onRead2 = { result in
+            if case .Success(let queue) = result {
+                let pipePtr = UnsafeMutablePointer<uv_pipe_t>(queue.streamPtr)
+                if uv_pipe_pending_count(pipePtr) <= 0 {
+                    let err = SuvError.RuntimeError(message: "No pending count")
+                    return callback(.Error(err))
+                }
+                
+                let pending = uv_pipe_pending_type(pipePtr)
+                if pending != pendingType {
+                    let err = SuvError.RuntimeError(message: "Pending pipe type is mismatched")
+                    return callback(.Error(err))
+                }
+            }
+            
+            callback(result)
+        }
+        
+        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        
+        let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
+            defer {
+                dealloc(buf.pointee.base, capacity: nread)
+            }
+            
+            let stream = unsafeBitCast(queue.pointee.data, to: Stream.self)
+            
+            let result: GenericResult<Pipe>
+            if (nread == Int(UV_EOF.rawValue)) {
+                result = .Error(SuvError.RuntimeError(message: "Connection was closed"))
+            } else if (nread < 0) {
+                result = .Error(SuvError.UVError(code: Int32(nread)))
+            } else {
+                let pipe = Pipe(pipe: UnsafeMutablePointer<uv_pipe_t>(queue))
+                result = .Success(pipe)
+            }
+            
+            stream.onRead2(result)
+        }
+        
+        if r < 0 {
+            callback(.Error(SuvError.UVError(code: r)))
+        }
+    }
+    
+    /**
+     Read data from an incoming stream
+     
+     - parameter callback: Completion handler
+     */
+    public func read(callback: ReadStreamResult -> ()) {
+        if isClosing() {
+            return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
+        }
+        
+        onRead = callback
+        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        
+        let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
+            defer {
+                dealloc(buf.pointee.base, capacity: nread)
+            }
+            
+            let stream = unsafeBitCast(stream.pointee.data, to: Stream.self)
+            
+            let data: ReadStreamResult
+            if (nread == Int(UV_EOF.rawValue)) {
+                data = .EOF
+            } else if (nread < 0) {
+                data = .Error(SuvError.UVError(code: Int32(nread)))
+            } else {
+                var buffer = Buffer()
+                buffer.append(UnsafePointer<UInt8>(buf.pointee.base), length: nread)
+                data = .Data(buffer)
+            }
+            
+            stream.onRead(data)
+        }
+        
+        if r < 0 {
+            callback(.Error(SuvError.UVError(code: r)))
         }
     }
 }
