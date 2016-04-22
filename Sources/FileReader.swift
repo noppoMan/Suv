@@ -37,17 +37,15 @@ internal class FileReaderContext {
     
     var fd: Int32
     
-    var bufferd: Bool = true
-    
     /**
      an integer specifying the number of bytes to read
-    */
+     */
     var length: Int?
     
     /**
-     an integer specifying where to begi1n reading from in the file. 
+     an integer specifying where to begi1n reading from in the file.
      If position is null, data will be read from the current file position
-    */
+     */
     var position: Int
     
     init(loop: Loop = Loop.defaultLoop, fd: Int32, length: Int? = nil, position: Int, completion: (FsReadResult) -> Void){
@@ -74,42 +72,30 @@ internal class FileReader {
         
     }
     
-    func read(bufferd: Bool = true){
-        self.context.bufferd = bufferd
+    func read(){
         readNext(context)
     }
 }
 
-
 private func readNext(context: FileReaderContext){
-    
     let readReq = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
-    
-    var buf = [Int8](repeating: 0, count: numOfBytes)
-    context.buf = uv_buf_init(&buf, UInt32(numOfBytes))
+    context.buf = uv_buf_init(UnsafeMutablePointer(allocatingCapacity: numOfBytes), UInt32(numOfBytes))
     
     readReq.pointee.data = retainedVoidPointer(context)
     
-    withUnsafePointer(&context.buf!) {
-        let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), $0, UInt32(context.buf!.len), context.bytesRead) { req in
-            onReadEach(req)
-        }
-        
-        if r < 0 {
-            defer {
-                fs_req_cleanup(readReq)
-            }
-            context.onRead(.Error(SuvError.UVError(code: r)))
-        }
+    let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), &context.buf!, UInt32(context.buf!.len), context.bytesRead, onReadEach)
+    
+    if r < 0 {
+        fs_req_cleanup(readReq)
+        context.onRead(.Error(SuvError.UVError(code: r)))
     }
 }
 
 private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
+    let context: FileReaderContext = releaseVoidPointer(req.pointee.data)!
     defer {
         fs_req_cleanup(req)
     }
-    
-    let context: FileReaderContext = releaseVoidPointer(req.pointee.data)!
     
     if(req.pointee.result < 0) {
         let e = SuvError.UVError(code: Int32(req.pointee.result))
@@ -119,17 +105,13 @@ private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
     if(req.pointee.result == 0) {
         return context.onRead(.End(Int(context.bytesRead)))
     }
-    
-    context.bytesRead += req.pointee.result
-    
-    if context.bufferd {
-        var buf = Buffer()
-        let bytes = UnsafePointer<UInt8>(context.buf!.base)
-        for i in stride(from: 0, to: req.pointee.result, by: 1) {
-            buf.append(bytes[i])
-        }
-        context.onRead(.Data(buf))
+
+    var buf = Buffer()
+    for i in stride(from: 0, to: req.pointee.result, by: 1) {
+        buf.append(context.buf!.base[i])
     }
+    context.onRead(.Data(buf))
+    context.bytesRead += req.pointee.result
     
     readNext(context)
 }

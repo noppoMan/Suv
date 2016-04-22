@@ -60,12 +60,14 @@ public class FS {
             length: nil,
             position: 0
         ) { res in
-            if case .End(let pos) = res {
+            if case .Data(_) = res {
+                return
+            } else if case .End(let pos) = res {
                 return completion(pos)
             }
             completion(-1) // error state
         }
-        reader.read(false)
+        reader.read()
     }
     
     /**
