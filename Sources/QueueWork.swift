@@ -18,8 +18,7 @@ private func work_cb(req: UnsafeMutablePointer<uv_work_t>) {
 
 private func after_work_cb(req: UnsafeMutablePointer<uv_work_t>, status: Int32){
     defer {
-        req.deinitialize()
-        req.deallocateCapacity(sizeof(uv_work_t))
+        dealloc(req)
     }
     
     let ctx: QueueWorkerContext = releaseVoidPointer(req.pointee.data)!

@@ -170,7 +170,6 @@ public final class TCPServer: ServerType {
     }
     
     deinit {
-        self.context.deinitialize()
-        self.context.deallocateCapacity(1)
+        dealloc(context, capacity: 1)
     }
 }

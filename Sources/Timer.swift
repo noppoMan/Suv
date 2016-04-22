@@ -128,12 +128,9 @@ public class Timer {
     */
     public func end(){
         if case .End = state { return }
-        defer {
-            handle.deinitialize()
-            handle.deallocateCapacity(1)
-        }
         stop()
         unref()
         self.state = .End
+        dealloc(handle)
     }
 }

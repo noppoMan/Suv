@@ -46,7 +46,6 @@
 		B6599BE61C73B1E800CD70A2 /* PipeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B622E6561C5FD0DA0042859C /* PipeServer.swift */; };
 		B6599BE71C73B1E800CD70A2 /* ServerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697FF2C1C5C7C8B00D14C3E /* ServerType.swift */; };
 		B6599BE81C73B1E800CD70A2 /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ED36EF1C65DEB2005F5986 /* Base64.swift */; };
-		B6599BEB1C73B1E800CD70A2 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6881F411C67D493004F34B1 /* Time.swift */; };
 		B6599BEC1C73B1E800CD70A2 /* OpenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */; };
 		B6599BED1C73B1E800CD70A2 /* FileStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6262E691C70D2E200917437 /* FileStat.swift */; };
 		B6635D1F1C555FB600D8EE19 /* ChildProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6635D1E1C555FB600D8EE19 /* ChildProcess.swift */; };
@@ -55,7 +54,6 @@
 		B66C66531CB26A010066F97D /* ClusterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */; };
 		B6781B611C5745D700497298 /* Pipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6781B601C5745D700497298 /* Pipe.swift */; };
 		B68033AB1C763BA00075C87C /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B19FFF1C7630E100E6C595 /* Timer.swift */; };
-		B6881F421C67D493004F34B1 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6881F411C67D493004F34B1 /* Time.swift */; };
 		B68A23921CAEFA2200D75386 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23901CAEFA2200D75386 /* ReadableStream.swift */; };
 		B68A23931CAEFA2200D75386 /* WritableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23911CAEFA2200D75386 /* WritableStream.swift */; };
 		B68A23941CB1912A00D75386 /* ReadableStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A23901CAEFA2200D75386 /* ReadableStream.swift */; };
@@ -125,7 +123,6 @@
 		B66AFEE31C52AFB600D7609F /* FS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FS.swift; sourceTree = "<group>"; };
 		B66AFEE51C52B15600D7609F /* FileWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWriter.swift; sourceTree = "<group>"; };
 		B6781B601C5745D700497298 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
-		B6881F411C67D493004F34B1 /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		B68A23901CAEFA2200D75386 /* ReadableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadableStream.swift; sourceTree = "<group>"; };
 		B68A23911CAEFA2200D75386 /* WritableStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritableStream.swift; sourceTree = "<group>"; };
 		B68A52C21C456F0A000CC351 /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
@@ -272,7 +269,6 @@
 				B622E6561C5FD0DA0042859C /* PipeServer.swift */,
 				B697FF2C1C5C7C8B00D14C3E /* ServerType.swift */,
 				B6ED36EF1C65DEB2005F5986 /* Base64.swift */,
-				B6881F411C67D493004F34B1 /* Time.swift */,
 				B6F57F8A1C6F97DF00E9A7B5 /* OpenFlag.swift */,
 				B6262E691C70D2E200917437 /* FileStat.swift */,
 				B6CBB50E1C74E50800F8FCB3 /* DNS.swift */,
@@ -407,7 +403,6 @@
 				B697FF2D1C5C7C8B00D14C3E /* ServerType.swift in Sources */,
 				B66AFEE61C52B15600D7609F /* FileWriter.swift in Sources */,
 				B6262E6A1C70D2E200917437 /* FileStat.swift in Sources */,
-				B6881F421C67D493004F34B1 /* Time.swift in Sources */,
 				B6BE3A3B1C5E7C0B005CE911 /* Signal.swift in Sources */,
 				B63354DC1C8827FA005EA8D9 /* Idle.swift in Sources */,
 				B68A23931CAEFA2200D75386 /* WritableStream.swift in Sources */,
@@ -466,7 +461,6 @@
 				B6E992D91C89E2B700867A5D /* test_support.swift in Sources */,
 				B6599BDD1C73B1E800CD70A2 /* support.swift in Sources */,
 				B6E992D11C89E2B700867A5D /* DNSTests.swift in Sources */,
-				B6599BEB1C73B1E800CD70A2 /* Time.swift in Sources */,
 				B63354DD1C88281B005EA8D9 /* Idle.swift in Sources */,
 				B6E992D61C89E2B700867A5D /* PipeTests.swift in Sources */,
 				B6599BD11C73B1E800CD70A2 /* SuvError.swift in Sources */,

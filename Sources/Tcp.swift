@@ -115,12 +115,10 @@ public class TCP: WritableStream {
                 let addr = Address(host: a.host, port: Int(a.service)!)
                 
                 let r = uv_tcp_connect(self.con, self.socket, addr.address) { connection, status in
-                    let tcp = unsafeBitCast(connection.pointee.data, to: TCP.self)
-                    
                     defer {
-                        connection.deinitialize()
-                        connection.deallocateCapacity(sizeof(uv_connect_t))
+                        dealloc(connection)
                     }
+                    let tcp = unsafeBitCast(connection.pointee.data, to: TCP.self)
                     
                     if status < 0 {
                         return tcp.onConnect(.Error(SuvError.UVError(code: status)))

@@ -44,7 +44,6 @@ public class Loop {
     
     deinit {
         uv_loop_close(loopPtr)
-        loopPtr.deinitialize()
-        loopPtr.deallocateCapacity(1)
+        dealloc(loopPtr, capacity: 1)
     }
 }

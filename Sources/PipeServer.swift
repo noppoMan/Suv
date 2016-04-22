@@ -100,8 +100,7 @@ public final class PipeServer: ServerType {
             
             let beforeExit = {
                 sig.stop()
-                req.deinitialize()
-                req.deallocateCapacity(sizeof(uv_fs_t))
+                dealloc(req)
             }
             
             // Unlink sock file
@@ -145,7 +144,6 @@ public final class PipeServer: ServerType {
     }
     
     deinit {
-        self.context.deinitialize()
-        self.context.deallocateCapacity(1)
+        dealloc(self.context, capacity: 1)
     }
 }
