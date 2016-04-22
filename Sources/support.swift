@@ -13,12 +13,23 @@ let alloc_buffer: @convention(c) (UnsafeMutablePointer<uv_handle_t>, ssize_t, Un
 }
 
 internal func close_handle<T>(req: UnsafeMutablePointer<T>){
-    if uv_is_closing(UnsafeMutablePointer(req)) == 1 { return }
-    
-    uv_close(UnsafeMutablePointer<uv_handle_t>(req)) { handle in        
-        handle.deinitialize()
-        handle.deallocateCapacity(sizeof(uv_handle_t))
+    if uv_is_closing(UnsafeMutablePointer(req)) == 1 {
+        return
     }
+    uv_close(UnsafeMutablePointer<uv_handle_t>(req)) {
+        dealloc($0)
+    }
+}
+
+// cleanup and free
+func fs_req_cleanup(req: UnsafeMutablePointer<uv_fs_t>) {
+    uv_fs_req_cleanup(req)
+    dealloc(req)
+}
+
+func dealloc<T>(ponter: UnsafeMutablePointer<T>, capacity: Int? = nil){
+    ponter.deinitialize()
+    ponter.deallocateCapacity(capacity ?? sizeof(T))
 }
 
 internal func dict2ArrayWithEqualSeparator(dict: [String: String]) -> [String] {
@@ -27,34 +38,6 @@ internal func dict2ArrayWithEqualSeparator(dict: [String: String]) -> [String] {
         envs.append("\(k)=\(v)")
     }
     return envs
-}
-
-internal typealias SeriesCB = ((ErrorProtocol?) -> ()) -> ()
-
-internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Void) {
-    if tasks.count == 0 {
-        completion(nil)
-        return
-    }
-    
-    var index = 0
-    
-    func _series(current: SeriesCB?) {
-        if let cur = current {
-            cur { err in
-                if let e = err {
-                    return completion(e)
-                }
-                index += 1
-                let next: SeriesCB? = index < tasks.count ? tasks[index] : nil
-                _series(next)
-            }
-        } else {
-            completion(nil)
-        }
-    }
-    
-    _series(tasks[index])
 }
 
 final class Box<A> {

@@ -14,13 +14,6 @@
 
 import CLibUv
 
-
-func fs_req_cleanup(req: UnsafeMutablePointer<uv_fs_t>) {
-    uv_fs_req_cleanup(req)
-    req.deinitialize()
-    req.deallocateCapacity(sizeof(uv_fs_t))
-}
-
 public typealias FileOperationResultTask = Result -> ()
 
 private struct FSContext {

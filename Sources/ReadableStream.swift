@@ -61,8 +61,7 @@ public class ReadableStream: Stream {
         
         let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
             defer {
-                buf.pointee.base.deinitialize()
-                buf.pointee.base.deallocateCapacity(nread)
+                dealloc(buf.pointee.base, capacity: nread)
             }
             
             let stream = unsafeBitCast(queue.pointee.data, to: ReadableStream.self)
@@ -100,8 +99,7 @@ public class ReadableStream: Stream {
         
         let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
             defer {
-                buf.pointee.base.deinitialize()
-                buf.pointee.base.deallocateCapacity(nread)
+                dealloc(buf.pointee.base, capacity: nread)
             }
             
             let stream = unsafeBitCast(stream.pointee.data, to: ReadableStream.self)

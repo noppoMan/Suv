@@ -47,8 +47,7 @@ public extension Process {
     public static var execPath: String {
         let exepath = UnsafeMutablePointer<Int8>(allocatingCapacity: Int(PATH_MAX))
         defer {
-            exepath.deinitialize()
-            exepath.deallocateCapacity(Int(PATH_MAX))
+            dealloc(exepath, capacity: Int(PATH_MAX))
         }
         
         var size = Int(PATH_MAX)

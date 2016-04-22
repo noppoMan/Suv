@@ -134,8 +134,7 @@ internal class Spawn {
         memset(options, 0, sizeof(uv_process_options_t))
 
         defer {
-            options.deinitialize()
-            options.deallocateCapacity(opts.stdio.count)
+            dealloc(options, capacity: opts.stdio.count)
         }
         
         if let cwd = opts.cwd {

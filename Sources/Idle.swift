@@ -46,9 +46,7 @@ public class Idle {
     
     public func stop(){
         uv_idle_stop(handle)
-        handle.pointee.data.deinitialize()
-        handle.pointee.data.deallocateCapacity(1)
-        handle.deinitialize()
-        handle.deallocateCapacity(sizeof(uv_idle_t))
+        dealloc(handle.pointee.data, capacity: 1)
+        dealloc(handle)
     }
 }

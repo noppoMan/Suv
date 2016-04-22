@@ -42,7 +42,6 @@ public class Address {
     }
     
     deinit {
-        sockAddrInPtr.deinitialize()
-        sockAddrInPtr.deallocateCapacity(1)
+        dealloc(sockAddrInPtr, capacity: 1)
     }
 }

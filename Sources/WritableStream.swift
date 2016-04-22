@@ -9,10 +9,8 @@
 import CLibUv
 
 private func destroy_write_req(req: UnsafeMutablePointer<uv_write_t>){
-    req.pointee.bufs.deinitialize()
-    req.pointee.bufs.deallocateCapacity(1)
-    req.deinitialize()
-    req.deallocateCapacity(sizeof(uv_write_t))
+    dealloc(req.pointee.bufs, capacity: 1)
+    dealloc(req)
 }
 
 /**

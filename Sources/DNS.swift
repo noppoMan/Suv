@@ -38,11 +38,6 @@ private struct DnsContext {
     let completion: GenericResult<[AddrInfo]> -> ()
 }
 
-private func destroy_req(req: UnsafeMutablePointer<uv_getaddrinfo_t>) {
-    req.deinitialize()
-    req.deallocateCapacity(sizeof(uv_getaddrinfo_t))
-}
-
 // TODO Should implement with uv_queue_work or uv_getnameinfo
 func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> AddrInfo? {
     
@@ -88,7 +83,7 @@ func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>, status: Int32, 
     
     defer {
         freeaddrinfo(res)
-        destroy_req(req)
+        dealloc(req)
     }
     
     if status < 0 {
@@ -138,7 +133,7 @@ public class DNS {
         
         if r < 0 {
             defer {
-                destroy_req(req)
+                dealloc(req)
             }
             completion(.Error(SuvError.UVError(code: r)))
         }

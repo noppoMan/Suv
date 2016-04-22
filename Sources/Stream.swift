@@ -21,11 +21,6 @@ public enum ReadStreamResult {
     case EOF
 }
 
-private func destroy_shoutdown_req(req: UnsafeMutablePointer<uv_shutdown_t>){
-    req.deinitialize()
-    req.deallocateCapacity(sizeof(uv_shutdown_t))
-}
-
 public enum SocketState {
     case Ready, Connecting, Connected, Closing, Closed
 }
@@ -111,7 +106,7 @@ public class Stream: Handle {
         uv_shutdown(req, streamPtr) { req, status in
             let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
             stream.onShutDown()
-            destroy_shoutdown_req(req)
+            dealloc(req)
         }
     }
 }
