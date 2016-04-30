@@ -15,7 +15,7 @@
 import CLibUv
 
 private class FileWriterContext {
-    var writeReq: UnsafeMutablePointer<uv_fs_t> = nil
+    var writeReq: UnsafeMutablePointer<uv_fs_t>? = nil
     
     var onWrite: GenericResult<Int> -> Void = {_ in }
     
@@ -64,7 +64,7 @@ internal class FileWriter {
         )
     }
     
-    func write(data: Buffer){
+    func write(_ data: Buffer){
         if(data.bytes.count <= 0) {
             return context.onWrite(.Success(0 + context.offset))
         }
@@ -73,7 +73,7 @@ internal class FileWriter {
     }
 }
 
-private func attemptWrite(context: FileWriterContext){
+private func attemptWrite(_ context: FileWriterContext){
     var writeReq = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
     
     var bytes = context.data.bytes.map { Int8(bitPattern: $0) }
@@ -96,7 +96,7 @@ private func attemptWrite(context: FileWriterContext){
     }
 }
 
-private func onWriteEach(req: UnsafeMutablePointer<uv_fs_t>){
+private func onWriteEach(_ req: UnsafeMutablePointer<uv_fs_t>){
     defer {
         fs_req_cleanup(req)
     }

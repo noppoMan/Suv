@@ -95,7 +95,7 @@ extension Stream {
     /**
      shoutdown connection
      */
-    public func shutdown(completion: (() -> ())? = nil) {
+    public func shutdown(_ completion: (() -> ())? = nil) {
         if isClosing() { return }
         
         if let onShutDown = completion {
@@ -112,8 +112,7 @@ extension Stream {
     }
 }
 
-private func destroy_write_req(req: UnsafeMutablePointer<uv_write_t>){
-    dealloc(req.pointee.bufs, capacity: 1)
+private func destroy_write_req(_ req: UnsafeMutablePointer<uv_write_t>){
     dealloc(req)
 }
 
@@ -152,7 +151,7 @@ extension Stream {
      - parameter data: Int8 Array bytes to write
      - parameter onWrite: Completion handler
      */
-    public func write(data: [Int8], onWrite: Result -> () = { _ in }) {
+    public func write(bytes data: [Int8], onWrite: Result -> () = { _ in }) {
         let bytes = UnsafeMutablePointer<Int8>(data)
         writeBytes(bytes, length: UInt32(data.count), onWrite: onWrite)
     }
@@ -163,12 +162,12 @@ extension Stream {
      - parameter data: Buffer to write
      - parameter onWrite: Completion handler
      */
-    public func write(data: Buffer, onWrite: Result -> () = { _ in }) {
+    public func write(buffer data: Buffer, onWrite: Result -> () = { _ in }) {
         let bytes = UnsafeMutablePointer<Int8>(data.bytes)
         writeBytes(bytes, length: UInt32(data.length), onWrite: onWrite)
     }
     
-    private func writeBytes(bytes: UnsafeMutablePointer<Int8>, length: UInt32, onWrite: Result -> () = { _ in }){
+    private func writeBytes(_ bytes: UnsafeMutablePointer<Int8>, length: UInt32, onWrite: Result -> () = { _ in }){
         if isClosing() {
             return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
@@ -269,7 +268,7 @@ extension Stream {
      
      - parameter callback: Completion handler
      */
-    public func read(callback: ReadStreamResult -> ()) {
+    public func read(_ callback: ReadStreamResult -> ()) {
         if isClosing() {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }

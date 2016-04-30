@@ -91,6 +91,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B64AE6D41CD5274E00518A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "_____Product_Time";
+			remoteInfo = Time;
+		};
+		B64AE6D61CD5274E00518A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "_____Product_TimeTestSuite";
+			remoteInfo = Time.testsuite;
+		};
+		B64AE6D91CD5275B00518A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "______Target_Time";
+			remoteInfo = Time;
+		};
+		B64AE6DB1CD5275F00518A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "______Target_Time";
+			remoteInfo = Time;
+		};
 		B6FD25C31C46D58100A08245 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6F20B5D1C438BFA00A270CF /* Project object */;
@@ -114,6 +142,7 @@
 		B63354DB1C8827FA005EA8D9 /* Idle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Idle.swift; sourceTree = "<group>"; };
 		B636D7EC1CB24B2800CEC5CD /* ClusterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterTests.swift; sourceTree = "<group>"; };
 		B6395E361C821A9100DB3084 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
+		B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Time.xcodeproj; path = ../../Time/Xcode/Time.xcodeproj; sourceTree = "<group>"; };
 		B65785C71C6F3866005B98FB /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		B6635D1E1C555FB600D8EE19 /* ChildProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildProcess.swift; sourceTree = "<group>"; };
 		B66AFEE31C52AFB600D7609F /* FS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FS.swift; sourceTree = "<group>"; };
@@ -174,6 +203,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B64AE6D01CD5274D00518A8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B64AE6D51CD5274E00518A8B /* Time.dylib */,
+				B64AE6D71CD5274E00518A8B /* TimeTestSuite.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		B6C2819B1C6A6B5900645BEC /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +244,7 @@
 		B6F20B5C1C438BFA00A270CF = {
 			isa = PBXGroup;
 			children = (
+				B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */,
 				B6C2819B1C6A6B5900645BEC /* Tests */,
 				B6F20B801C438C4300A270CF /* Sources */,
 				B6F20B681C438BFA00A270CF /* Suv */,
@@ -310,6 +349,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B64AE6DA1CD5275B00518A8B /* PBXTargetDependency */,
 			);
 			name = Suv;
 			productName = "swift-libuv";
@@ -327,6 +367,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B64AE6DC1CD5275F00518A8B /* PBXTargetDependency */,
 				B6FD25C41C46D58100A08245 /* PBXTargetDependency */,
 			);
 			name = SuvTests;
@@ -362,6 +403,12 @@
 			mainGroup = B6F20B5C1C438BFA00A270CF;
 			productRefGroup = B6F20B671C438BFA00A270CF /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B64AE6D01CD5274D00518A8B /* Products */;
+					ProjectRef = B64AE6CF1CD5274D00518A8B /* Time.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B6F20B651C438BFA00A270CF /* Suv */,
@@ -369,6 +416,25 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		B64AE6D51CD5274E00518A8B /* Time.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			name = Time.dylib;
+			path = libTime.dylib;
+			remoteRef = B64AE6D41CD5274E00518A8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B64AE6D71CD5274E00518A8B /* TimeTestSuite.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = file;
+			name = TimeTestSuite.xctest;
+			path = Time.testsuite.xctest;
+			remoteRef = B64AE6D61CD5274E00518A8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B6F20B641C438BFA00A270CF /* Resources */ = {
@@ -484,6 +550,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B64AE6DA1CD5275B00518A8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Time;
+			targetProxy = B64AE6D91CD5275B00518A8B /* PBXContainerItemProxy */;
+		};
+		B64AE6DC1CD5275F00518A8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Time;
+			targetProxy = B64AE6DB1CD5275F00518A8B /* PBXContainerItemProxy */;
+		};
 		B6FD25C41C46D58100A08245 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B6F20B651C438BFA00A270CF /* Suv */;

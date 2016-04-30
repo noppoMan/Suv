@@ -17,7 +17,7 @@ extension String {
         return characters.split(separator: separator, omittingEmptySubsequences: allowEmptySlices).map { String($0) }
     }
     
-    var buffer: UnsafePointer<Int8> {
+    var buffer: UnsafePointer<Int8>? {
 #if os(Linux)
         return NSString(string: self).UTF8String
 #else

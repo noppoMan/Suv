@@ -9,14 +9,14 @@
 import CLibUv
 
 func getCpuCount() -> Int32 {
-    var info = UnsafeMutablePointer<uv_cpu_info_t>(allocatingCapacity: sizeof(uv_cpu_info_t))
+    var info: UnsafeMutablePointer<uv_cpu_info_t>?
+    info = UnsafeMutablePointer<uv_cpu_info_t>(allocatingCapacity: sizeof(uv_cpu_info_t))
+    
     var cpuCount: Int32 = 0
     uv_cpu_info(&info, &cpuCount)
     uv_free_cpu_info(info, cpuCount)
     return cpuCount
 }
-
-private let _cpuCount = getCpuCount()
 
 /**
  For Getting OS information
@@ -26,5 +26,5 @@ public struct OS {
     /**
      Returns number of cpu count
      */
-    public static let cpuCount = _cpuCount
+    public static let cpuCount = getCpuCount()
 }

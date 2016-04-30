@@ -22,7 +22,7 @@ public class TCP: Stream {
     
     private var onConnect: Result -> () = { _ in }
     
-    private var con: UnsafeMutablePointer<uv_connect_t> = nil
+    private var con: UnsafeMutablePointer<uv_connect_t>? = nil
     
     private var socket: UnsafeMutablePointer<uv_tcp_t> {
         return UnsafeMutablePointer<uv_tcp_t>(streamPtr)
@@ -93,7 +93,7 @@ public class TCP: Stream {
      - parameter addr: Address to bind
      - parameter completion: Completion handler
      */
-    public func connect(host host: String, port: Int, completion: Result -> ()) {
+    public func connect(host ahost: String, port: Int, completion: Result -> ()) {
         if streamPtr.pointee.type != UV_TCP {
             let err = SuvError.RuntimeError(message: "Handle type is not UV_TCP")
             return completion(.Error(err))
@@ -102,9 +102,9 @@ public class TCP: Stream {
         self.onConnect = completion
         
         con = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
-        con.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        con?.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
-        DNS.getAddrInfo(self.loop, fqdn: host, port: String(port)) { result in
+        DNS.getAddrInfo(loop: self.loop, fqdn: ahost, port: String(port)) { result in
             if case .Error(let error) = result {
                 return completion(.Error(error))
             }

@@ -27,21 +27,21 @@ public protocol ServerType {
      
      - parameter client: Stream extended client instance
     */
-    func accept(client: Stream, queue: Stream?) throws
+    func accept(_ client: Stream, queue: Stream?) throws
     
     /**
      Bind address or socket
      
      - parameter bindTarget: BindType
      */
-    func bind(bindTarget: BindType) throws
+    func bind(_ bindTarget: BindType) throws
     
     /**
      Accept client
      
      - parameter client: Stream extended client instance
      */
-    func listen(backlog: UInt, onConnection: OnConnectionCallbackType) throws -> ()
+    func listen(_ backlog: UInt, onConnection: OnConnectionCallbackType) throws -> ()
     
     /**
      For close server handle

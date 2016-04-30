@@ -35,7 +35,7 @@ public class Signal {
         uv_signal_init(loop.loopPtr, signalPtr)
     }
     
-    public func start(sig: Int32, signalHandler: (Int32) -> ()){
+    public func start(_ sig: Int32, signalHandler: (Int32) -> ()){
         self.signalHandler = signalHandler
         
         signalPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)

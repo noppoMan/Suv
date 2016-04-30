@@ -40,7 +40,7 @@ public final class PipeServer: ServerType {
     
     private var sockName: String? = nil
     
-    private var context: UnsafeMutablePointer<ServerContext> = nil
+    private var context: UnsafeMutablePointer<ServerContext>
     
     /**
      - parameter loop: Event loop
@@ -60,7 +60,7 @@ public final class PipeServer: ServerType {
      - parameter sockName: Socket name to bind
      - throws: SuvError.UVError
      */
-    public func bind(sockName: BindType) throws {
+    public func bind(_ sockName: BindType) throws {
         self.sockName = sockName
         let r = uv_pipe_bind(socket.pipePtr, sockName)
         
@@ -75,7 +75,7 @@ public final class PipeServer: ServerType {
      - parameter client: Stream extended client instance
      - parameter queue: Write stream queue from the other process. default is nil and use self socket stream
      */
-    public func accept(client: Stream, queue: Stream? = nil) throws {
+    public func accept(_ client: Stream, queue: Stream? = nil) throws {
         let result = uv_accept(socket.streamPtr, client.streamPtr)
         if(result < 0) {
             throw SuvError.UVError(code: result)
@@ -88,7 +88,7 @@ public final class PipeServer: ServerType {
      
      - parameter backlog: The maximum number of tcp established connection that server can handle
      */
-    public func listen(backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws {
+    public func listen(_ backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws {
         self.context.pointee.onConnection = onConnection
         if self.sockName == nil {
             throw SuvError.RuntimeError(message: "Could not call listen without bind sock")
@@ -118,14 +118,15 @@ public final class PipeServer: ServerType {
         stream.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(stream, Int32(backlog)) { stream, status in
-            let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data)
+            if let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data) {
             
-            guard status >= 0 else {
-                let err = SuvError.UVError(code: status)
-                return context.pointee.onConnection(.Error(err))
+                guard status >= 0 else {
+                    let err = SuvError.UVError(code: status)
+                    return context.pointee.onConnection(.Error(err))
+                }
+                
+                context.pointee.onConnection(.Success(nil))
             }
-            
-            context.pointee.onConnection(.Success(nil))
         }
         
         if result < 0 {

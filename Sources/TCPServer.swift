@@ -63,7 +63,7 @@ public final class TCPServer: ServerType {
     */
     public let loop: Loop
     
-    private var context: UnsafeMutablePointer<ServerContext> = nil
+    private var context: UnsafeMutablePointer<ServerContext>
     
     /**
      - parameter loop: Event loop
@@ -91,7 +91,7 @@ public final class TCPServer: ServerType {
      - parameter addr: Bind Address
      - throws: SuvError.UVError
     */
-    public func bind(addr: BindType) throws {
+    public func bind(_ addr: BindType) throws {
         let r = uv_tcp_bind(UnsafeMutablePointer<uv_tcp_t>(socket.streamPtr), addr.address, 0)
         if r < 0 {
             throw SuvError.UVError(code: r)
@@ -105,7 +105,7 @@ public final class TCPServer: ServerType {
      - parameter client: Stream extended client instance
      - parameter queue: Write stream queue from the other process. default is nil and use self socket stream
      */
-    public func accept(client: Stream, queue: Stream? = nil) throws {
+    public func accept(_ client: Stream, queue: Stream? = nil) throws {
         let stream: Stream
         if let queue = queue {
             stream = queue
@@ -127,13 +127,13 @@ public final class TCPServer: ServerType {
      - parameter onConnection: Completion handler
     */
     
-    public func listen(backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws -> () {
+    public func listen(_ backlog: UInt = 128, onConnection: OnConnectionCallbackType) throws -> () {
         self.context.pointee.onConnection = onConnection
         
         if !self.socket.ipcEnable {
             try listenServer(backlog)
         } else {
-            self.socket.read2(UV_TCP) { [unowned self] res in
+            self.socket.read2(pendingType: UV_TCP) { [unowned self] res in
                 if case .Error(let err) = res {
                     self.context.pointee.onConnection(.Error(err))
                 } else if case .Success(let queue) = res {
@@ -143,18 +143,19 @@ public final class TCPServer: ServerType {
         }
     }
     
-    private func listenServer(backlog: UInt = 128) throws -> () {
+    private func listenServer(_ backlog: UInt = 128) throws -> () {
         socket.streamPtr.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(socket.streamPtr, Int32(backlog)) { stream, status in
-            let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data)
+            if let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data) {
             
-            guard status >= 0 else {
-                let err = SuvError.UVError(code: status)
-                return context.pointee.onConnection(.Error(err))
+                guard status >= 0 else {
+                    let err = SuvError.UVError(code: status)
+                    return context.pointee.onConnection(.Error(err))
+                }
+                
+                context.pointee.onConnection(.Success(nil))
             }
-            
-            context.pointee.onConnection(.Success(nil))
         }
         
         if result < 0 {

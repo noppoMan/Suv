@@ -23,7 +23,7 @@
 // SOFTWARE.
 
 public struct Base64 {
-    public static func decode(string: String) throws -> Buffer {
+    public static func decode(_ string: String) throws -> Buffer {
         let ascii: [UInt8] = [
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -55,7 +55,7 @@ public struct Base64 {
             unreadBytes += 1
         }
         
-        func byte(index: Int) -> Int {
+        func byte(_ index: Int) -> Int {
             return Int(Array(string.utf8)[index])
         }
         
@@ -85,16 +85,16 @@ public struct Base64 {
         return decoded
     }
     
-    public static func encode(data: Buffer, specialChars: String = "+/", paddingChar: Character? = "=") throws -> String {
+    public static func encode(_ data: Buffer, specialChars: String = "+/", paddingChar: Character? = "=") throws -> String {
         
         let base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + specialChars
         var encoded: String = ""
         
-        func appendCharacterFromBase(character: Int) {
+        func appendCharacterFromBase(_ character: Int) {
             encoded.append(base64[base64.startIndex.advanced(by: character)])
         }
         
-        func byte(index: Int) -> Int {
+        func byte(_ index: Int) -> Int {
             return  Int(data.bytes[index])
         }
         

@@ -28,12 +28,12 @@ private func launchServer() -> PipeServer {
             return server.close()
         }
         
-        let client = TCP()
+        let client = Pipe()
         try! server.accept(client)
         
         client.read { result in
             if case let .Data(buf) = result {
-                client.write(buf)
+                client.write(buffer: buf)
             } else if case .Error = result {
                 client.close()
             } else {
@@ -59,7 +59,7 @@ class PipeTests: XCTestCase {
             let client = Pipe()
             
             client.connect("/tmp/suv-test.sock") { res in
-                client.write(Buffer(string: "Hi!")) { res in
+                client.write(buffer: Buffer(string: "Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
                             XCTAssertEqual(buf.toString()!, "Hi!")

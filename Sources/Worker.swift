@@ -65,13 +65,13 @@ struct InternalMessageParser {
         self.completion = completion
     }
     
-    mutating func parse(src: String) {
+    mutating func parse(_ src: String) {
         self.received = self.received + src
         
         if cmd.isEmpty {
-            let t = received.splitBy("\t", allowEmptySlices: true, maxSplit: 2)
+            let t = received.splitBy(separator: "\t", allowEmptySlices: true, maxSplit: 2)
             if t.count >= 3 {
-                let t2 = t[0].splitBy(".")
+                let t2 = t[0].splitBy(separator: ".")
                 if t2[0] != "Suv" || t2[1] != "InterProcess" {
                     return
                 }
@@ -137,11 +137,11 @@ struct InternalMessageParser {
 }
 
 extension Pipe {
-    internal func send(event: InterProcessEvent){
-        self.write(Buffer(string: "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
+    internal func send(_ event: InterProcessEvent){
+        self.write(buffer: Buffer(string: "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
     }
     
-    internal func on(callback: InterProcessEvent -> ()){
+    internal func on(_ callback: InterProcessEvent -> ()){
         var parser = InternalMessageParser(callback)
         
         self.read { result in
@@ -209,7 +209,7 @@ extension Worker {
      
      - parameter event: An event that want to send a worker
      */
-    public func send(event: InterProcessEvent){
+    public func send(_ event: InterProcessEvent){
         writeChannel?.send(event)
     }
     
@@ -218,7 +218,7 @@ extension Worker {
      
      - parameter callback: Handler for receiving event from a worker
      */
-    public func on(callback: InterProcessEvent -> ()){
+    public func on(_ callback: InterProcessEvent -> ()){
         // Online should be called at once
         if !self.emitedOnlineEvent {
             callback(.Online)

@@ -30,7 +30,7 @@ public class FS {
      
      - Throws: SuvError.UVError
      */
-    public static func unlink(path: String, loop: Loop = Loop.defaultLoop) throws {
+    public static func unlink(_ path: String, loop: Loop = Loop.defaultLoop) throws {
         let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
         let r = uv_fs_unlink(loop.loopPtr, req, path, nil)
         fs_req_cleanup(req)
@@ -46,7 +46,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func ftell(fd: Int32, loop: Loop = Loop.defaultLoop, completion: Int -> ()){
+    public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: Int -> ()){
         let reader = FileReader(
             loop: loop,
             fd: fd,
@@ -72,7 +72,7 @@ public class FS {
      - parameter position: Not implemented yet
      - parameter completion: Completion handler
      */
-    public static func read(fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: FsReadResult -> ()){
+    public static func read(_ fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: FsReadResult -> ()){
         let reader = FileReader(
             loop: loop,
             fd: fd,
@@ -95,7 +95,7 @@ public class FS {
      - parameter position: Position to start writing
      - parameter completion: Completion handler
      */
-    public static func write(fd: Int32, loop: Loop = Loop.defaultLoop, data: Buffer, offset: Int = 0, length: Int? = nil, position: Int = 0, completion: (GenericResult<Int>) -> Void){
+    public static func write(_ fd: Int32, loop: Loop = Loop.defaultLoop, withBuffer data: Buffer, offset: Int = 0, length: Int? = nil, position: Int = 0, completion: (GenericResult<Int>) -> Void){
         let writer = FileWriter(
             loop: loop,
             fd: fd,
@@ -116,7 +116,7 @@ public class FS {
      - parameter mode: mode for uv_fs_open
      - parameter completion: Completion handler
      */
-    public static func open(path: String, loop: Loop = Loop.defaultLoop, flags: OpenFlag = .R, mode: Int32? = nil, completion: (GenericResult<Int32>) -> Void) {
+    public static func open(_ path: String, loop: Loop = Loop.defaultLoop, flags: OpenFlag = .R, mode: Int32? = nil, completion: (GenericResult<Int32>) -> Void) {
         
         let context = FSContext(onOpen: completion)
         
@@ -149,7 +149,7 @@ public class FS {
      - parameter completion: Completion handler
      - parameter loop: Event Loop
      */
-    public static func stat(path: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
+    public static func stat(_ path: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
         let stat = FileStat(loop: loop, path: path) { res in
             completion(res)
         }
@@ -163,7 +163,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func close(fd: Int32, loop: Loop = Loop.defaultLoop, completion: Result -> () = { _ in }){
+    public static func close(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: Result -> () = { _ in }){
         let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
         uv_fs_close(loop.loopPtr, req, uv_file(fd), nil)
         fs_req_cleanup(req)
@@ -177,7 +177,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func createFile(path: String, loop: Loop = Loop.defaultLoop, completion: ErrorProtocol? -> ()) {
+    public static func createFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: ErrorProtocol? -> ()) {
         FS.open(path, flags: .W) { res in
             if case .Error(let err) = res {
                 return completion(err)
@@ -198,7 +198,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func readFile(path: String, loop: Loop = Loop.defaultLoop, completion: (GenericResult<Buffer>) -> Void) {
+    public static func readFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: (GenericResult<Buffer>) -> Void) {
         FS.open(path, flags: .R) { res in
             if case .Error(let err) = res {
                 return completion(.Error(err))
@@ -230,8 +230,8 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func writeFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
-        writeFile(path, data: Buffer(string: data), loop: loop, completion: completion)
+    public static func writeFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
+        writeFile(path, withBuffer: Buffer(string: data), loop: loop, completion: completion)
     }
     
     /**
@@ -242,14 +242,14 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func writeFile(path: String, data: Buffer, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
+    public static func writeFile(_ path: String, withBuffer data: Buffer, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
         FS.open(path, flags: .W) { res in
             if case .Error(let err) = res {
                 return completion(.Error(err))
             }
             
             if case .Success(let fd) = res {
-                FS.write(fd, data: data) { res in
+                FS.write(fd, withBuffer: data) { res in
                     FS.close(fd)
                     switch(res) {
                     case .Success:
@@ -270,8 +270,8 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func appendFile(path: String, data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
-        appendFile(path, data: Buffer(string: data), loop: loop, completion: completion)
+    public static func appendFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
+        appendFile(path, withBuffer: Buffer(string: data), loop: loop, completion: completion)
     }
     
     
@@ -283,7 +283,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func appendFile(path: String, data: Buffer, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
+    public static func appendFile(_ path: String, withBuffer data: Buffer, loop: Loop = Loop.defaultLoop, completion: (Result) -> Void) {
         FS.open(path, flags: .AP) { res in
             if case .Error(let err) = res {
                 return completion(.Error(err))
@@ -295,7 +295,7 @@ public class FS {
                         return completion(.Error(SuvError.FileSystemError(message: .FSInvalidPosition)))
                     }
                     
-                    FS.write(fd, data: data, position: pos) { res in
+                    FS.write(fd, withBuffer: data, position: pos) { res in
                         FS.close(fd)
                         switch(res) {
                         case .Success:
@@ -318,7 +318,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func exists(path: String, loop: Loop = Loop.defaultLoop, completion: Bool -> ()){
+    public static func exists(_ path: String, loop: Loop = Loop.defaultLoop, completion: Bool -> ()){
         FS.stat(path) { res in
             if case .Error = res {
                 return completion(false)
