@@ -77,7 +77,7 @@ internal class FileReader {
     }
 }
 
-private func readNext(context: FileReaderContext){
+private func readNext(_ context: FileReaderContext){
     let readReq = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
     context.buf = uv_buf_init(UnsafeMutablePointer(allocatingCapacity: numOfBytes), UInt32(numOfBytes))
     
@@ -91,7 +91,7 @@ private func readNext(context: FileReaderContext){
     }
 }
 
-private func onReadEach(req: UnsafeMutablePointer<uv_fs_t>) {
+private func onReadEach(_ req: UnsafeMutablePointer<uv_fs_t>!) {
     let context: FileReaderContext = releaseVoidPointer(req.pointee.data)!
     defer {
         fs_req_cleanup(req)

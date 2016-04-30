@@ -94,7 +94,7 @@ extension Process {
      
      - parameter event: An event that want to send a master
     */
-    public static func send(event: InterProcessEvent){
+    public static func send(_ event: InterProcessEvent){
         if Cluster.isMaster { return }
         
         if writeChannel == nil {
@@ -109,7 +109,7 @@ extension Process {
      
      - parameter callback: Handler for receiving event from a master
      */
-    public static func on(callback: InterProcessEvent -> ()){
+    public static func on(_ callback: InterProcessEvent -> ()){
         if Cluster.isMaster { return }
         
         if readChannel == nil {

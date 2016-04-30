@@ -42,7 +42,7 @@ public class Pipe: Stream {
      
      - parameter stdio: Number of fd to open (Stdio)
     */
-    public func open(stdio: Stdio = Stdio.STDIN) -> Pipe {
+    public func open(_ stdio: Stdio = Stdio.STDIN) -> Pipe {
         uv_pipe_open(pipePtr, stdio.rawValue)
         return self
     }
@@ -52,7 +52,7 @@ public class Pipe: Stream {
      
      - parameter stdio: Number of fd to open (Int32)
      */
-    public func open(stdio: Int32) -> Pipe {
+    public func open(_ stdio: Int32) -> Pipe {
         uv_pipe_open(pipePtr, stdio)
         return self
     }
@@ -63,7 +63,7 @@ public class Pipe: Stream {
      - parameter sockName: Socket name to connect
      - parameter onConnect: Will be called when the connection is succeeded or failed
      */
-    public func connect(sockName: String, onConnect: GenericResult<Stream> -> ()){
+    public func connect(_ sockName: String, onConnect: GenericResult<Stream> -> ()){
         self.onConnect = onConnect
         let req = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
         

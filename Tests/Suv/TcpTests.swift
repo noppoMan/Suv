@@ -27,7 +27,7 @@ private func launchServer() -> TCPServer {
         
         client.read { result in
             if case let .Data(buf) = result {
-                client.write(buf)
+                client.write(buffer: buf)
             } else if case .Error = result {
                 client.close()
             } else {
@@ -52,7 +52,7 @@ class TcpTests: XCTestCase {
             let client = TCP()
             
             client.connect(host: "localhost", port: 9999) { res in
-                client.write(Buffer(string: "Hi!")) { res in
+                client.write(buffer: Buffer(string: "Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
                             XCTAssertEqual(buf.toString()!, "Hi!")

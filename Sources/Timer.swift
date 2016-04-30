@@ -8,9 +8,10 @@
 
 import CLibUv
 
-private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>){
-    let context = UnsafeMutablePointer<TimerContext>(handle.pointee.data)
-    context.pointee.callback()
+private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>!){
+    if let context = UnsafeMutablePointer<TimerContext>(handle.pointee.data) {
+        context.pointee.callback()
+    }
 }
 
 struct TimerContext {
@@ -52,7 +53,7 @@ public class Timer {
     
     private let handle: UnsafeMutablePointer<uv_timer_t>
     
-    private var context: UnsafeMutablePointer<TimerContext> = nil
+    private var context: UnsafeMutablePointer<TimerContext>?
     
     private var initalized = false
     
@@ -98,7 +99,7 @@ public class Timer {
         if initalized { return }
         
         context = UnsafeMutablePointer<TimerContext>(allocatingCapacity: 1)
-        context.initialize(with: TimerContext(callback: callback))
+        context?.initialize(with: TimerContext(callback: callback))
         
         handle.pointee.data = UnsafeMutablePointer(context)
         

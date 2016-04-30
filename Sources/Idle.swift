@@ -8,12 +8,13 @@
 
 import CLibUv
 
-private func idle_cb(handle: UnsafeMutablePointer<uv_idle_t>) {
-    let ctx = UnsafeMutablePointer<IdleContext>(handle.pointee.data)
-    if ctx.pointee.queues.count <= 0 { return }
-    let lastIndex = ctx.pointee.queues.count - 1
-    let queue = ctx.pointee.queues.remove(at: lastIndex)
-    queue()
+private func idle_cb(handle: UnsafeMutablePointer<uv_idle_t>!) {
+    if let ctx = UnsafeMutablePointer<IdleContext>(handle.pointee.data) {
+        if ctx.pointee.queues.count <= 0 { return }
+        let lastIndex = ctx.pointee.queues.count - 1
+        let queue = ctx.pointee.queues.remove(at: lastIndex)
+        queue()
+    }
 }
 
 private struct IdleContext {
@@ -21,9 +22,9 @@ private struct IdleContext {
 }
 
 public class Idle {
-    private var handle: UnsafeMutablePointer<uv_idle_t> = nil
+    private var handle: UnsafeMutablePointer<uv_idle_t>
     
-    private var ctx: UnsafeMutablePointer<IdleContext> = nil
+    private var ctx: UnsafeMutablePointer<IdleContext>
     
     public private(set) var isStarted = false
     
@@ -35,7 +36,7 @@ public class Idle {
         uv_idle_init(loop.loopPtr, handle)
     }
     
-    public func append(queue: () -> ()){
+    public func append(_ queue: () -> ()){
         ctx.pointee.queues.append(queue)
     }
     

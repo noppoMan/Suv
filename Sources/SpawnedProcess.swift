@@ -57,7 +57,7 @@ public class SpawnedProcess {
      
      - parameter callback: Completion handler
      */
-    public func onExit(callback: (Int64) -> ()){
+    public func onExit(_ callback: (Int64) -> ()){
         self.onExitCallback = callback
     }
 
@@ -66,7 +66,7 @@ public class SpawnedProcess {
      
      - parameter sig: signal for kill
      */
-    public func kill(sig: Int32) throws {
+    public func kill(_ sig: Int32) throws {
         uv_kill(self.pid!, sig)
     }
 }

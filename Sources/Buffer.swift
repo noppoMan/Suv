@@ -59,8 +59,8 @@ public struct Buffer {
      
      - parameter bytes: UInt8 Array bytes
      */
-    public mutating func append(bytes bytes: [UInt8]) {
-        self.bytes += bytes
+    public mutating func append(bytes abytes: [UInt8]) {
+        self.bytes += abytes
     }
     
     /**
@@ -68,8 +68,8 @@ public struct Buffer {
      
      - parameter byte: A UInt8 byte
      */
-    public mutating func append(byte byte: UInt8) {
-        self.bytes.append(byte)
+    public mutating func append(byte abyte: UInt8) {
+        self.bytes.append(abyte)
     }
     
     /**
@@ -96,10 +96,10 @@ public struct Buffer {
      - parameter buffer: UnsafePointer<UInt8> buffer
      - parameter length: length for buffer
      */
-    public mutating func append(buffer buffer: UnsafePointer<UInt8>, length: Int) {
+    public mutating func append(buffer buf: UnsafePointer<UInt8>, length: Int) {
         var bytes: [UInt8] = []
         for i in stride(from: 0, to: length, by: 1) {
-            bytes.append(buffer[i])
+            bytes.append(buf[i])
         }
         self.append(bytes: bytes)
     }
@@ -114,11 +114,11 @@ extension Buffer {
      - parameter encoding: Encoding for converting
      - returns: String Converted Buffer.bytes
      */
-    public func toString(encoding: Encoding = .UTF8) -> String? {
+    public func toString(_ encoding: Encoding = .UTF8) -> String? {
         return toStringWithEncoding(encoding)
     }
 
-    private func toStringWithEncoding(encoding: Encoding) -> String? {
+    private func toStringWithEncoding(_ encoding: Encoding) -> String? {
         switch encoding {
         case .Base64:
             do {

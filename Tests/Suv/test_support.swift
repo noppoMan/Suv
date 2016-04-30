@@ -42,7 +42,7 @@ private class AsynchronousTestSupporter {
 
 
 extension XCTestCase {
-    func waitUntil(timeout: Int = 1, description: String, callback: (() -> ()) -> ()){
+    func waitUntil(_ timeout: Int = 1, description: String, callback: (() -> ()) -> ()){
         let _ = AsynchronousTestSupporter(timeout: timeout, description: description, callback: callback)
         Loop.defaultLoop.run()
     }
@@ -51,7 +51,7 @@ extension XCTestCase {
 
 internal typealias SeriesCB = ((ErrorProtocol?) -> ()) -> ()
 
-internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Void) {
+internal func seriesTask(_ tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Void) {
     if tasks.count == 0 {
         completion(nil)
         return
@@ -59,7 +59,7 @@ internal func seriesTask(tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Vo
     
     var index = 0
     
-    func _series(current: SeriesCB?) {
+    func _series(_ current: SeriesCB?) {
         if let cur = current {
             cur { err in
                 if let e = err {

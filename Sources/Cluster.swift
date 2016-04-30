@@ -16,7 +16,7 @@ private var onlined = false
 
 
 func exexOptions() -> [String] {
-    if Process.arguments.count > 1 {
+    if Process.argc > 1 {
         return Array(Process.arguments[1..<Process.arguments.count])
     }
     
