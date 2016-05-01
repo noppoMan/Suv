@@ -94,7 +94,7 @@ public class Timer {
     /**
      Start the timer with specific mode
     */
-    public func start(callback: () -> ()){
+    public func start(_ callback: () -> ()){
         if case .End = state { return }
         if initalized { return }
         

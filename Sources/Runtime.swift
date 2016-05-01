@@ -75,7 +75,7 @@ public extension Process {
      
      - parameter queue: Function to invoke at the next idle
     */
-    public static func setImmediate(queue: () -> ()) {
+    public static func setImmediate(_ queue: () -> ()) {
         if !idle.isStarted {
             idle.start()
         }

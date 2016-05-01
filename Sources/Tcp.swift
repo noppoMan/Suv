@@ -56,7 +56,7 @@ public class TCP: Stream {
     /**
      Enable / disable Nagle’s algorithm.
     */
-    public func setNoDelay(enable: Bool) throws {
+    public func setNoDelay(_ enable: Bool) throws {
         if streamPtr.pointee.type != UV_TCP {
             throw SuvError.RuntimeError(message: "Handle type is not UV_TCP")
         }
@@ -75,7 +75,7 @@ public class TCP: Stream {
      - parameter enable: if ture enable tcp keepalive, false disable it
      - parameter delay: the initial delay in seconds, ignored when disable.
      */
-    public func setKeepAlive(enable: Bool, delay: UInt) throws {
+    public func setKeepAlive(_ enable: Bool, delay: UInt) throws {
         if streamPtr.pointee.type != UV_TCP {
             throw SuvError.RuntimeError(message: "Handle type is not UV_TCP")
         }
