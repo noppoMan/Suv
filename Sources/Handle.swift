@@ -10,6 +10,8 @@ import CLibUv
 
 public class Handle {
     
+    private var onCloseHandlers = [() -> ()]()
+    
     internal let handlePtr: UnsafeMutablePointer<uv_handle_t>
     
     public init(_ handlePtr: UnsafeMutablePointer<uv_handle_t>){
@@ -47,6 +49,10 @@ public class Handle {
         return false
     }
     
+    public func onClose(_ onClose: () -> ()){
+        self.onCloseHandlers.append(onClose)
+    }
+    
     /**
      close stream handle
      */
@@ -54,6 +60,10 @@ public class Handle {
         if isClosing() { return }
         
         close_handle(handlePtr)
+        
+        for handler in onCloseHandlers {
+            handler()
+        }
     }
     
     /**

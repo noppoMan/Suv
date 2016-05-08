@@ -40,6 +40,7 @@ public class Stream: Handle {
 }
 
 extension Stream {
+    
     /**
      Returns true if the pipe is ipc, 0 otherwise.
      */
