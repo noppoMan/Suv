@@ -30,14 +30,6 @@ public enum SocketState {
  */
 public class Stream: Handle {
     
-    private var onRead: ReadStreamResult -> () = { _ in}
-    
-    private var onRead2: GenericResult<Pipe> -> () = { _ in }
-    
-    private var onWrite: Result -> () = {_ in }
-    
-    private var onShutDown: () -> () = {}
-    
     /**
      Initialize with Pointer of the uv_stream_t
      - parameter stream: Pointer of the uv_stream_t
@@ -95,18 +87,14 @@ extension Stream {
     /**
      shoutdown connection
      */
-    public func shutdown(_ completion: (() -> ())? = nil) {
+    public func shutdown(_ completion: () -> () = { _ in }) {
         if isClosing() { return }
         
-        if let onShutDown = completion {
-            self.onShutDown = onShutDown
-        }
-        
         let req = UnsafeMutablePointer<uv_shutdown_t>(allocatingCapacity: sizeof(uv_shutdown_t))
-        req.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        req.pointee.data =  retainedVoidPointer(completion)
         uv_shutdown(req, streamPtr) { req, status in
-            let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
-            stream.onShutDown()
+            let completion: () -> () = releaseVoidPointer(req.pointee.data)!
+            completion()
             dealloc(req)
         }
     }
@@ -173,16 +161,15 @@ extension Stream {
         }
         
         var data = uv_buf_init(bytes, length)
-        self.onWrite = onWrite
         
         withUnsafePointer(&data) {
             let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
-            writeReq.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+            writeReq.pointee.data = retainedVoidPointer(onWrite)
             
             let r = uv_write(writeReq, streamPtr, $0, 1) { req, _ in
-                let stream = unsafeBitCast(req.pointee.data, to: Stream.self)
+                let onWrite: Result -> () = releaseVoidPointer(req.pointee.data)!
                 destroy_write_req(req)
-                stream.onWrite(.Success)
+                onWrite(.Success)
             }
             
             if r < 0 {
@@ -218,7 +205,7 @@ extension Stream {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        onRead2 = { result in
+        let onRead2: GenericResult<Pipe> -> () = { result in
             if case .Success(let queue) = result {
                 let pipePtr = UnsafeMutablePointer<uv_pipe_t>(queue.streamPtr)
                 if uv_pipe_pending_count(pipePtr) <= 0 {
@@ -236,14 +223,14 @@ extension Stream {
             callback(result)
         }
         
-        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        streamPtr.pointee.data = retainedVoidPointer(onRead2)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
             defer {
                 dealloc(buf.pointee.base, capacity: nread)
             }
             
-            let stream = unsafeBitCast(queue.pointee.data, to: Stream.self)
+            let onRead2: GenericResult<Pipe> -> () = releaseVoidPointer(queue.pointee.data)!
             
             let result: GenericResult<Pipe>
             if (nread == Int(UV_EOF.rawValue)) {
@@ -255,7 +242,8 @@ extension Stream {
                 result = .Success(pipe)
             }
             
-            stream.onRead2(result)
+            queue.pointee.data = retainedVoidPointer(onRead2)
+            onRead2(result)
         }
         
         if r < 0 {
@@ -273,15 +261,14 @@ extension Stream {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        onRead = callback
-        streamPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
+        streamPtr.pointee.data = retainedVoidPointer(callback)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
             defer {
                 dealloc(buf.pointee.base, capacity: nread)
             }
             
-            let stream = unsafeBitCast(stream.pointee.data, to: Stream.self)
+            let onRead: ReadStreamResult -> () = releaseVoidPointer(stream.pointee.data)!
             
             let data: ReadStreamResult
             if (nread == Int(UV_EOF.rawValue)) {
@@ -294,7 +281,8 @@ extension Stream {
                 data = .Data(buffer)
             }
             
-            stream.onRead(data)
+            stream.pointee.data = retainedVoidPointer(onRead)
+            onRead(data)
         }
         
         if r < 0 {
