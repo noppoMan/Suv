@@ -9,7 +9,7 @@
 import CLibUv
 
 struct FileStatContext {
-    var completion: Result -> ()
+    var completion: (Result) -> ()
 }
 
 class FileStat {
@@ -20,7 +20,7 @@ class FileStat {
     
     let loop: Loop
     
-    init(loop: Loop = Loop.defaultLoop, path: String, completion: Result -> ()){
+    init(loop: Loop = Loop.defaultLoop, path: String, completion: (Result) -> ()){
         self.loop = loop
         self.path = path
         self.context = FileStatContext(completion: completion)
@@ -31,6 +31,8 @@ class FileStat {
         req.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_stat(loop.loopPtr, req, path) { req in
+            guard let req = req else { return }
+            
             let context: FileStatContext = releaseVoidPointer(req.pointee.data)!
             
             defer {

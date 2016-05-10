@@ -35,7 +35,7 @@ public struct AddrInfo {
 }
 
 private struct DnsContext {
-    let completion: GenericResult<[AddrInfo]> -> ()
+    let completion: (GenericResult<[AddrInfo]>) -> ()
 }
 
 // TODO Should implement with uv_queue_work or uv_getnameinfo
@@ -70,7 +70,7 @@ func sockaddr_description(addr: UnsafePointer<sockaddr>, length: UInt32) -> Addr
 }
 
 extension addrinfo {
-    func walk(_ f: addrinfo -> Void) -> Void {
+    func walk(_ f: (addrinfo) -> Void) -> Void {
         f(self)
         if self.ai_next != nil {
             self.ai_next.pointee.walk(f)
@@ -78,7 +78,11 @@ extension addrinfo {
     }
 }
 
-func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>!, status: Int32, res: UnsafeMutablePointer<addrinfo>!){
+func getaddrinfo_cb(req: UnsafeMutablePointer<uv_getaddrinfo_t>?, status: Int32, res: UnsafeMutablePointer<addrinfo>?){
+    guard let req = req, res = res else {
+        return
+    }
+    
     let context: DnsContext = releaseVoidPointer(req.pointee.data)!
     
     defer {
@@ -117,7 +121,7 @@ public class DNS {
      - parameter fqdn: The fqdn to resolve
      - parameter port: The port number(String) to resolve
     */
-    public static func getAddrInfo(loop: Loop = Loop.defaultLoop, fqdn: String, port: String? = nil, completion: GenericResult<[AddrInfo]> -> ()){
+    public static func getAddrInfo(loop: Loop = Loop.defaultLoop, fqdn: String, port: String? = nil, completion: (GenericResult<[AddrInfo]>) -> ()){
         let req = UnsafeMutablePointer<uv_getaddrinfo_t>(allocatingCapacity: sizeof(uv_getaddrinfo_t))
         
         let context = DnsContext(completion: completion)

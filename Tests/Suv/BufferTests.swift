@@ -16,7 +16,7 @@ import XCTest
 @testable import Suv
 
 class BufferTests: XCTestCase {
-    static var allTests: [(String, BufferTests -> () throws -> Void)] {
+    static var allTests: [(String, (BufferTests) -> () throws -> Void)] {
         return [
             ("testToString", testToString)
         ]

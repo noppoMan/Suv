@@ -10,13 +10,20 @@ import CLibUv
 
 private typealias WorkQueueTask = () -> ()
 
-private func work_cb(req: UnsafeMutablePointer<uv_work_t>!) {
+private func work_cb(req: UnsafeMutablePointer<uv_work_t>?) {
+    guard let req = req else {
+        return
+    }
     let ctx: QueueWorkerContext = releaseVoidPointer(req.pointee.data)!
     ctx.workCB()
     req.pointee.data = retainedVoidPointer(ctx)
 }
 
-private func after_work_cb(req: UnsafeMutablePointer<uv_work_t>!, status: Int32){
+private func after_work_cb(req: UnsafeMutablePointer<uv_work_t>?, status: Int32){
+    guard let req = req else {
+        return
+    }
+    
     defer {
         dealloc(req)
     }

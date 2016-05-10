@@ -18,7 +18,7 @@ import XCTest
 private let targetFile = Process.cwd + "/test.txt"
 
 class FsTests: XCTestCase {
-    static var allTests: [(String, FsTests -> () throws -> Void)] {
+    static var allTests: [(String, (FsTests) -> () throws -> Void)] {
         return [
             ("testReadFile", testReadFile),
             ("testWriteFile", testWriteFile),

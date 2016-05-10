@@ -40,7 +40,7 @@ private func launchServer() -> TCPServer {
 }
 
 class TcpTests: XCTestCase {
-    static var allTests: [(String, TcpTests -> () throws -> Void)] {
+    static var allTests: [(String, (TcpTests) -> () throws -> Void)] {
         return [
             ("testTcpConnect", testTcpConnect)
         ]

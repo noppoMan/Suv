@@ -40,8 +40,10 @@ public class Signal {
         
         signalPtr.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         uv_signal_start(signalPtr, { handle, sig in
-            let _signal = unsafeBitCast(handle.pointee.data, to: Signal.self)
-            _signal.signalHandler(sig)
+            if let handle = handle {
+                let _signal = unsafeBitCast(handle.pointee.data, to: Signal.self)
+                _signal.signalHandler(sig)
+            }
         }, sig)
     }
     

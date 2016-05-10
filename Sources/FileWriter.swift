@@ -17,7 +17,7 @@ import CLibUv
 private class FileWriterContext {
     var writeReq: UnsafeMutablePointer<uv_fs_t>? = nil
     
-    var onWrite: GenericResult<Int> -> Void = {_ in }
+    var onWrite: (GenericResult<Int>) -> Void = {_ in }
     
     var bytesWritten: Int64 = 0
     
@@ -39,7 +39,7 @@ private class FileWriterContext {
         return position + Int(bytesWritten)
     }
     
-    init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: GenericResult<Int> -> Void){
+    init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: (GenericResult<Int>) -> Void){
         self.loop = loop
         self.fd = fd
         self.offset = offset
@@ -53,7 +53,7 @@ internal class FileWriter {
     
     private var context: FileWriterContext
     
-    init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: GenericResult<Int> -> Void){
+    init(loop: Loop = Loop.defaultLoop, fd: Int32, offset: Int, length: Int? = nil, position: Int, completion: (GenericResult<Int>) -> Void){
         context = FileWriterContext(
             loop: loop,
             fd: fd,
@@ -83,7 +83,9 @@ private func attemptWrite(_ context: FileWriterContext){
         writeReq.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_write(context.loop.loopPtr, writeReq, uv_file(context.fd), $0, UInt32(context.buf!.len), Int64(context.curPos)) { req in
-            onWriteEach(req)
+            if let req = req {
+                onWriteEach(req)
+            }
         }
         
         if r < 0 {

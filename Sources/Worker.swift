@@ -59,9 +59,9 @@ struct InternalMessageParser {
     
     var message = ""
     
-    let completion: InterProcessEvent -> ()
+    let completion: (InterProcessEvent) -> ()
     
-    init(_ completion: InterProcessEvent -> ()){
+    init(_ completion: (InterProcessEvent) -> ()){
         self.completion = completion
     }
     
@@ -88,7 +88,7 @@ struct InternalMessageParser {
             return
         }
         
-        let to = message.startIndex.advanced(by: length)
+        let to = message.index(message.startIndex, offsetBy: length)
 #if os(Linux)
         let value = message.substringToIndex(to)
 #else
@@ -113,7 +113,7 @@ struct InternalMessageParser {
         self.completion(event)
       
         // Go next parsing
-        let from = message.startIndex.advanced(by: length)
+        let from = message.index(message.startIndex, offsetBy: length)
 #if os(Linux)
         let nextMessage = message.substringFromIndex(from)
 #else
@@ -141,7 +141,7 @@ extension Pipe {
         self.write(buffer: Buffer(string: "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
     }
     
-    internal func on(_ callback: InterProcessEvent -> ()){
+    internal func on(_ callback: (InterProcessEvent) -> ()){
         var parser = InternalMessageParser(callback)
         
         self.read { result in
@@ -169,7 +169,7 @@ public class Worker: Equatable {
     
     private var emitedOnlineEvent = false
     
-    private var onEventCallback: InterProcessEvent -> () = { _ in }
+    private var onEventCallback: (InterProcessEvent) -> () = { _ in }
     
     init(loop: Loop = Loop.defaultLoop, process: SpawnedProcess, workerId: Int){
         self.process = process
@@ -218,7 +218,7 @@ extension Worker {
      
      - parameter callback: Handler for receiving event from a worker
      */
-    public func on(_ callback: InterProcessEvent -> ()){
+    public func on(_ callback: (InterProcessEvent) -> ()){
         // Online should be called at once
         if !self.emitedOnlineEvent {
             callback(.Online)

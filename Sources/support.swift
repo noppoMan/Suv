@@ -8,8 +8,10 @@
 
 import CLibUv
 
-let alloc_buffer: @convention(c) (UnsafeMutablePointer<uv_handle_t>!, ssize_t, UnsafeMutablePointer<uv_buf_t>!) -> Void = { (handle, suggestedSize, buf) in
-    buf.pointee = uv_buf_init(UnsafeMutablePointer(allocatingCapacity: suggestedSize), UInt32(suggestedSize))
+let alloc_buffer: @convention(c) (UnsafeMutablePointer<uv_handle_t>?, ssize_t, UnsafeMutablePointer<uv_buf_t>?) -> Void = { (handle, suggestedSize, buf) in
+    if let buf = buf {
+        buf.pointee = uv_buf_init(UnsafeMutablePointer(allocatingCapacity: suggestedSize), UInt32(suggestedSize))
+    }
 }
 
 internal func close_handle<T>(_ req: UnsafeMutablePointer<T>){
@@ -17,7 +19,9 @@ internal func close_handle<T>(_ req: UnsafeMutablePointer<T>){
         return
     }
     uv_close(UnsafeMutablePointer<uv_handle_t>(req)) {
-        dealloc($0)
+        if let handle = $0 {
+            dealloc(handle)
+        }
     }
 }
 

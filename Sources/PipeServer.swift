@@ -26,7 +26,7 @@ public final class PipeServer: ServerType {
     /**
      Type for generic listen method
      */
-    public typealias OnConnectionCallbackType = GenericResult<Pipe?> -> ()
+    public typealias OnConnectionCallbackType = (GenericResult<Pipe?>) -> ()
     
     /**
      Socket to handle
@@ -118,6 +118,10 @@ public final class PipeServer: ServerType {
         stream.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(stream, Int32(backlog)) { stream, status in
+            guard let stream = stream else {
+                return
+            }
+            
             if let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data) {
             
                 guard status >= 0 else {

@@ -23,9 +23,9 @@ public enum Stdio: Int32 {
  */
 public class Pipe: Stream {
     
-    private var onListen: GenericResult<Int> -> ()  = { _ in }
+    private var onListen: (GenericResult<Int>) -> ()  = { _ in }
     
-    private var onConnect: GenericResult<Stream> -> () = {_ in }
+    private var onConnect: (GenericResult<Stream>) -> () = {_ in }
     
     public init(pipe: UnsafeMutablePointer<uv_pipe_t>){
         super.init(UnsafeMutablePointer<uv_stream_t>(pipe))
@@ -63,13 +63,16 @@ public class Pipe: Stream {
      - parameter sockName: Socket name to connect
      - parameter onConnect: Will be called when the connection is succeeded or failed
      */
-    public func connect(_ sockName: String, onConnect: GenericResult<Stream> -> ()){
+    public func connect(_ sockName: String, onConnect: (GenericResult<Stream>) -> ()){
         self.onConnect = onConnect
         let req = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: sizeof(uv_connect_t))
         
         req.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
         uv_pipe_connect(req, pipePtr, sockName) { req, status in
+            guard let req = req else {
+                return
+            }
             let pipe = unsafeBitCast(req.pointee.data, to: Pipe.self)
             if status < 0 {
                 let err = SuvError.UVError(code: status)

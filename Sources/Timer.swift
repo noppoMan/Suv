@@ -8,8 +8,8 @@
 
 import CLibUv
 
-private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>!){
-    if let context = UnsafeMutablePointer<TimerContext>(handle.pointee.data) {
+private func timer_start_cb(handle: UnsafeMutablePointer<uv_timer_t>?){
+    if let handle = handle, context = UnsafeMutablePointer<TimerContext>(handle.pointee.data) {
         context.pointee.callback()
     }
 }

@@ -18,9 +18,9 @@ import CLibUv
  Stream handle type for TCP reading/writing
  */
 public class TCP: Stream {
-    private var onListen: GenericResult<Int> -> ()  = { _ in }
+    private var onListen: (GenericResult<Int>) -> ()  = { _ in }
     
-    private var onConnect: Result -> () = { _ in }
+    private var onConnect: (Result) -> () = { _ in }
     
     private var con: UnsafeMutablePointer<uv_connect_t>? = nil
     
@@ -93,7 +93,7 @@ public class TCP: Stream {
      - parameter addr: Address to bind
      - parameter completion: Completion handler
      */
-    public func connect(host ahost: String, port: Int, completion: Result -> ()) {
+    public func connect(host ahost: String, port: Int, completion: (Result) -> ()) {
         if streamPtr.pointee.type != UV_TCP {
             let err = SuvError.RuntimeError(message: "Handle type is not UV_TCP")
             return completion(.Error(err))
@@ -115,6 +115,9 @@ public class TCP: Stream {
                 let addr = Address(host: a.host, port: Int(a.service)!)
                 
                 let r = uv_tcp_connect(self.con, self.socket, addr.address) { connection, status in
+                    guard let connection = connection else {
+                        return
+                    }
                     defer {
                         dealloc(connection)
                     }

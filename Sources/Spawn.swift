@@ -98,7 +98,11 @@ public struct SpawnOptions {
     }
 }
 
-private func exit_cb(req: UnsafeMutablePointer<uv_process_t>!, status: Int64, signal: Int32) {
+private func exit_cb(req: UnsafeMutablePointer<uv_process_t>?, status: Int64, signal: Int32) {
+    guard let req = req else {
+        return
+    }
+    
     defer {
         close_handle(req)
     }

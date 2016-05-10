@@ -38,7 +38,7 @@ public extension Process {
      Returns current working directory
      */
     public static var cwd: String {
-        return NSFileManager.defaultManager().currentDirectoryPath
+        return NSFileManager.default().currentDirectoryPath
     }
     
     /**
@@ -109,7 +109,7 @@ extension Process {
      
      - parameter callback: Handler for receiving event from a master
      */
-    public static func on(_ callback: InterProcessEvent -> ()){
+    public static func on(_ callback: (InterProcessEvent) -> ()){
         if Cluster.isMaster { return }
         
         if readChannel == nil {

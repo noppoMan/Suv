@@ -10,7 +10,7 @@ import XCTest
 @testable import Suv
 
 class IdleTests: XCTestCase {
-    static var allTests: [(String, IdleTests -> () throws -> Void)] {
+    static var allTests: [(String, (IdleTests) -> () throws -> Void)] {
         return [
             ("testSetImmediate", testSetImmediate)
         ]

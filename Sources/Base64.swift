@@ -91,7 +91,7 @@ public struct Base64 {
         var encoded: String = ""
         
         func appendCharacterFromBase(_ character: Int) {
-            encoded.append(base64[base64.startIndex.advanced(by: character)])
+            encoded.append(base64[base64.index(base64.startIndex, offsetBy: character)])
         }
         
         func byte(_ index: Int) -> Int {

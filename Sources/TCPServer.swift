@@ -51,7 +51,7 @@ public final class TCPServer: ServerType {
     /**
      Type for generic listen method
      */
-    public typealias OnConnectionCallbackType = GenericResult<Pipe?> -> ()
+    public typealias OnConnectionCallbackType = (GenericResult<Pipe?>) -> ()
     
     /**
      Socket
@@ -147,6 +147,10 @@ public final class TCPServer: ServerType {
         socket.streamPtr.pointee.data = UnsafeMutablePointer(context)
         
         let result = uv_listen(socket.streamPtr, Int32(backlog)) { stream, status in
+            guard let stream = stream else {
+                return
+            }
+            
             if let context = UnsafeMutablePointer<ServerContext>(stream.pointee.data) {
             
                 guard status >= 0 else {

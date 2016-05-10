@@ -9,9 +9,9 @@
 import CLibUv
 
 internal struct ServerContext {
-    var onConnection: GenericResult<Pipe?> -> ()
+    var onConnection: (GenericResult<Pipe?>) -> ()
     
-    init(onConnection: GenericResult<Pipe?> -> ()){
+    init(onConnection: (GenericResult<Pipe?>) -> ()){
         self.onConnection = onConnection
     }
 }
