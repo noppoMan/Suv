@@ -91,7 +91,11 @@ private func readNext(_ context: FileReaderContext){
     }
 }
 
-private func onReadEach(_ req: UnsafeMutablePointer<uv_fs_t>!) {
+private func onReadEach(_ req: UnsafeMutablePointer<uv_fs_t>?) {
+    guard let req = req else {
+        return
+    }
+    
     let context: FileReaderContext = releaseVoidPointer(req.pointee.data)!
     defer {
         fs_req_cleanup(req)

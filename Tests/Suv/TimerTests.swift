@@ -17,7 +17,7 @@ import Time
 @testable import Suv
 
 class TimerTests: XCTestCase {
-    static var allTests: [(String, TimerTests -> () throws -> Void)] {
+    static var allTests: [(String, (TimerTests) -> () throws -> Void)] {
         return [
             ("testTimerTimeout", testTimerTimeout),
             ("testTimerInterval", testTimerInterval)

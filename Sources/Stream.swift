@@ -94,6 +94,9 @@ extension Stream {
         let req = UnsafeMutablePointer<uv_shutdown_t>(allocatingCapacity: sizeof(uv_shutdown_t))
         req.pointee.data =  retainedVoidPointer(completion)
         uv_shutdown(req, streamPtr) { req, status in
+            guard let req = req else {
+                return
+            }
             let completion: () -> () = releaseVoidPointer(req.pointee.data)!
             completion()
             dealloc(req)
@@ -113,7 +116,7 @@ extension Stream {
      - paramter  data: Buffer to write
      - parameter onWrite: Completion handler(Not implemented yet)
      */
-    public func write2(ipcPipe: Pipe, onWrite: Result -> () = { _ in }){
+    public func write2(ipcPipe: Pipe, onWrite: (Result) -> () = { _ in }){
         if isClosing() {
             return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
@@ -124,7 +127,9 @@ extension Stream {
         withUnsafePointer(&dummy_buf) {
             let writeReq = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: sizeof(uv_write_t))
             let r = uv_write2(writeReq, ipcPipe.streamPtr, $0, 1, self.streamPtr) { req, _ in
-                destroy_write_req(req)
+                if let req = req {
+                    destroy_write_req(req)
+                }
             }
             
             if r < 0 {
@@ -140,7 +145,7 @@ extension Stream {
      - parameter data: Int8 Array bytes to write
      - parameter onWrite: Completion handler
      */
-    public func write(bytes data: [Int8], onWrite: Result -> () = { _ in }) {
+    public func write(bytes data: [Int8], onWrite: (Result) -> () = { _ in }) {
         let bytes = UnsafeMutablePointer<Int8>(data)
         writeBytes(bytes, length: UInt32(data.count), onWrite: onWrite)
     }
@@ -151,12 +156,12 @@ extension Stream {
      - parameter data: Buffer to write
      - parameter onWrite: Completion handler
      */
-    public func write(buffer data: Buffer, onWrite: Result -> () = { _ in }) {
+    public func write(buffer data: Buffer, onWrite: (Result) -> () = { _ in }) {
         let bytes = UnsafeMutablePointer<Int8>(data.bytes)
         writeBytes(bytes, length: UInt32(data.length), onWrite: onWrite)
     }
     
-    private func writeBytes(_ bytes: UnsafeMutablePointer<Int8>, length: UInt32, onWrite: Result -> () = { _ in }){
+    private func writeBytes(_ bytes: UnsafeMutablePointer<Int8>, length: UInt32, onWrite: (Result) -> () = { _ in }){
         if isClosing() {
             return onWrite(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
@@ -168,7 +173,11 @@ extension Stream {
             writeReq.pointee.data = retainedVoidPointer(onWrite)
             
             let r = uv_write(writeReq, streamPtr, $0, 1) { req, _ in
-                let onWrite: Result -> () = releaseVoidPointer(req.pointee.data)!
+                guard let req = req else {
+                    return
+                }
+                
+                let onWrite: (Result) -> () = releaseVoidPointer(req.pointee.data)!
                 destroy_write_req(req)
                 onWrite(.Success)
             }
@@ -201,12 +210,12 @@ extension Stream {
      - parameter pendingType: uv_handle_type
      - parameter callback: Completion handler
      */
-    public func read2(pendingType: uv_handle_type, callback: GenericResult<Pipe> -> ()) {
+    public func read2(pendingType: uv_handle_type, callback: (GenericResult<Pipe>) -> ()) {
         if isClosing() {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
         
-        let onRead2: GenericResult<Pipe> -> () = { result in
+        let onRead2: (GenericResult<Pipe>) -> () = { result in
             if case .Success(let queue) = result {
                 let pipePtr = UnsafeMutablePointer<uv_pipe_t>(queue.streamPtr)
                 if uv_pipe_pending_count(pipePtr) <= 0 {
@@ -227,11 +236,15 @@ extension Stream {
         streamPtr.pointee.data = retainedVoidPointer(onRead2)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { queue, nread, buf in
+            guard let queue = queue, buf = buf else {
+                return
+            }
+            
             defer {
                 dealloc(buf.pointee.base, capacity: nread)
             }
             
-            let onRead2: GenericResult<Pipe> -> () = releaseVoidPointer(queue.pointee.data)!
+            let onRead2: (GenericResult<Pipe>) -> () = releaseVoidPointer(queue.pointee.data)!
             
             let result: GenericResult<Pipe>
             if (nread == Int(UV_EOF.rawValue)) {
@@ -257,7 +270,7 @@ extension Stream {
      
      - parameter callback: Completion handler
      */
-    public func read(_ callback: ReadStreamResult -> ()) {
+    public func read(_ callback: (ReadStreamResult) -> ()) {
         if isClosing() {
             return callback(.Error(SuvError.RuntimeError(message: "Stream is already closed")))
         }
@@ -265,11 +278,15 @@ extension Stream {
         streamPtr.pointee.data = retainedVoidPointer(callback)
         
         let r = uv_read_start(streamPtr, alloc_buffer) { stream, nread, buf in
+            guard let stream = stream, buf = buf else {
+                return
+            }
+            
             defer {
                 dealloc(buf.pointee.base, capacity: nread)
             }
             
-            let onRead: ReadStreamResult -> () = releaseVoidPointer(stream.pointee.data)!
+            let onRead: (ReadStreamResult) -> () = releaseVoidPointer(stream.pointee.data)!
             
             let data: ReadStreamResult
             if (nread == Int(UV_EOF.rawValue)) {

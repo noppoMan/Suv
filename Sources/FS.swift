@@ -14,7 +14,7 @@
 
 import CLibUv
 
-public typealias FileOperationResultTask = Result -> ()
+public typealias FileOperationResultTask = (Result) -> ()
 
 private struct FSContext {
     var onOpen: (GenericResult<Int32>) -> Void = {_ in}
@@ -46,7 +46,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: Int -> ()){
+    public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: (Int) -> ()){
         let reader = FileReader(
             loop: loop,
             fd: fd,
@@ -72,7 +72,7 @@ public class FS {
      - parameter position: Not implemented yet
      - parameter completion: Completion handler
      */
-    public static func read(_ fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: FsReadResult -> ()){
+    public static func read(_ fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: (FsReadResult) -> ()){
         let reader = FileReader(
             loop: loop,
             fd: fd,
@@ -124,6 +124,10 @@ public class FS {
         req.pointee.data = retainedVoidPointer(context)
         
         let r = uv_fs_open(loop.loopPtr, req, path, flags.rawValue, mode != nil ? mode! : flags.mode) { req in
+            guard let req = req else {
+                return
+            }
+            
             let ctx: FSContext = releaseVoidPointer(req.pointee.data)!
             defer {
                 fs_req_cleanup(req)
@@ -163,7 +167,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func close(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: Result -> () = { _ in }){
+    public static func close(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: (Result) -> () = { _ in }){
         let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: sizeof(uv_fs_t))
         uv_fs_close(loop.loopPtr, req, uv_file(fd), nil)
         fs_req_cleanup(req)
@@ -177,7 +181,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func createFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: ErrorProtocol? -> ()) {
+    public static func createFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: (ErrorProtocol?) -> ()) {
         FS.open(path, flags: .W) { res in
             if case .Error(let err) = res {
                 return completion(err)
@@ -318,7 +322,7 @@ public class FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func exists(_ path: String, loop: Loop = Loop.defaultLoop, completion: Bool -> ()){
+    public static func exists(_ path: String, loop: Loop = Loop.defaultLoop, completion: (Bool) -> ()){
         FS.stat(path) { res in
             if case .Error = res {
                 return completion(false)

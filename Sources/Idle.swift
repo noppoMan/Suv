@@ -8,7 +8,10 @@
 
 import CLibUv
 
-private func idle_cb(handle: UnsafeMutablePointer<uv_idle_t>!) {
+private func idle_cb(handle: UnsafeMutablePointer<uv_idle_t>?) {
+    guard let handle = handle else {
+        return
+    }
     if let ctx = UnsafeMutablePointer<IdleContext>(handle.pointee.data) {
         if ctx.pointee.queues.count <= 0 { return }
         let lastIndex = ctx.pointee.queues.count - 1

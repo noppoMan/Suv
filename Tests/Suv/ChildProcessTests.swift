@@ -10,7 +10,7 @@ import XCTest
 @testable import Suv
 
 class ChildProcessTests: XCTestCase {
-    static var allTests: [(String, ChildProcessTests -> () throws -> Void)] {
+    static var allTests: [(String, (ChildProcessTests) -> () throws -> Void)] {
         return [
             ("testSpawn", testSpawn)
         ]

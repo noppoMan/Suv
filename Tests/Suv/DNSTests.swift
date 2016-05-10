@@ -12,7 +12,7 @@ import XCTest
 private func noop(){}
 
 class DNSTests: XCTestCase {
-    static var allTests: [(String, DNSTests -> () throws -> Void)] {
+    static var allTests: [(String, (DNSTests) -> () throws -> Void)] {
         return [
             ("testGetAddrInfo", testGetAddrInfo)
         ]

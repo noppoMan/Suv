@@ -46,7 +46,7 @@ private func launchServer() -> PipeServer {
 }
 
 class PipeTests: XCTestCase {
-    static var allTests: [(String, PipeTests -> () throws -> Void)] {
+    static var allTests: [(String, (PipeTests) -> () throws -> Void)] {
         return [
             ("testPipeConnect", testPipeConnect)
         ]

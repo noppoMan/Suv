@@ -16,7 +16,7 @@ import XCTest
 @testable import Suv
 
 class OSTests: XCTestCase {
-    static var allTests: [(String, OSTests -> () throws -> Void)] {
+    static var allTests: [(String, (OSTests) -> () throws -> Void)] {
         return [
                    ("testCpuCount", testCpuCount)
         ]

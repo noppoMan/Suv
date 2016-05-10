@@ -16,7 +16,7 @@ import XCTest
 @testable import Suv
 
 class ClusterTests: XCTestCase {
-    static var allTests: [(String, ClusterTests -> () throws -> Void)] {
+    static var allTests: [(String, (ClusterTests) -> () throws -> Void)] {
         return [
             ("testFork", testFork)
         ]

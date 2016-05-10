@@ -11,7 +11,7 @@ import CLibUv
 @testable import Suv
 
 class QueueWorkerTests: XCTestCase {
-    static var allTests: [(String, QueueWorkerTests -> () throws -> Void)] {
+    static var allTests: [(String, (QueueWorkerTests) -> () throws -> Void)] {
         return [
             ("testQWork", testQWork)
         ]
