@@ -18,10 +18,6 @@ extension String {
     }
     
     var buffer: UnsafePointer<Int8>? {
-#if os(Linux)
-        return NSString(string: self).UTF8String
-#else
         return NSString(string: self).utf8String
-#endif
     }
 }

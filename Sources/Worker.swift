@@ -89,14 +89,9 @@ struct InternalMessageParser {
         }
         
         let to = message.index(message.startIndex, offsetBy: length)
-#if os(Linux)
-        let value = message.substringToIndex(to)
-#else
         let value = message.substring(to: to)
-#endif
         
         let event: InterProcessEvent
-        
         switch cmd.lowercased() {
         case "online":
             event = .Online
@@ -114,11 +109,7 @@ struct InternalMessageParser {
       
         // Go next parsing
         let from = message.index(message.startIndex, offsetBy: length)
-#if os(Linux)
-        let nextMessage = message.substringFromIndex(from)
-#else
         let nextMessage = message.substring(from: from)
-#endif
         self.reset()
         
         if nextMessage.isEmpty {

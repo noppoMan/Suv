@@ -38,7 +38,11 @@ public extension Process {
      Returns current working directory
      */
     public static var cwd: String {
+#if os(Linux)
+        return NSFileManager.defaultManager().currentDirectoryPath
+#else
         return NSFileManager.default().currentDirectoryPath
+#endif
     }
     
     /**
