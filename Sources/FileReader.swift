@@ -83,7 +83,7 @@ private func readNext(_ context: FileReaderContext){
     
     readReq.pointee.data = retainedVoidPointer(context)
     
-    let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), &context.buf!, UInt32(context.buf!.len), context.bytesRead, onReadEach)
+    let r = uv_fs_read(context.loop.loopPtr, readReq, uv_file(context.fd), &context.buf!, 1, context.bytesRead, onReadEach)
     
     if r < 0 {
         fs_req_cleanup(readReq)
