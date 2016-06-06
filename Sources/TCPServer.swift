@@ -75,7 +75,7 @@ public final class TCPServer: ServerType {
         
         if ipcEnable {
             let queue = Pipe(loop: loop, ipcEnable: true)
-            queue.open(Stdio.CLUSTER_MODE_IPC.rawValue)
+            _ = queue.open(Stdio.CLUSTER_MODE_IPC.rawValue)
             self.socket = queue
         } else {
             self.socket = TCP(loop: loop)

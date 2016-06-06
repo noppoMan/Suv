@@ -107,7 +107,7 @@ private func exit_cb(req: UnsafeMutablePointer<uv_process_t>?, status: Int64, si
         close_handle(req)
     }
 
-    let context = Unmanaged<SpawnedProcess>.fromOpaque(OpaquePointer(req.pointee.data)).takeRetainedValue()
+    let context = Unmanaged<SpawnedProcess>.fromOpaque(UnsafeMutablePointer(req.pointee.data)).takeRetainedValue()
 
     context.onExitCallback(status)
 }
@@ -203,7 +203,7 @@ internal class Spawn {
             options.pointee.exit_cb = exit_cb
         }
         
-        let unmanaged = OpaquePointer(bitPattern: Unmanaged.passRetained(proc))
+        let unmanaged = Unmanaged.passRetained(proc).toOpaque()
         childReq.pointee.data = UnsafeMutablePointer(unmanaged)
 
         let r = uv_spawn(loop, childReq, options)
