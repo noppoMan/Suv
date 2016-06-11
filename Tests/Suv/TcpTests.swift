@@ -51,7 +51,7 @@ class TcpTests: XCTestCase {
             let server = launchServer()
             let client = TCP()
             
-            client.connect(host: "localhost", port: 9999) { res in
+            client.connect(Address(host: "0.0.0.0", port: 9999)) { res in
                 client.write(buffer: Buffer(string: "Hi!")) { res in
                     client.read { res in
                         if case .Data(let buf) = res {
