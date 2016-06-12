@@ -1,9 +1,9 @@
 //
-//  Worker.swift
+//  InternalMessage.swift
 //  Suv
 //
-//  Created by Yuki Takei on 1/26/16.
-//  Copyright © 2016 MikeTOKYO. All rights reserved.
+//  Created by Yuki Takei on 6/12/16.
+//
 //
 
 /**
@@ -104,9 +104,9 @@ struct InternalMessageParser {
         default:
             event = .Message(value)
         }
-    
+        
         self.completion(event)
-      
+        
         // Go next parsing
         let from = message.index(message.startIndex, offsetBy: length)
         let nextMessage = message.substring(from: from)
@@ -127,103 +127,25 @@ struct InternalMessageParser {
     }
 }
 
-extension Pipe {
+
+extension WritablePipe {
     internal func send(_ event: InterProcessEvent){
-        self.write(buffer: Buffer(string: "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"))
+        let data = "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"
+        self.send(Data(data))
     }
-    
+}
+
+extension ReadablePipe {
     internal func on(_ callback: (InterProcessEvent) -> ()){
         var parser = InternalMessageParser(callback)
         
-        self.read { result in
-            if case .Error(let error) = result {
-                return callback(.Error("\(error)"))
+        self.receive { getData in
+            do {
+                let data = try getData()
+                parser.parse("\(data)")
+            } catch {
+                callback(.Error("\(error)"))
             }
-
-            if case .Data(let buf) = result {
-                parser.parse(buf.toString()!)
-            }
         }
     }
-}
-
-/**
- Worker handle type
- */
-public class Worker: Equatable {
-    
-    public let id: Int
-    
-    public let process: SpawnedProcess
-    
-    public private(set) var ipcPipe: Pipe? = nil
-    
-    private var emitedOnlineEvent = false
-    
-    private var onEventCallback: (InterProcessEvent) -> () = { _ in }
-    
-    init(loop: Loop = Loop.defaultLoop, process: SpawnedProcess, workerId: Int){
-        self.process = process
-        self.id = workerId
-        
-        if process.stdio.count >= Stdio.CLUSTER_MODE_IPC.intValue {
-            ipcPipe = process.stdio[Stdio.CLUSTER_MODE_IPC.intValue].pipe
-        }
-        
-        // Register onExit
-        process.onExit { [unowned self] status in
-            for (index, element) in Cluster.workers.enumerated() {
-                if(element == self) {
-                    Cluster.workers.remove(at:index)
-                    break
-                }
-            }
-            
-            //Cluster.workers.removeAtIndex
-            self.onEventCallback(.Exit(status))
-        }
-    }
-}
-
-// Inter process communication
-extension Worker {
-    private var writeChannel: Pipe? {
-        return process.stdio[4].pipe
-    }
-    
-    private var readChannel: Pipe? {
-        return process.stdio[5].pipe
-    }
-    
-    /**
-     Send a message to a master
-     
-     - parameter event: An event that want to send a worker
-     */
-    public func send(_ event: InterProcessEvent){
-        writeChannel?.send(event)
-    }
-    
-    /**
-     Event listener for receiving event from worker
-     
-     - parameter callback: Handler for receiving event from a worker
-     */
-    public func on(_ callback: (InterProcessEvent) -> ()){
-        // Online should be called at once
-        if !self.emitedOnlineEvent {
-            callback(.Online)
-            self.emitedOnlineEvent = true
-        }
-        
-        self.onEventCallback = callback
-
-        readChannel?.on { ev in
-            callback(ev)
-        }
-    }
-}
-
-public func ==(lhs: Worker, rhs: Worker) -> Bool {
-    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
 }

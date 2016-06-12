@@ -13,7 +13,7 @@ addons:
     - libssl-dev
     - git
 env:
-  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-05-31-a
+  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-06-06-a
 before_install:
   # for osx
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
@@ -28,5 +28,4 @@ script:
   # test
   - cd $TRAVIS_BUILD_DIR
   - make debug
-  - sh ./scripts/prepare_test.sh
   - make test

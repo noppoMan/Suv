@@ -1,3 +1,11 @@
+//
+//  Base64.swift
+//  Suv
+//
+//  Created by Yuki Takei on 6/12/16.
+//
+//
+
 // Base64.swift
 //
 // The MIT License (MIT)
@@ -22,29 +30,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+enum Base64Error: ErrorProtocol {
+    case invalidInput
+}
+
+let ascii: [Byte] = [
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 62, 64, 63,
+    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 64, 64, 64, 64, 64, 64,
+    64, 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14,
+    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 64, 64, 64, 64, 63,
+    64, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+]
+
 public struct Base64 {
-    public static func decode(_ string: String) throws -> Buffer {
-        let ascii: [UInt8] = [
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 62, 64, 63,
-            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 64, 64, 64, 64, 64, 64,
-            64, 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14,
-            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 64, 64, 64, 64, 63,
-            64, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-            64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-        ]
+    public static func decode(_ string: String) throws -> Data {
+        if string.utf8.count % 4 != 0    {
+            throw Base64Error.invalidInput
+        }
         
-        var decoded = Buffer()
+        var decoded = Data()
         var unreadBytes = 0
         
         for character in string.utf8 {
@@ -63,30 +79,29 @@ public struct Base64 {
         var index = 0
         
         while unreadBytes > 4 {
-            decoded.append(byte: ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
-            decoded.append(byte: ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
-            decoded.append(byte: ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
             index += 4
             unreadBytes -= 4
         }
         
         if unreadBytes > 1 {
-            decoded.append(byte: ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
+            decoded.append(ascii[byte(index + 0)] << 2 | ascii[byte(index + 1)] >> 4)
         }
         
         if unreadBytes > 2 {
-            decoded.append(byte: ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
+            decoded.append(ascii[byte(index + 1)] << 4 | ascii[byte(index + 2)] >> 2)
         }
         
         if unreadBytes > 3 {
-            decoded.append(byte: ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
+            decoded.append(ascii[byte(index + 2)] << 6 | ascii[byte(index + 3)])
         }
         
         return decoded
     }
     
-    public static func encode(_ data: Buffer, specialChars: String = "+/", paddingChar: Character? = "=") throws -> String {
-        
+    public static func encode(_ data: Data, specialChars: String = "+/", paddingChar: Character? = "=") -> String {
         let base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + specialChars
         var encoded: String = ""
         
@@ -95,10 +110,10 @@ public struct Base64 {
         }
         
         func byte(_ index: Int) -> Int {
-            return  Int(data.bytes[index])
+            return Int(data[index])
         }
         
-        let decodedBytes = data.bytes.map { Int($0) }
+        let decodedBytes = data.map { Int($0) }
         
         var i = 0
         
@@ -129,5 +144,15 @@ public struct Base64 {
         }
         
         return encoded
+    }
+    
+    public static func urlSafeEncode(_ data: Data) -> String {
+        return Base64.encode(data, specialChars: "-_", paddingChar: nil)
+    }
+}
+
+extension Base64 {
+    public static func encode(_ convertible: DataConvertible) -> String {
+        return encode(convertible.data)
     }
 }

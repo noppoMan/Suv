@@ -23,8 +23,8 @@ class ClusterTests: XCTestCase {
     }
     
     func testFork() {
-        let testAppPath = "\(Process.cwd)/Suv-Test-App/.build/debug/SuvTestApp"
-        let worker = try! Cluster.fork(exexPath: testAppPath, silent: false)
+        let testExecutable = "\(Process.cwd)/.build/debug/ClusterTests"
+        let worker = try! Cluster.fork(exexPath: testExecutable, silent: false)
         
         worker.on { ev in
             if case .Online = ev {
@@ -32,7 +32,7 @@ class ClusterTests: XCTestCase {
             }
             else if case .Message(let message) = ev {
                 XCTAssertEqual(message, "2")
-                try! worker.process.kill(SIGKILL)
+                try! worker.kill(SIGKILL)
             } else if case .Exit(let status) = ev {
                 XCTAssertEqual(status, 0)
             }
