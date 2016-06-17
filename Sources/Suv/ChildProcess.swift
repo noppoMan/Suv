@@ -6,8 +6,6 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
-import CLibUv
-
 /**
  Child Process handle type
  */
@@ -21,7 +19,7 @@ public class ChildProcess {
      - parameter loop: Event loop
      - parameter options: SpawnOptions instance
      */
-    public static func spawn(_ execPath: String, _ execOpts: [String] = [], loop: Loop = Loop.defaultLoop, options: SpawnOptions? = nil) throws -> SpawnedProcess {
-        return try Spawn(execPath, execOpts, loop: loop, options: options).spawnAsync()
+    public static func spawn(_ execPath: String, _ execOpts: [String] = [], loop: Loop = Loop.defaultLoop, options: SpawnOptions? = nil) throws -> Proc {
+        return try SpawnWrap(execPath, execOpts, loop: loop, options: options).spawn()
     }
 }

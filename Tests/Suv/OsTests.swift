@@ -18,7 +18,7 @@ import XCTest
 class OSTests: XCTestCase {
     static var allTests: [(String, (OSTests) -> () throws -> Void)] {
         return [
-                   ("testCpuCount", testCpuCount)
+            ("testCpuCount", testCpuCount)
         ]
     }
     

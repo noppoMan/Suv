@@ -63,6 +63,7 @@ public class Cluster {
         var options = SpawnOptions()
         
         options.cwd = Process.cwd
+        options.env["SUV_CHILD_PROC"] = "1"
         options.env[workerIdKeyName] = String(workerId)
         workerId+=1
         
@@ -70,32 +71,32 @@ public class Cluster {
         
         if options.silent {
             options.stdio = [
-                StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop)),
+                StdioOption(flags: .createReadablePipe, pipe: PipeWrap(loop: loop)),
                 
-                StdioOption(flags: .CreateWritablePipe, pipe: Pipe(loop: loop)),
+                StdioOption(flags: .createWritablePipe, pipe: PipeWrap(loop: loop)),
                 
-                StdioOption(flags: .CreateWritablePipe, pipe: Pipe(loop: loop)),
+                StdioOption(flags: .createWritablePipe, pipe: PipeWrap(loop: loop)),
             ]
         } else {
             options.stdio = [
-                StdioOption(flags: .InheritFd, fd: Stdio.STDIN.rawValue),
+                StdioOption(flags: .inheritFd, fd: 0),
                 
-                StdioOption(flags: .InheritFd, fd: Stdio.STDOUT.rawValue),
+                StdioOption(flags: .inheritFd, fd: 1),
     
-                StdioOption(flags: .InheritFd, fd: Stdio.STDERR.rawValue),
+                StdioOption(flags: .inheritFd, fd: 2),
             ]
         }
         
         // ipc channels
         options.stdio.append(contentsOf:[
             // For sending handle
-            StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true)),
+            StdioOption(flags: .createReadablePipe, pipe: PipeWrap(loop: loop, ipcEnable: true)),
             
             // ipc message writer
-            StdioOption(flags: .CreateWritablePipe, pipe: Pipe(loop: loop, ipcEnable: true)),
+            StdioOption(flags: .createWritablePipe, pipe: PipeWrap(loop: loop, ipcEnable: true)),
             
             // ipc message reader
-            StdioOption(flags: .CreateReadablePipe, pipe: Pipe(loop: loop, ipcEnable: true))
+            StdioOption(flags: .createReadablePipe, pipe: PipeWrap(loop: loop, ipcEnable: true))
         ])
         
         let childProc = try ChildProcess.spawn(exexPath ?? Process.execPath, execOpts, loop: loop, options: options)

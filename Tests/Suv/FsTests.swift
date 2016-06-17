@@ -39,13 +39,10 @@ class FsTests: XCTestCase {
         unlink(targetFile)
 
         waitUntil(description: "setup") { done in
-            FS.open(targetFile, flags: .W) { res in
-                if case .Success(let fd) = res {
-                    FS.read(fd) { result in
-                        FS.close(fd)
-                        done()
-                    }
-                }
+            FS.open(targetFile, flags: .w) { getFd in
+                let fd = try! getFd()
+                FS.close(fd)
+                done()
             }
         }
     }
@@ -64,103 +61,92 @@ class FsTests: XCTestCase {
     
     func testReadFile(){
         waitUntil(description: "readFile") { done in
-            FS.readFile(targetFile) { res in
-                if case .Success(let buf) = res {
-                    XCTAssertEqual(buf.bytes.count, 0)
+            FS.readFile(targetFile) { getData in
+                do {
+                    let data = try getData()
+                    XCTAssertEqual(data.bytes.count, 0)
+                    done()
+                } catch {
+                    XCTFail("\(error)")
                 }
-                done()
             }
         }
     }
 
     func testRead() {
         waitUntil(description: "readFile") { done in
-            FS.open(targetFile, flags: .R) { result in
-                if case .Success(let fd) = result {
-                    XCTAssertGreaterThanOrEqual(fd, 0)
-                    FS.read(fd) { result in
-                        FS.close(fd)
-                        if case .Error(let err) = result {
-                            XCTFail("\(err)")
-                        } else if case .Data = result {
-                            // noop
-                        } else if case .End(let pos) = result {
-                            XCTAssertEqual(pos, 0)
-                            done()
-                        }
-                    }
+            FS.open(targetFile, flags: .r) { getFd in
+                let fd = try! getFd()
+                XCTAssertGreaterThanOrEqual(fd, 0)
+                FS.read(fd) { getData in
+                    FS.close(fd)
+                    let data = try! getData()
+                    XCTAssertEqual(data.bytes.count, 0)
+                    done()
                 }
             }
         }
     }
-    
+
     func testWriteFile(){
         waitUntil(description: "writeFile") { done in
-            FS.writeFile(targetFile, withString: "Hello world") { res in
-                FS.readFile(targetFile) { res in
-                    if case .Success(let buf) = res {
-                        XCTAssertEqual(buf.toString()!, "Hello world")
-                        done()
-                    } else if case .Error(let e) = res {
-                        XCTFail("\(e)")
-                    }
+            FS.writeFile(targetFile, withString: "Hello world") { _ in
+                FS.readFile(targetFile) { getData in
+                    let data = try! getData()
+                    XCTAssertEqual("\(data)", "Hello world")
+                    done()
                 }
             }
         }
     }
-    
+
     func testWrite() {
         waitUntil(description: "writeFile") { done in
-            FS.open(targetFile, flags: .W) { result in
-                if case .Success(let fd) = result {
-                    XCTAssertGreaterThanOrEqual(fd, 0)
-                    FS.write(fd, withBuffer: Buffer(string: "test text")) { result in
-                        if case .Error(let err) = result {
-                            return XCTFail("\(err)")
-                        }
-                        
-                        FS.close(fd)
-                        done()
-                    }
+            FS.open(targetFile, flags: .w) { getFd in
+                let fd = try! getFd()
+                XCTAssertGreaterThanOrEqual(fd, 0)
+                FS.write(fd, data: Data("test text")) { result in
+                    _ = try! result()
+                    FS.close(fd)
+                    done()
                 }
             }
         }
     }
-    
+
     func testReadAndWrite() {
         waitUntil(5, description: "ReadAndWrite") { done in
-            FS.open(targetFile, flags: .RP) { res in
-                if case .Success(let fd) = res {
-                    XCTAssertGreaterThanOrEqual(fd, 0)
-                    seriesTask([
-                       { cb in
-                            FS.write(fd, withBuffer: Buffer(string: "test text")) { res in
-                                if case .Error(let err) = res {
-                                    return cb(err)
-                                }
+            FS.open(targetFile, flags: .rp) { getFd in
+                let fd = try! getFd()
+                XCTAssertGreaterThanOrEqual(fd, 0)
+                seriesTask([
+                   { cb in
+                        FS.write(fd, data: Data("test text")) { result in
+                            do {
+                                _ = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
-                        },
-                        { cb in
-                            FS.read(fd) { res in
-                                switch(res) {
-                                case .Error(let e):
-                                    cb(e)
-                                case .Data(let buf):
-                                    XCTAssertEqual(buf.toString()!, "test text")
-                                case .End(let pos):
-                                    XCTAssertEqual(pos, 9)
-                                    cb(nil)
-                                }
-                            }
-                        },
-                    ]) { err in
-                        FS.close(fd)
-                        if let e = err {
-                            return XCTFail("\(e)")
                         }
-                        done()
+                    },
+                    { cb in
+                        FS.read(fd) { getData in
+                            do {
+                                let data = try getData()
+                                XCTAssertEqual("\(data)", "test text")
+                                cb(nil)
+                            } catch {
+                                cb(error)
+                            }
+                        }
+                    },
+                ]) { err in
+                    FS.close(fd)
+                    if let e = err {
+                        return XCTFail("\(e)")
                     }
+                    done()
                 }
             }
         }
@@ -170,46 +156,46 @@ class FsTests: XCTestCase {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .W) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "foofoofoo")) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    cb(err)
-                                }
+                    FS.open(targetFile, flags: .w) { getFd in
+                        let fd = try! getFd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("foofoofoo")) { result in
+                            FS.close(fd)
+                            do {
+                                _  = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .WP) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "bar")) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    cb(err)
-                                }
+                    FS.open(targetFile, flags: .wp) { getFd in
+                        let fd = try! getFd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("bar")) { result in
+                            FS.close(fd)
+                            do {
+                                _  = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .R) { res in
-                        if case .Success(let fd) = res {
-                            FS.read(fd) { res in
-                                switch(res) {
-                                case .Error(let e):
-                                    cb(e)
-                                case .Data(let buf):
-                                    XCTAssertEqual(buf.toString()!, "bar")
-                                case .End(let pos):
-                                    XCTAssertEqual(3, pos)
-                                    cb(nil)
-                                }
+                    FS.open(targetFile, flags: .r) { getFd in
+                        let fd = try! getFd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.read(fd) { getData in
+                            do {
+                                let data = try getData()
+                                XCTAssertEqual("\(data)", "bar")
+                                cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
@@ -222,82 +208,80 @@ class FsTests: XCTestCase {
             }
         }
     }
-    
+
     func testAppendFile(){
         waitUntil(description: "appendFile") { done in
             FS.writeFile(targetFile, withString: "foo") { _ in
                 FS.appendFile(targetFile, withString: "bar") { _ in
-                    FS.readFile(targetFile) { res in
-                        if case .Success(let buf) = res {
-                            XCTAssertEqual(buf.toString()!, "foobar")
-                            done()
-                        } else if case .Error(let e) = res {
-                            XCTFail("\(e)")
-                        }
+                    FS.readFile(targetFile) { getData in
+                        let data = try! getData()
+                        XCTAssertEqual("\(data)", "foobar")
+                        done()
                     }
                 }
             }
         }
     }
-    
+
     func testAppend() {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .W) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "foo")) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    cb(err)
-                                }
+                    FS.open(targetFile, flags: .w) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("foo")) { result in
+                            FS.close(fd)
+                            do {
+                                _ = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .A) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "bar"), position: 3) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    cb(err)
-                                }
+                    FS.open(targetFile, flags: .a) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("bar"), position: 3) { result in
+                            FS.close(fd)
+                            do {
+                                _ = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .AP) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "baz"), position: 6) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    cb(err)
-                                }
+                    
+                    FS.open(targetFile, flags: .ap) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("baz"), position: 6) { result in
+                            FS.close(fd)
+                            do {
+                                _ = try result()
                                 cb(nil)
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .R) { res in
-                        if case .Success(let fd) = res {
-                            FS.read(fd) { res in
-                                switch(res) {
-                                case .Error(let e):
-                                    cb(e)
-                                case .Data(let buf):
-                                    XCTAssertEqual(buf.toString()!, "foobarbaz")
-                                case .End(let pos):
-                                    XCTAssertEqual(9, pos)
-                                    cb(nil)
-                                }
+                    FS.open(targetFile, flags: .r) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.read(fd) { getData in
+                            do {
+                                let data = try getData()
+                                XCTAssertEqual("\(data)", "foobarbaz")
+                            } catch {
+                                cb(error)
                             }
                         }
                     }
@@ -310,51 +294,53 @@ class FsTests: XCTestCase {
             }
         }
     }
-    
+
     func testFtell(){
         waitUntil(5, description: "fell") { done in
-            FS.open(targetFile, flags: .WP) { res in
-                if case .Success(let fd) = res {
-                    XCTAssertGreaterThanOrEqual(fd, 0)
-                    let str = "hello world.hello world.hello world.hello world.hello world."
-                    
-                    FS.write(fd, withBuffer: Buffer(string: str)) { res in
-                        if case .Error(let err) = res {
+            FS.open(targetFile, flags: .wp) { getfd in
+                let fd = try! getfd()
+                XCTAssertGreaterThanOrEqual(fd, 0)
+                let str = "hello world.hello world.hello world.hello world.hello world."
+                
+                FS.write(fd, data: Data(str)) { result in
+                    do {
+                        _ = try result()
+                        FS.ftell(fd) { getPos in
                             FS.close(fd)
-                            return XCTFail("\(err)")
-                        } else if case .Success(let pos) = res {
-                            XCTAssertEqual(pos, str.characters.count)
-                        }
-                        
-                        FS.ftell(fd) { pos in
-                            FS.close(fd)
-                            XCTAssertEqual(pos, str.characters.count)
+                            XCTAssertEqual(try! getPos(), str.characters.count)
                             done()
                         }
+                        
+                    } catch {
+                        FS.close(fd)
+                        XCTFail("\(error)")
                     }
                 }
             }
         }
     }
-    
+
     func testStat(){
         waitUntil(5, description: "stat") { done in
             seriesTask([
                 { cb in
-                    FS.stat("invalid file path") { res in
-                        if case .Error(let err) = res {
-                            XCTAssertNotNil(err)
-                            return cb(nil)
+                    FS.stat("invalid file path") { result in
+                        do {
+                            _ = try result()
+                            XCTFail("Here has never been called")
+                        } catch {
+                            cb(nil)
                         }
-                        cb(SuvError.RuntimeError(message: "Here has never been called"))
                     }
                 },
                 { cb in
-                    FS.stat(targetFile) { res in
-                        if case .Error(let err) = res {
-                            return cb(err)
+                    FS.stat(targetFile) { result in
+                        do {
+                            _ = try result()
+                            cb(nil)
+                        } catch {
+                            cb(error)
                         }
-                        cb(nil)
                     }
                 },
             ]) { err in
@@ -368,56 +354,63 @@ class FsTests: XCTestCase {
 
     func testExists(){
         waitUntil(description: "exists") { done in
-            FS.exists(targetFile) { yes in
-                XCTAssertTrue(yes)
-                FS.exists("invalid file path") { yes in
-                    XCTAssertFalse(yes)
+            FS.exists(targetFile) { result in
+                XCTAssertTrue(try! result())
+                FS.exists("invalid file path") { result in
+                    XCTAssertFalse(try! result())
                     done()
                 }
             }
         }
     }
-    
+
     func testErrorFd() {
         waitUntil(5, description: "ErrorFd") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .R) { res in
-                        if case .Success(let fd) = res {
-                            XCTAssertGreaterThanOrEqual(fd, 0)
-                            FS.write(fd, withBuffer: Buffer(string: "foo")) { res in
-                                FS.close(fd)
-                                if case .Error(let err) = res {
-                                    XCTAssertNotNil(err)
-                                    return cb(nil)
-                                }
-                                cb(SuvError.RuntimeError(message: "Here has never been called"))
+                    FS.open(targetFile, flags: .r) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.write(fd, data: Data("foo")) { result in
+                            FS.close(fd)
+                            do {
+                                try result()
+                                XCTFail("Here has been never called")
+                            } catch {
+                                XCTAssertNotNil(error)
+                                cb(nil)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .W) { res in
-                        if case .Success(let fd) = res {
-                            FS.read(fd) { res in
-                                if case .Error(let err) = res {
-                                    XCTAssertNotNil(err)
-                                    return cb(nil)
-                                }
-                                cb(SuvError.RuntimeError(message: "Here has never been called"))
+                    FS.open(targetFile, flags: .w) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.read(fd) { getData in
+                            FS.close(fd)
+                            do {
+                                _ = try getData()
+                                XCTFail("Here has been never called")
+                            } catch {
+                                XCTAssertNotNil(error)
+                                cb(nil)
                             }
                         }
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .A) { res in
-                        if case .Success(let fd) = res {
-                            FS.read(fd) { res in
-                                if case .Error(let err) = res {
-                                    XCTAssertNotNil(err)
-                                    return cb(nil)
-                                }
-                                cb(SuvError.RuntimeError(message: "Here has never been called"))
+                    FS.open(targetFile, flags: .a) { getfd in
+                        let fd = try! getfd()
+                        XCTAssertGreaterThanOrEqual(fd, 0)
+                        FS.read(fd) { getData in
+                            FS.close(fd)
+                            do {
+                                _ = try getData()
+                                XCTFail("Here has been never called")
+                            } catch {
+                                XCTAssertNotNil(error)
+                                cb(nil)
                             }
                         }
                     }

@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import SuvTestSuite
-    
+
 XCTMain([
     testCase(ChildProcessTests.allTests),
     testCase(FsTests.allTests),
@@ -20,5 +20,6 @@ XCTMain([
     testCase(IdleTests.allTests),
     testCase(OSTests.allTests),
     testCase(ClusterTests.allTests),
-    testCase(BufferTests.allTests)
+    testCase(BufferTests.allTests),
+    testCase(UDPTests.allTests)
 ])

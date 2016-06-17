@@ -18,27 +18,27 @@ import XCTest
 @testable import Suv
 
 // Simple Echo Server
-private func launchServer() -> PipeServer {
+private func launchServer() throws -> PipeServer {
     let server = PipeServer()    
-    try! server.bind("/tmp/suv-test.sock")
+    try server.bind("/tmp/suv-test.sock")
     
-    try! server.listen(128) { result in
-        if case .Error(let error) = result {
-            XCTFail("\(error)")
-            return server.close()
-        }
-        
-        let client = Pipe()
-        try! server.accept(client)
-        
-        client.read { result in
-            if case let .Data(buf) = result {
-                client.write(buffer: buf)
-            } else if case .Error = result {
-                client.close()
-            } else {
-                client.close()
+    try server.listen { result in
+        do {
+            _ = try result()
+            let client = PipeSocket()
+            try server.accept(client)
+            
+            client.receive { getData in
+                do {
+                    let data = try getData()
+                    client.send(data)
+                } catch {
+                    try! client.close()
+                    XCTFail("\(error)")
+                }
             }
+        } catch {
+            XCTFail("\(error)")
         }
     }
     
@@ -54,20 +54,24 @@ class PipeTests: XCTestCase {
     
     func testPipeConnect(){
         waitUntil(5, description: "PipeServer Connect") { done in
-            let server = launchServer()
+            let server = try! launchServer()
             
-            let client = Pipe()
+            let client = PipeClient(sockName: "/tmp/suv-test.sock")
             
-            client.connect("/tmp/suv-test.sock") { res in
-                client.write(buffer: Buffer(string: "Hi!")) { res in
-                    client.read { res in
-                        if case .Data(let buf) = res {
-                            XCTAssertEqual(buf.toString()!, "Hi!")
-                        }
-                        
-                        server.close()
+            try! client.open { result in
+                _ = try! result()
+                
+                client.send(Data("Hi!"))
+                
+                client.receive { getData in
+                    do {
+                        let data = try getData()
+                        try! server.close()
+                        XCTAssertEqual("\(data)", "Hi!")
                         Loop.defaultLoop.stop()
                         done()
+                    } catch {
+                        XCTFail("\(error)")
                     }
                 }
             }
