@@ -10,40 +10,40 @@
  Enum that are used in ipc
  */
 public enum InterProcessEvent {
-    case Online
-    case Exit(Int64)
-    case Error(String)
-    case Signal(Int32)
-    case Message(String)
+    case online
+    case exit(Int64)
+    case error(String)
+    case signal(Int32)
+    case message(String)
 }
 
 public extension InterProcessEvent {
     public var stringValue: String {
         switch self {
-        case .Online:
+        case .online:
             return ""
-        case .Exit(let status):
+        case .exit(let status):
             return "\(status)"
-        case .Signal(let sig):
+        case .signal(let sig):
             return "\(sig)"
-        case .Message(let message):
+        case .message(let message):
             return message
-        case .Error(let error):
+        case .error(let error):
             return "\(error)"
         }
     }
     
     public var cmdString: String {
         switch self {
-        case .Online:
+        case .online:
             return "Online"
-        case .Exit(_):
+        case .exit(_):
             return "Exit"
-        case .Signal(_):
+        case .signal(_):
             return "Signal"
-        case .Message(_):
+        case .message(_):
             return "Message"
-        case .Error(_):
+        case .error(_):
             return "Error"
         }
     }
@@ -94,15 +94,15 @@ struct InternalMessageParser {
         let event: InterProcessEvent
         switch cmd.lowercased() {
         case "online":
-            event = .Online
+            event = .online
         case "exit":
-            event = .Exit(Int64(value)!)
+            event = .exit(Int64(value)!)
         case "signal":
-            event = .Signal(Int32(value)!)
+            event = .signal(Int32(value)!)
         case "error":
-            event = .Error(value)
+            event = .error(value)
         default:
-            event = .Message(value)
+            event = .message(value)
         }
         
         self.completion(event)
@@ -131,7 +131,7 @@ struct InternalMessageParser {
 extension WritablePipe {
     internal func send(_ event: InterProcessEvent){
         let data = "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"
-        self.send(Data(data))
+        self.send(data.data)
     }
 }
 
@@ -144,7 +144,7 @@ extension ReadablePipe {
                 let data = try getData()
                 parser.parse("\(data)")
             } catch {
-                callback(.Error("\(error)"))
+                callback(.error("\(error)"))
             }
         }
     }

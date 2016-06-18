@@ -12,7 +12,7 @@ public class PipeClient: AsyncConnection {
     
     public let socket: PipeSocket
     
-    public private(set) var state: ClientState = .Disconnected
+    public private(set) var state: ClientState = .disconnected
     
     public var closed: Bool {
         return socket.closed
@@ -42,7 +42,7 @@ public class PipeClient: AsyncConnection {
     
     public func close() throws {
         try socket.close()
-        self.state = .Closed
+        self.state = .closed
     }
     
     public func flush(timingOut deadline: Double, completion: ((Void) throws -> Void) -> Void = { _ in }) {}

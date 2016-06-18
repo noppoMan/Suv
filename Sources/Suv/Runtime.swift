@@ -29,7 +29,7 @@ extension Process {
      - parameter onFinish: Function that want to run in a main loop
      */
     public static func qwork(loop: Loop = Loop.defaultLoop, onThread: () -> (), onFinish: () -> () = {}){
-        let _ = QueueWorkerWrap(loop: loop, workCB: onThread, afterWorkCB: onFinish)
+        _ = QueueWorkerWrap(loop: loop, workCB: onThread, afterWorkCB: onFinish)
     }
     
     /**
@@ -81,10 +81,10 @@ extension Process {
         
         readChannel?.on { ev in
             // Online and Exit events should not be got at the worker.
-            if case .Online = ev {
+            if case .online = ev {
                 return
             }
-            else if case .Exit = ev {
+            else if case .exit = ev {
                 return
             }
             

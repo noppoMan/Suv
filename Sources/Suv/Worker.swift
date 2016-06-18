@@ -72,7 +72,7 @@ public class Worker: Equatable {
             }
             
             //Cluster.workers.removeAtIndex
-            self.onEventCallback(.Exit(status))
+            self.onEventCallback(.exit(status))
         }
     }
     
@@ -101,7 +101,7 @@ extension Worker {
     public func on(_ callback: (InterProcessEvent) -> ()){
         // Online should be called at once
         if !self.emitedOnlineEvent {
-            callback(.Online)
+            callback(.online)
             self.emitedOnlineEvent = true
         }
         

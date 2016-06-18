@@ -9,17 +9,17 @@
 import CLibUv
 
 public enum PendingType {
-    case TCP
-    case UDP
-    case Pipe
+    case tcp
+    case udp
+    case pipe
 }
 
 extension PendingType {
     var rawValue: uv_handle_type {
         switch self {
-        case .TCP:
+        case .tcp:
             return UV_TCP
-        case .UDP:
+        case .udp:
             return UV_UDP
         default:
             return UV_STREAM

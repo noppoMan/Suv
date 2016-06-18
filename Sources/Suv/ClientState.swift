@@ -7,7 +7,7 @@
 //
 
 public enum ClientState {
-    case Disconnected
-    case Connected
-    case Closed
+    case disconnected
+    case connected
+    case closed
 }

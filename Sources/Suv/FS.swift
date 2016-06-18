@@ -145,7 +145,7 @@ extension FS {
                 }
             }
             completion {
-                throw FSError.InvalidPosition(-1)
+                throw FSError.invalidPosition(-1)
             }
         }
         reader.start()

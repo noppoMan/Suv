@@ -27,13 +27,13 @@ class ClusterTests: XCTestCase {
         let worker = try! Cluster.fork(exexPath: testExecutable, silent: false)
         
         worker.on { ev in
-            if case .Online = ev {
-                worker.send(.Message("1"))
+            if case .online = ev {
+                worker.send(.message("1"))
             }
-            else if case .Message(let message) = ev {
+            else if case .message(let message) = ev {
                 XCTAssertEqual(message, "2")
                 try! worker.kill(SIGKILL)
-            } else if case .Exit(let status) = ev {
+            } else if case .exit(let status) = ev {
                 XCTAssertEqual(status, 0)
             }
         }

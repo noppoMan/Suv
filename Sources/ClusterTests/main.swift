@@ -10,10 +10,10 @@ import Suv
 
 if Cluster.isWorker {
     Process.on { ev in
-        if case .Message(let message) = ev {
+        if case .message(let message) = ev {
             var i = Int("\(message)")!
             i+=1
-            Process.send(.Message("\(i)"))
+            Process.send(.message("\(i)"))
         }
     }
     Loop.defaultLoop.run()
