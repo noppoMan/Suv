@@ -18,9 +18,9 @@ public final class TCPClient: AsyncConnection {
         return socket.closed
     }
     
-    public init(uri: URI){
+    public init(loop: Loop = Loop.defaultLoop, uri: URI){
         self.uri = uri
-        self.socket = TCPSocket()
+        self.socket = TCPSocket(loop: loop)
     }
     
     public func open(timingOut deadline: Double = .never, completion: ((Void) throws -> AsyncConnection) -> Void = { _ in }) throws {
