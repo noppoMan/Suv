@@ -54,11 +54,11 @@ public class Cluster {
      The returned Worker will have an additional communication channel built-in that allows messages to be passed back and forth between the parent and child(Currently channel is implemented for only sharing connection)
      
      - parameter loop: Event loop
-     - parameter exexPath: Path for executable
+     - parameter execPath: Path for executable
      - parameter execOpts: Options for executable
      - parameter silent: Boolean If true, stdin, stdout, and stderr of the child will be piped to the parent, otherwise they will be inherited from the parent
     */
-    public static func fork(loop: Loop = Loop.defaultLoop, exexPath: String? = nil, execOpts: [String] = exexOptions(), silent: Bool = true
+    public static func fork(loop: Loop = Loop.defaultLoop, execPath: String? = nil, execOpts: [String] = exexOptions(), silent: Bool = true
     ) throws -> Worker {
         var options = SpawnOptions()
         
@@ -99,7 +99,7 @@ public class Cluster {
             StdioOption(flags: .createReadablePipe, pipe: PipeWrap(loop: loop, ipcEnable: true))
         ])
         
-        let childProc = try ChildProcess.spawn(exexPath ?? Process.execPath, execOpts, loop: loop, options: options)
+        let childProc = try ChildProcess.spawn(execPath ?? Process.execPath, execOpts, loop: loop, options: options)
         
         let worker = Worker(process: childProc, workerId: workerId)
         

@@ -24,7 +24,7 @@ class ClusterTests: XCTestCase {
     
     func testFork() {
         let testExecutable = "\(Process.cwd)/.build/debug/ClusterTests"
-        let worker = try! Cluster.fork(exexPath: testExecutable, silent: false)
+        let worker = try! Cluster.fork(execPath: testExecutable, silent: false)
         
         worker.on { ev in
             if case .online = ev {
