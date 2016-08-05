@@ -29,7 +29,10 @@ extension Process {
      - parameter onFinish: Function that want to run in a main loop
      */
     public static func qwork(loop: Loop = Loop.defaultLoop, onThread: () -> (), onFinish: () -> () = {}){
-        _ = QueueWorkerWrap(loop: loop, workCB: onThread, afterWorkCB: onFinish)
+        let qw = QueueWorkWrap(loop: loop)
+        qw.workCallback = onThread
+        qw.afterWorkCallback = onFinish
+        qw.execute()
     }
     
     /**
