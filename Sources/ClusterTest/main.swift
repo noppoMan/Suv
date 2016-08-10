@@ -9,7 +9,7 @@
 import Suv
 
 if Cluster.isWorker {
-    Process.on { ev in
+    Process.onIPC { ev in
         if case .message(let message) = ev {
             var i = Int("\(message)")!
             i+=1

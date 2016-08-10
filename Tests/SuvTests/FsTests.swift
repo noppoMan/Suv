@@ -15,7 +15,7 @@
 import XCTest
 @testable import Suv
 
-private let targetFile = Process.cwd + "/test.txt"
+private let targetFile = CommandLine.cwd + "/test.txt"
 
 class FsTests: XCTestCase {
     static var allTests: [(String, (FsTests) -> () throws -> Void)] {
@@ -39,7 +39,7 @@ class FsTests: XCTestCase {
         unlink(targetFile)
 
         waitUntil(description: "setup") { done in
-            FS.open(targetFile, flags: .w) { getFd in
+            FS.open(targetFile, flags: .truncateWrite) { getFd in
                 let fd = try! getFd()
                 FS.close(fd)
                 done()
@@ -75,7 +75,7 @@ class FsTests: XCTestCase {
 
     func testRead() {
         waitUntil(description: "readFile") { done in
-            FS.open(targetFile, flags: .r) { getFd in
+            FS.open(targetFile, flags: .read) { getFd in
                 let fd = try! getFd()
                 XCTAssertGreaterThanOrEqual(fd, 0)
                 FS.read(fd) { getData in
@@ -102,7 +102,7 @@ class FsTests: XCTestCase {
 
     func testWrite() {
         waitUntil(description: "writeFile") { done in
-            FS.open(targetFile, flags: .w) { getFd in
+            FS.open(targetFile, flags: .truncateWrite) { getFd in
                 let fd = try! getFd()
                 XCTAssertGreaterThanOrEqual(fd, 0)
                 FS.write(fd, data: Data("test text")) { result in
@@ -116,7 +116,7 @@ class FsTests: XCTestCase {
 
     func testReadAndWrite() {
         waitUntil(5, description: "ReadAndWrite") { done in
-            FS.open(targetFile, flags: .rp) { getFd in
+            FS.open(targetFile, flags: .readWrite) { getFd in
                 let fd = try! getFd()
                 XCTAssertGreaterThanOrEqual(fd, 0)
                 seriesTask([
@@ -156,7 +156,7 @@ class FsTests: XCTestCase {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .w) { getFd in
+                    FS.open(targetFile, flags: .truncateWrite) { getFd in
                         let fd = try! getFd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("foofoofoo")) { result in
@@ -171,7 +171,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .wp) { getFd in
+                    FS.open(targetFile, flags: .truncateReadWrite) { getFd in
                         let fd = try! getFd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("bar")) { result in
@@ -186,7 +186,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .r) { getFd in
+                    FS.open(targetFile, flags: .read) { getFd in
                         let fd = try! getFd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.read(fd) { getData in
@@ -227,7 +227,7 @@ class FsTests: XCTestCase {
         waitUntil(5, description: "RWAndAppend") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .w) { getfd in
+                    FS.open(targetFile, flags: .truncateWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("foo")) { result in
@@ -242,7 +242,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .a) { getfd in
+                    FS.open(targetFile, flags: .appendWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("bar"), position: 3) { result in
@@ -258,7 +258,7 @@ class FsTests: XCTestCase {
                 },
                 { cb in
                     
-                    FS.open(targetFile, flags: .ap) { getfd in
+                    FS.open(targetFile, flags: .appendReadWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("baz"), position: 6) { result in
@@ -273,7 +273,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .r) { getfd in
+                    FS.open(targetFile, flags: .read) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.read(fd) { getData in
@@ -297,7 +297,7 @@ class FsTests: XCTestCase {
 
     func testFtell(){
         waitUntil(5, description: "fell") { done in
-            FS.open(targetFile, flags: .wp) { getfd in
+            FS.open(targetFile, flags: .truncateReadWrite) { getfd in
                 let fd = try! getfd()
                 XCTAssertGreaterThanOrEqual(fd, 0)
                 let str = "hello world.hello world.hello world.hello world.hello world."
@@ -368,7 +368,7 @@ class FsTests: XCTestCase {
         waitUntil(5, description: "ErrorFd") { done in
             seriesTask([
                 { cb in
-                    FS.open(targetFile, flags: .r) { getfd in
+                    FS.open(targetFile, flags: .read) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.write(fd, data: Data("foo")) { result in
@@ -384,7 +384,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .w) { getfd in
+                    FS.open(targetFile, flags: .truncateWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.read(fd) { getData in
@@ -400,7 +400,7 @@ class FsTests: XCTestCase {
                     }
                 },
                 { cb in
-                    FS.open(targetFile, flags: .a) { getfd in
+                    FS.open(targetFile, flags: .appendWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
                         FS.read(fd) { getData in

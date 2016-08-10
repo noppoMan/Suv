@@ -10,7 +10,7 @@ public class UDPSocket {
 
     let rawSocket: UDPWrap
 
-    public enum Error: ErrorProtocol {
+    public enum UDPSocketError: Error {
         case InvalidURI
     }
 
@@ -27,17 +27,17 @@ public class UDPSocket {
     }
 
     public func bind(_ uri: URI) throws {
-        guard let host = uri.host, port = uri.port else {
-            throw Error.InvalidURI
+        guard let host = uri.host, let port = uri.port else {
+            throw UDPSocketError.InvalidURI
         }
         try rawSocket.bind(Address(host: host, port: port))
     }
 
     public func send(_ data: Data, uri: URI, timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = { _ in }) {
 
-        guard let host = uri.host, port = uri.port else {
+        guard let host = uri.host, let port = uri.port else {
             return completion {
-                throw Error.InvalidURI
+                throw UDPSocketError.InvalidURI
             }
         }
 
