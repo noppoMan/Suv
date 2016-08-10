@@ -13,7 +13,6 @@ public enum InterProcessEvent {
     case online
     case exit(Int64)
     case error(String)
-    case signal(Int32)
     case message(String)
 }
 
@@ -24,8 +23,6 @@ public extension InterProcessEvent {
             return ""
         case .exit(let status):
             return "\(status)"
-        case .signal(let sig):
-            return "\(sig)"
         case .message(let message):
             return message
         case .error(let error):
@@ -39,8 +36,6 @@ public extension InterProcessEvent {
             return "Online"
         case .exit(_):
             return "Exit"
-        case .signal(_):
-            return "Signal"
         case .message(_):
             return "Message"
         case .error(_):
@@ -61,7 +56,7 @@ struct InternalMessageParser {
     
     let completion: (InterProcessEvent) -> ()
     
-    init(_ completion: (InterProcessEvent) -> ()){
+    init(_ completion: @escaping (InterProcessEvent) -> ()){
         self.completion = completion
     }
     
@@ -97,8 +92,6 @@ struct InternalMessageParser {
             event = .online
         case "exit":
             event = .exit(Int64(value)!)
-        case "signal":
-            event = .signal(Int32(value)!)
         case "error":
             event = .error(value)
         default:
@@ -127,7 +120,6 @@ struct InternalMessageParser {
     }
 }
 
-
 extension WritablePipe {
     internal func send(_ event: InterProcessEvent){
         let data = "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"
@@ -136,7 +128,7 @@ extension WritablePipe {
 }
 
 extension ReadablePipe {
-    internal func on(_ callback: (InterProcessEvent) -> ()){
+    internal func onIPC(_ callback: @escaping (InterProcessEvent) -> ()){
         var parser = InternalMessageParser(callback)
         
         self.receive { getData in

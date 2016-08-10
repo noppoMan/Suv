@@ -16,7 +16,7 @@ public class WritableFileStream: AsyncSendingStream {
         self.fd = fd
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = {_ in}) {
+    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         
         FS.write(fd, data: data) { result in
             completion {
@@ -25,7 +25,7 @@ public class WritableFileStream: AsyncSendingStream {
         }
     }
     
-    public func flush(timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = {_ in}) {
+    public func flush(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         // noop
     }
     

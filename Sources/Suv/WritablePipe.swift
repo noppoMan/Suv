@@ -31,7 +31,7 @@ public class WritablePipe: AsyncSendingStream {
         return self
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = { _ in }) {
+    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
         socket.send(data, completion: completion)
     }
     
@@ -39,6 +39,6 @@ public class WritablePipe: AsyncSendingStream {
         try socket.close()
     }
     
-    public func flush(timingOut deadline: Double, completion: ((Void) throws -> Void) -> Void) {}
+    public func flush(timingOut deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void) {}
 }
 
