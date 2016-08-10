@@ -15,7 +15,7 @@
 import XCTest
 @testable import Suv
 
-private let targetFile = Process.cwd + "/test.txt"
+private let targetFile = CommandLine.cwd + "/test.txt"
 
 class FileStreamTests: XCTestCase {
     static var allTests: [(String, (FileStreamTests) -> () throws -> Void)] {
@@ -27,7 +27,7 @@ class FileStreamTests: XCTestCase {
     func prepare() {
         unlink(targetFile)
         waitUntil(description: "setup") { done in
-            FS.open(targetFile, flags: .w) { getFd in
+            FS.open(targetFile, flags: .createWrite) { getFd in
                 let fd = try! getFd()
                 FS.close(fd)
                 done()
@@ -52,7 +52,7 @@ class FileStreamTests: XCTestCase {
             FS.createWritableStream(path: targetFile) { getStream in
                 let stream = try! getStream()
                 
-                let data: Data = "foobar"
+                let data: C7.Data = "foobar"
                 
                 stream.send(data) { result in
                     try! stream.close()
@@ -65,7 +65,6 @@ class FileStreamTests: XCTestCase {
                             let data = try! getData()
                             XCTAssertEqual("\(data)", "foobar")
                             try! stream.close()
-                            print(data)
                             done()
                         }
                     }

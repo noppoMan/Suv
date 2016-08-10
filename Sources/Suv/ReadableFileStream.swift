@@ -16,11 +16,11 @@ public class ReadableFileStream: AsyncReceivingStream {
         self.fd = fd
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: ((Void) throws -> Data) -> Void = { _ in }) {
+    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
         FS.read(fd, completion: completion)
     }
     
-    public func flush(timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = {_ in}) {
+    public func flush(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         // noop
     }
     

@@ -8,7 +8,7 @@
 
 public final class TCPServer {
     
-    public enum Error: ErrorProtocol {
+    public enum TCPServerError: Error {
         case InvalidURI
     }
     
@@ -51,8 +51,8 @@ public final class TCPServer {
      - throws: SuvError.UVError
     */
     public func bind(_ uri: URI) throws {
-        guard let host = uri.host, port = uri.port else {
-            throw Error.InvalidURI
+        guard let host = uri.host, let port = uri.port else {
+            throw TCPServerError.InvalidURI
         }
         try socket?.rawSocket.bind(Address(host: host, port: port))
     }
@@ -80,7 +80,7 @@ public final class TCPServer {
      - parameter onConnection: Completion handler
     */
     
-    public func listen(_ backlog: UInt = 128, onConnection: ((Void) throws -> PipeSocket?) -> Void) throws {
+    public func listen(_ backlog: UInt = 128, onConnection: @escaping ((Void) throws -> PipeSocket?) -> Void) throws {
         if let ipcChan = self.ipcChan {
             ipcChan.rawSocket.read2(pendingType: .tcp) { getQueue in
                 onConnection {
