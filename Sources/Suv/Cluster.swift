@@ -16,8 +16,8 @@ private var onlined = false
 
 
 func exexOptions() -> [String] {
-    if Process.argc > 1 {
-        return Array(Process.arguments[1..<Process.arguments.count])
+    if CommandLine.argc > 1 {
+        return Array(CommandLine.arguments[1..<CommandLine.arguments.count])
     }
     
     return []
@@ -38,7 +38,7 @@ public class Cluster {
      true is worker, false otherwise
      */
     public static var isWorker: Bool {
-        return Process.env[workerIdKeyName] != nil
+        return CommandLine.env[workerIdKeyName] != nil
     }
     
     /**
@@ -62,7 +62,7 @@ public class Cluster {
     ) throws -> Worker {
         var options = SpawnOptions()
         
-        options.cwd = Process.cwd
+        options.cwd = CommandLine.cwd
         options.env["SUV_CHILD_PROC"] = "1"
         options.env[workerIdKeyName] = String(workerId)
         workerId+=1
@@ -99,7 +99,7 @@ public class Cluster {
             StdioOption(flags: .createReadablePipe, pipe: PipeWrap(loop: loop, ipcEnable: true))
         ])
         
-        let childProc = try ChildProcess.spawn(execPath ?? Process.execPath, execOpts, loop: loop, options: options)
+        let childProc = try ChildProcess.spawn(execPath ?? CommandLine.execPath, execOpts, loop: loop, options: options)
         
         let worker = Worker(process: childProc, workerId: workerId)
         

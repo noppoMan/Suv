@@ -8,7 +8,7 @@
 
 private func shouldResolveIpv4FromName(_ uri: URI) throws -> Bool {
     guard let host = uri.host else {
-        throw TCPClient.Error.hostIsRequired
+        throw TCPClient.TCPClientError.hostIsRequired
     }
     let segments = host.splitBy(separator: ".")
     for seg in segments {
@@ -19,7 +19,7 @@ private func shouldResolveIpv4FromName(_ uri: URI) throws -> Bool {
     return false
 }
 
-private func resolveNameIfNeeded(loop: Loop, uri: URI, completion: ((Void) throws -> [Address]) -> Void) throws {
+private func resolveNameIfNeeded(loop: Loop, uri: URI, completion: @escaping ((Void) throws -> [Address]) -> Void) throws {
     if try shouldResolveIpv4FromName(uri) {
         DNS.getAddrInfo(fqdn: uri.host!) { result in
             completion {
@@ -35,7 +35,7 @@ private func resolveNameIfNeeded(loop: Loop, uri: URI, completion: ((Void) throw
 
 public final class TCPClient: AsyncConnection {
     
-    public enum Error: ErrorProtocol {
+    public enum TCPClientError: Error {
         case hostIsRequired
     }
     
@@ -57,7 +57,7 @@ public final class TCPClient: AsyncConnection {
         self.socket = TCPSocket(loop: loop)
     }
     
-    public func open(timingOut deadline: Double = .never, completion: ((Void) throws -> AsyncConnection) -> Void = { _ in }) throws {
+    public func open(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> AsyncConnection) -> Void = { _ in }) throws {
         
         try resolveNameIfNeeded(loop: loop, uri: uri) { [unowned self] getAddrInfo in
             do {
@@ -77,11 +77,11 @@ public final class TCPClient: AsyncConnection {
         }
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: ((Void) throws -> Void) -> Void = { _ in }) {
+    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
         socket.send(data, timingOut: deadline, completion: completion)
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: ((Void) throws -> Data) -> Void = { _ in }) {
+    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
         socket.receive(upTo: byteCount, timingOut: deadline, completion: completion)
     }
     
@@ -90,6 +90,6 @@ public final class TCPClient: AsyncConnection {
         self.state = .closed
     }
     
-    public func flush(timingOut deadline: Double, completion: ((Void) throws -> Void) -> Void = { _ in }) {}
+    public func flush(timingOut deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
 }
 

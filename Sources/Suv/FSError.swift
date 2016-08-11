@@ -6,7 +6,7 @@
 //
 //
 
-public enum FSError: ErrorProtocol {
+public enum FSError: Error {
     case invalidPosition(Int)
     case fileDescriptorIsEmpty
     case alreadyOpend

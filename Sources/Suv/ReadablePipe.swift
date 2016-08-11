@@ -31,7 +31,7 @@ public class ReadablePipe: AsyncReceivingStream {
         return self
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: ((Void) throws -> Data) -> Void = { _ in }) {
+    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
         socket.receive(upTo: byteCount, timingOut: deadline, completion: completion)
     }
     
