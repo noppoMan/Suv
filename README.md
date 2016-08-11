@@ -5,32 +5,30 @@ This is built with [libuv](https://github.com/libuv/libuv) as core architecture 
 
 Suv is also core engine of [Slimane](https://github.com/noppoMan/slimane.git)
 
-## A Work In Progress
-Recently Suv doesn't have coveragge for all of libuv apis.
-
 ## Features
-- [x] TCP Server/Client
-- [x] Pipe Server/Client
-- [x] File System(40%)
+- [x] TCP Server
+- [x] TCP Client
+- [x] TCP Socket
+- [x] Pipe Server
+- [x] Pipe Client
+- [x] Pipe Socket
+- [x] UDP Socket
+- [x] UDP Client
+- [x] File System
 - [x] Child Process
-- [x] Cluster and Worker(IPC based)
-- [x] Signal handling
+- [x] Cluster/Worker
+- [x] Signal
 - [x] Timer
 - [x] DNS
-- [x] Threads
-- [x] Utility
-- [x] Encryption(10%)
+- [x] QueueWork
+- [x] Idle
 
 ## Requirements
 * [libuv](https://github.com/libuv/libuv)
-* [openssl](https://www.openssl.org/)
 
 
 ## Documentaion
 Check out the [Wiki](https://github.com/noppoMan/Suv/wiki) to start using.
-
-## API Reference
-Check out the [Api Reference](http://rawgit.com/noppoMan/Suv/master/docs/api/index.html)
 
 ## License
 
