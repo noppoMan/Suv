@@ -1,8 +1,8 @@
 //
-//  Runtime.swift
+//  Process.swift
 //  Suv
 //
-//  Created by Yuki Takei on 6/12/16.
+//  Created by Yuki Takei on 8/10/16.
 //
 //
 
@@ -18,6 +18,8 @@ import CLibUv
 
 internal let idle = IdleWrap(loop: Loop.defaultLoop)
 
+public struct Process {}
+
 extension Process {
     /**
      This is a convenience function that allows an application to run a task in a separate thread, and have a callback that is triggered when the task is done.
@@ -28,11 +30,11 @@ extension Process {
      - parameter onThread: Function that want to run in a separate thread
      - parameter onFinish: Function that want to run in a main loop
      */
-    public static func qwork(loop: Loop = Loop.defaultLoop, onThread: () -> (), onFinish: () -> () = {}){
-        let qw = QueueWorkWrap(loop: loop)
-        qw.workCallback = onThread
-        qw.afterWorkCallback = onFinish
-        qw.execute()
+    public static func qwork(loop: Loop = Loop.defaultLoop, onThread: @escaping () -> (), onFinish: @escaping () -> () = {}){
+        let q = QueueWorkWrap(loop: loop)
+        q.workCallback = onThread
+        q.afterWorkCallback = onFinish
+        q.execute()
     }
     
     /**
@@ -41,7 +43,7 @@ extension Process {
      
      - parameter queue: Function to invoke at the next idle
      */
-    public static func setImmediate(_ queue: () -> ()) {
+    public static func setImmediate(_ queue: @escaping () -> ()) {
         if !idle.isStarted {
             idle.start()
         }
@@ -75,14 +77,14 @@ extension Process {
      
      - parameter callback: Handler for receiving event from a master
      */
-    public static func on(_ loop: Loop = Loop.defaultLoop, _ callback: (InterProcessEvent) -> ()){
+    public static func onIPC(_ loop: Loop = Loop.defaultLoop, _ callback: @escaping (InterProcessEvent) -> ()){
         if Cluster.isMaster { return }
         
         if readChannel == nil {
             readChannel = ReadablePipe(loop: loop).open(4)
         }
         
-        readChannel?.on { ev in
+        readChannel?.onIPC { ev in
             // Online and Exit events should not be got at the worker.
             if case .online = ev {
                 return
@@ -94,4 +96,12 @@ extension Process {
             callback(ev)
         }
     }
+    
+    public static func onSignal(loop: Loop = Loop.defaultLoop, signal: PosixSignal, completion: @escaping (Void) -> Void) {
+        let s = SignalWrap(loop: loop)
+        s.start(signal.value) { _ in
+            completion()
+        }
+    }
 }
+
