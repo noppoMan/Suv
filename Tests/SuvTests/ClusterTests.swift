@@ -21,12 +21,12 @@ class ClusterTests: XCTestCase {
             ("testFork", testFork)
         ]
     }
-    
+
     func testFork() {
-        let testExecutable = "\(Process.cwd)/.build/debug/ClusterTests"
+        let testExecutable = "\(CommandLine.cwd)/.build/debug/ClusterTest"
         let worker = try! Cluster.fork(execPath: testExecutable, silent: false)
-        
-        worker.on { ev in
+
+        worker.onIPC { ev in
             if case .online = ev {
                 worker.send(.message("1"))
             }
@@ -37,7 +37,7 @@ class ClusterTests: XCTestCase {
                 XCTAssertEqual(status, 0)
             }
         }
-        
+
         Loop.defaultLoop.run()
     }
 }

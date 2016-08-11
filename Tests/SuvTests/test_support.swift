@@ -13,7 +13,7 @@ import Time
 
 private class AsynchronousTestSupporter {
 
-    init(timeout: Int, description: String, callback: (() -> ()) -> ()){
+    init(timeout: Int, description: String, callback:  (@escaping () -> ()) -> ()){
         print("Starting the \(description) test")
 
         var breakFlag = false
@@ -43,16 +43,16 @@ private class AsynchronousTestSupporter {
 
 
 extension XCTestCase {
-    func waitUntil(_ timeout: Int = 1, description: String, callback: (() -> ()) -> ()){
+    func waitUntil(_ timeout: Int = 1, description: String, callback: (@escaping () -> ()) -> ()){
         let _ = AsynchronousTestSupporter(timeout: timeout, description: description, callback: callback)
         Loop.defaultLoop.run()
     }
 }
 
 
-internal typealias SeriesCB = ((ErrorProtocol?) -> ()) -> ()
+internal typealias SeriesCB =  (@escaping (Error?) -> ()) -> ()
 
-internal func seriesTask(_ tasks: [SeriesCB], _ completion: (ErrorProtocol?) -> Void) {
+internal func seriesTask(_ tasks: [SeriesCB], _ completion: @escaping (Error?) -> Void) {
     if tasks.count == 0 {
         completion(nil)
         return

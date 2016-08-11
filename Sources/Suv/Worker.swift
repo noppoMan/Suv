@@ -29,9 +29,9 @@ public class Worker: Equatable {
     // for reading internal message
     public var ipcReadChan: ReadablePipe? = nil
     
-    private var emitedOnlineEvent = false
+    internal var emitedOnlineEvent = false
     
-    private var onEventCallback: (InterProcessEvent) -> () = { _ in }
+    internal var onEventCallback: (InterProcessEvent) -> () = { _ in }
     
     init(loop: Loop = Loop.defaultLoop, process: Proc, workerId: Int) {
         self.process = process
@@ -98,7 +98,7 @@ extension Worker {
      
      - parameter callback: Handler for receiving event from a worker
      */
-    public func on(_ callback: (InterProcessEvent) -> ()){
+    public func onIPC(_ callback: @escaping (InterProcessEvent) -> ()){
         // Online should be called at once
         if !self.emitedOnlineEvent {
             callback(.online)
@@ -106,7 +106,7 @@ extension Worker {
         }
         
         self.onEventCallback = callback
-        ipcReadChan?.on(callback)
+        ipcReadChan?.onIPC(callback)
     }
 }
 

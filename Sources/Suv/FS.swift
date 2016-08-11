@@ -15,7 +15,7 @@ private struct FSContext {
  */
 public class FS {
     
-    public static func createWritableStream(path: String, flags: Flags = .w, mode: Int32 = Flags.w.mode, completion: ((Void) throws -> WritableFileStream) -> Void)  {
+    public static func createWritableStream(path: String, flags: FileMode = .truncateWrite, mode: Int32 = FileMode.truncateWrite.defaultPermission, completion: @escaping ((Void) throws -> WritableFileStream) -> Void)  {
         FS.open(path, flags: flags, mode: mode) { getfd in
             do {
                 let fd = try getfd()
@@ -30,7 +30,7 @@ public class FS {
         }
     }
     
-    public static func createReadableStream(path: String, flags: Flags = .r, mode: Int32 = 0, completion: ((Void) throws -> ReadableFileStream) -> Void)  {
+    public static func createReadableStream(path: String, flags: FileMode = .read, mode: Int32 = FileMode.read.defaultPermission, completion: @escaping ((Void) throws -> ReadableFileStream) -> Void)  {
         FS.open(path, flags: flags, mode: mode) { getfd in
             do {
                 let fd = try getfd()
@@ -64,7 +64,7 @@ public class FS {
      - parameter position: Not implemented yet
      - parameter completion: Completion handler
      */
-    public static func read(_ fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: ((Void) throws -> Data) -> Void){
+    public static func read(_ fd: Int32, loop: Loop = Loop.defaultLoop, length: Int? = nil, position: Int = 0, completion: @escaping ((Void) throws -> Data) -> Void){
         FSWrap.read(fd, loop: loop, length: length, position: position) { getData in
             completion {
                 let buffer = try getData()
@@ -84,7 +84,7 @@ public class FS {
      - parameter position: Position to start writing
      - parameter completion: Completion handler
      */
-    public static func write(_ fd: Int32, loop: Loop = Loop.defaultLoop, data: Data, offset: Int = 0, length: Int? = nil, position: Int = 0, completion: ((Void) throws -> Void) ->  Void){
+    public static func write(_ fd: Int32, loop: Loop = Loop.defaultLoop, data: Data, offset: Int = 0, length: Int? = nil, position: Int = 0, completion: @escaping ((Void) throws -> Void) ->  Void){
         FSWrap.write(fd, loop: loop, data: data.bufferd, offset: offset, position: position, completion: completion)
     }
     
@@ -96,7 +96,7 @@ public class FS {
      - parameter mode: mode for uv_fs_open
      - parameter completion: Completion handler
      */
-    public static func open(_ path: String, loop: Loop = Loop.defaultLoop, flags: Flags = .r, mode: Int32? = nil, completion: ((Void) throws -> Int32) -> Void) {
+    public static func open(_ path: String, loop: Loop = Loop.defaultLoop, flags: FileMode = .read, mode: Int32? = nil, completion: @escaping ((Void) throws -> Int32) -> Void) {
         FSWrap.open(path, loop: loop, flags: flags, mode: mode, completion: completion)
     }
     
@@ -106,7 +106,7 @@ public class FS {
      - parameter completion: Completion handler
      - parameter loop: Event Loop
      */
-    public static func stat(_ path: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void) {
+    public static func stat(_ path: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void) {
         FSWrap.stat(path, loop: loop, completion: completion)
     }
     
@@ -130,7 +130,7 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Int) -> Void){
+    public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Int) -> Void){
         let reader = FileReader(
             loop: loop,
             fd: fd,
@@ -158,8 +158,8 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func createFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void = { _ in}) {
-        FS.open(path, flags: .w) { getfd in
+    public static func createFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void = { _ in}) {
+        FS.open(path, flags: .createWrite) { getfd in
             completion {
                 let fd = try getfd()
                 FS.close(fd)
@@ -174,8 +174,8 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func readFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Data) -> Void) {
-        FS.open(path, flags: .r) { getfd in
+    public static func readFile(_ path: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Data) -> Void) {
+        FS.open(path, flags: .read) { getfd in
             do {
                 let fd = try getfd()
                 var received: Data = []
@@ -211,7 +211,7 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func writeFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void) {
+    public static func writeFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void) {
         writeFile(path, withData: Data(data), loop: loop, completion: completion)
     }
     
@@ -223,8 +223,8 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func writeFile(_ path: String, withData data: Data, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void) {
-        FS.open(path, flags: .w) { getfd in
+    public static func writeFile(_ path: String, withData data: Data, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void) {
+        FS.open(path, flags: .truncateWrite) { getfd in
             do {
                 let fd = try getfd()
                 FS.write(fd, data: data) { result in
@@ -249,7 +249,7 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func appendFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void) {
+    public static func appendFile(_ path: String, withString data: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void) {
         appendFile(path, withData: Data(data), loop: loop, completion: completion)
     }
     
@@ -262,8 +262,8 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func appendFile(_ path: String, withData data: Data, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Void) -> Void) {
-        FS.open(path, flags: .ap) { getfd in
+    public static func appendFile(_ path: String, withData data: Data, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Void) -> Void) {
+        FS.open(path, flags: .appendReadWrite) { getfd in
             do {
                 let fd = try getfd()
                 FS.ftell(fd) { getPos in
@@ -298,7 +298,7 @@ extension FS {
      - parameter loop: Event Loop
      - parameter completion: Completion handler
      */
-    public static func exists(_ path: String, loop: Loop = Loop.defaultLoop, completion: ((Void) throws -> Bool) -> Void){
+    public static func exists(_ path: String, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Bool) -> Void){
         FS.stat(path) { result in
             completion {
                 do {
