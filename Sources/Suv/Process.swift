@@ -30,10 +30,9 @@ extension Process {
      - parameter onThread: Function that want to run in a separate thread
      - parameter onFinish: Function that want to run in a main loop
      */
-    public static func qwork(loop: Loop = Loop.defaultLoop, onThread: @escaping () -> (), onFinish: @escaping () -> () = {}){
-        let q = QueueWorkWrap(loop: loop)
-        q.workCallback = onThread
-        q.afterWorkCallback = onFinish
+    public static func qwork(loop: Loop = Loop.defaultLoop, onThread: @escaping (QueueWorkContext) -> Void, onFinish: @escaping (QueueWorkContext) -> Void){
+        let ctx = QueueWorkContext(workCallback: onThread, afterWorkCallback: onFinish)
+        let q = QueueWorkWrap(loop: loop, context: ctx)
         q.execute()
     }
     
