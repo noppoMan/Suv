@@ -8,16 +8,52 @@
 
 public class ReadableFileStream: AsyncReceivingStream {
     
-    public let fd: Int32
+    public let path: String
+    
+    public let mode: Int32
+    
+    public let flags: FileMode
     
     public var closed = false
     
-    public init(fd: Int32){
-        self.fd = fd
+    private var fd: Int32? = nil
+    
+    public init(path: String, flags: FileMode = .read, mode: Int32 = FileMode.read.defaultPermission){
+        self.path = path
+        self.flags = flags
+        self.mode = mode
     }
     
     public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
-        FS.read(fd, completion: completion)
+        if closed {
+            completion {
+                throw ClosableError.alreadyClosed
+            }
+            return
+        }
+        
+        openIfNeeded { [unowned self] result in
+            do {
+                try result()
+                FS.read(self.fd!, completion: completion)
+            } catch {
+                completion {
+                    throw error
+                }
+            }
+        }
+    }
+    
+    private func openIfNeeded(_ callback: @escaping ((Void) throws -> Void) -> Void){
+        if fd != nil {
+            callback { }
+        } else {
+            FS.open(path, flags: flags, mode: mode) { [unowned self] getfd in
+                callback {
+                    self.fd = try getfd()
+                }
+            }
+        }
     }
     
     public func flush(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
@@ -28,8 +64,9 @@ public class ReadableFileStream: AsyncReceivingStream {
         if closed {
             throw ClosableError.alreadyClosed
         }
-        
-        FS.close(fd)
+        if let fd = fd {
+            FS.close(fd)
+        }
         closed = true
     }
 }

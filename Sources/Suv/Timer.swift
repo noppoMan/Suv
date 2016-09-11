@@ -9,8 +9,8 @@
 public struct TimerInterval {
     let timer: TimerWrap
     
-    init(loop: Loop = Loop.defaultLoop, tick: Int){
-        self.timer = TimerWrap(loop: loop, mode: .interval, tick: UInt64(tick))
+    init(loop: Loop = Loop.defaultLoop, delay: Int){
+        self.timer = TimerWrap(loop: loop, mode: .interval, delay: UInt64(delay))
         self.timer.unref()
     }
     
@@ -22,7 +22,7 @@ public struct TimerInterval {
 public struct Timer {
 
     public static func timeout(loop: Loop = Loop.defaultLoop, timeout msec: Int, completion: @escaping (Void) -> Void){
-        let timer = TimerWrap(loop: loop, mode: .timeout, tick: UInt64(msec))
+        let timer = TimerWrap(loop: loop, mode: .timeout, delay: UInt64(msec))
         timer.start {
             timer.end()
             completion()
@@ -30,7 +30,7 @@ public struct Timer {
     }
     
     public static func interval(loop: Loop = Loop.defaultLoop, interval msec: Int, completion: @escaping (TimerInterval) -> Void){
-        let interval = TimerInterval(loop: loop, tick: msec)
+        let interval = TimerInterval(loop: loop, delay: msec)
         interval.timer.start {
             completion(interval)
         }
