@@ -15,34 +15,12 @@ private struct FSContext {
  */
 public class FS {
     
-    public static func createWritableStream(path: String, flags: FileMode = .truncateWrite, mode: Int32 = FileMode.truncateWrite.defaultPermission, completion: @escaping ((Void) throws -> WritableFileStream) -> Void)  {
-        FS.open(path, flags: flags, mode: mode) { getfd in
-            do {
-                let fd = try getfd()
-                completion {
-                    WritableFileStream(fd: fd)
-                }
-            } catch {
-                completion {
-                    throw error
-                }
-            }
-        }
+    public static func createWritableStream(path: String, flags: FileMode = .truncateWrite, mode: Int32 = FileMode.truncateWrite.defaultPermission) -> WritableFileStream {
+        return WritableFileStream(path: path, flags: flags, mode: mode)
     }
     
-    public static func createReadableStream(path: String, flags: FileMode = .read, mode: Int32 = FileMode.read.defaultPermission, completion: @escaping ((Void) throws -> ReadableFileStream) -> Void)  {
-        FS.open(path, flags: flags, mode: mode) { getfd in
-            do {
-                let fd = try getfd()
-                completion {
-                    ReadableFileStream(fd: fd)
-                }
-            } catch {
-                completion {
-                    throw error
-                }
-            }
-        }
+    public static func createReadableStream(path: String, flags: FileMode = .read, mode: Int32 = FileMode.read.defaultPermission) -> ReadableFileStream {
+        return ReadableFileStream(path: path, flags: flags, mode: mode)
     }
     
     /**
@@ -131,21 +109,27 @@ extension FS {
      - parameter completion: Completion handler
      */
     public static func ftell(_ fd: Int32, loop: Loop = Loop.defaultLoop, completion: @escaping ((Void) throws -> Int) -> Void){
+        
+        var pos = 0
+        
         let reader = FileReader(
             loop: loop,
             fd: fd,
             length: nil,
             position: 0
-        ) { res in
-            if case .data(_) = res {
-                return
-            } else if case .end(let pos) = res {
-                return completion {
-                    pos
+        ) { getData in
+            do {
+                let buffer = try getData()
+                pos+=buffer.bytes.count
+                if buffer.bytes.count == 0 {
+                    completion {
+                        pos
+                    }
                 }
-            }
-            completion {
-                throw FSError.invalidPosition(-1)
+            } catch {
+                completion {
+                    throw error
+                }
             }
         }
         reader.start()

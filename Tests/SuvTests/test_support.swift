@@ -26,7 +26,7 @@ private class AsynchronousTestSupporter {
 
         let endts = Time().addSec(timeout).unixtime
 
-        let t = TimerWrap(mode: .interval, tick: 100)
+        let t = TimerWrap(mode: .interval, delay: 100)
         t.start {
             if Time().unixtime > endts {
                 Loop.defaultLoop.stop()
