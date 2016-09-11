@@ -8,19 +8,50 @@
 
 public class WritableFileStream: AsyncSendingStream {
     
-    public var fd: Int32
+    public let path: String
+    
+    public let mode: Int32
+    
+    public let flags: FileMode
     
     public var closed = false
     
-    public init(fd: Int32){
-        self.fd = fd
+    private var fd: Int32? = nil
+    
+    public init(path: String, flags: FileMode = .read, mode: Int32 = FileMode.read.defaultPermission){
+        self.path = path
+        self.flags = flags
+        self.mode = mode
     }
     
     public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
-        
-        FS.write(fd, data: data) { result in
+        if closed {
             completion {
-                _ = try result()
+                throw ClosableError.alreadyClosed
+            }
+            return
+        }
+        
+        openIfNeeded { [unowned self] result in
+            do {
+                try result()
+                FS.write(self.fd!, data: data, completion: completion)
+            } catch {
+                completion {
+                    throw error
+                }
+            }
+        }
+    }
+    
+    private func openIfNeeded(_ callback: @escaping ((Void) throws -> Void) -> Void){
+        if fd != nil {
+            callback { }
+        } else {
+            FS.open(path, flags: flags, mode: mode) { [unowned self] getfd in
+                callback {
+                    self.fd = try getfd()
+                }
             }
         }
     }
@@ -33,8 +64,9 @@ public class WritableFileStream: AsyncSendingStream {
         if closed {
             throw ClosableError.alreadyClosed
         }
-        
-        FS.close(fd)
+        if let fd = fd {
+            FS.close(fd)
+        }
         closed = true
     }
 }
