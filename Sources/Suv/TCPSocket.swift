@@ -6,7 +6,7 @@
 //
 //
 
-public class TCPSocket: AsyncStream {
+public class TCPSocket: Stream {
 
     internal let rawSocket: TCPWrap
 
@@ -26,10 +26,10 @@ public class TCPSocket: AsyncStream {
         try self.rawSocket.setNoDelay(enable)
     }
 
-    public func send(queue: PipeSocket, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
+    public func write(queue: PipeSocket, deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
         if closed {
           completion {
-            throw ClosableError.alreadyClosed
+            throw StreamError.closedStream(data: [])
           }
           return
         }
@@ -37,21 +37,21 @@ public class TCPSocket: AsyncStream {
         rawSocket.write2(ipcPipe: queue.rawSocket, onWrite: completion)
     }
 
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
+    public func write(_ data: Data, deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
         if closed {
           completion {
-            throw ClosableError.alreadyClosed
+            throw StreamError.closedStream(data: [])
           }
           return
         }
 
-        rawSocket.write(buffer: data.bufferd, onWrite: completion)
+        rawSocket.write(buffer: data, onWrite: completion)
     }
 
-    public func receive(upTo byteCount: Int = 0, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
+    public func read(upTo byteCount: Int = 0, deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
         if closed {
           completion {
-            throw ClosableError.alreadyClosed
+            throw StreamError.closedStream(data: [])
           }
           return
         }
@@ -62,11 +62,8 @@ public class TCPSocket: AsyncStream {
         }
     }
 
-    public func close() throws {
-        if closed {
-            throw ClosableError.alreadyClosed
-        }
-        try rawSocket.stop()
+    public func close() {
+        do { try rawSocket.stop() } catch { }
         rawSocket.close()
     }
 
@@ -74,5 +71,5 @@ public class TCPSocket: AsyncStream {
         rawSocket.onClose(completion)
     }
 
-    public func flush(timingOut deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
+    public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
 }

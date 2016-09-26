@@ -64,7 +64,7 @@ class FsTests: XCTestCase {
             FS.readFile(targetFile) { getData in
                 do {
                     let data = try getData()
-                    XCTAssertEqual(data.bytes.count, 0)
+                    XCTAssertEqual(data.count, 0)
                     done()
                 } catch {
                     XCTFail("\(error)")
@@ -81,7 +81,7 @@ class FsTests: XCTestCase {
                 FS.read(fd) { getData in
                     FS.close(fd)
                     let data = try! getData()
-                    XCTAssertEqual(data.bytes.count, 0)
+                    XCTAssertEqual(data.count, 0)
                     done()
                 }
             }
@@ -92,8 +92,8 @@ class FsTests: XCTestCase {
         waitUntil(description: "writeFile") { done in
             FS.writeFile(targetFile, withString: "Hello world") { _ in
                 FS.readFile(targetFile) { getData in
-                    let data = try! getData()
-                    XCTAssertEqual("\(data)", "Hello world")
+                    let data = try! getData()    
+                    XCTAssertEqual(data.utf8String!, "Hello world")
                     done()
                 }
             }
@@ -105,7 +105,7 @@ class FsTests: XCTestCase {
             FS.open(targetFile, flags: .truncateWrite) { getFd in
                 let fd = try! getFd()
                 XCTAssertGreaterThanOrEqual(fd, 0)
-                FS.write(fd, data: Data("test text")) { result in
+                FS.write(fd, data: "test text".data) { result in
                     _ = try! result()
                     FS.close(fd)
                     done()
@@ -121,7 +121,7 @@ class FsTests: XCTestCase {
                 XCTAssertGreaterThanOrEqual(fd, 0)
                 seriesTask([
                    { cb in
-                        FS.write(fd, data: Data("test text")) { result in
+                        FS.write(fd, data: "test text".data) { result in
                             do {
                                 _ = try result()
                                 cb(nil)
@@ -134,7 +134,7 @@ class FsTests: XCTestCase {
                         FS.read(fd) { getData in
                             do {
                                 let data = try getData()
-                                XCTAssertEqual("\(data)", "test text")
+                                XCTAssertEqual(data.utf8String!, "test text")
                                 cb(nil)
                             } catch {
                                 cb(error)
@@ -159,7 +159,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .truncateWrite) { getFd in
                         let fd = try! getFd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("foofoofoo")) { result in
+                        FS.write(fd, data: "foofoofoo".data) { result in
                             FS.close(fd)
                             do {
                                 _  = try result()
@@ -174,7 +174,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .truncateReadWrite) { getFd in
                         let fd = try! getFd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("bar")) { result in
+                        FS.write(fd, data: "bar".data) { result in
                             FS.close(fd)
                             do {
                                 _  = try result()
@@ -192,7 +192,7 @@ class FsTests: XCTestCase {
                         FS.read(fd) { getData in
                             do {
                                 let data = try getData()
-                                XCTAssertEqual("\(data)", "bar")
+                                XCTAssertEqual(data.utf8String!, "bar")
                                 cb(nil)
                             } catch {
                                 cb(error)
@@ -215,7 +215,7 @@ class FsTests: XCTestCase {
                 FS.appendFile(targetFile, withString: "bar") { _ in
                     FS.readFile(targetFile) { getData in
                         let data = try! getData()
-                        XCTAssertEqual("\(data)", "foobar")
+                        XCTAssertEqual(data.utf8String!, "foobar")
                         done()
                     }
                 }
@@ -230,7 +230,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .truncateWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("foo")) { result in
+                        FS.write(fd, data: "foo".data) { result in
                             FS.close(fd)
                             do {
                                 _ = try result()
@@ -245,7 +245,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .appendWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("bar"), position: 3) { result in
+                        FS.write(fd, data: "bar".data, position: 3) { result in
                             FS.close(fd)
                             do {
                                 _ = try result()
@@ -261,7 +261,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .appendReadWrite) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("baz"), position: 6) { result in
+                        FS.write(fd, data: "baz".data, position: 6) { result in
                             FS.close(fd)
                             do {
                                 _ = try result()
@@ -279,7 +279,7 @@ class FsTests: XCTestCase {
                         FS.read(fd) { getData in
                             do {
                                 let data = try getData()
-                                XCTAssertEqual("\(data)", "foobarbaz")
+                                XCTAssertEqual(data.utf8String!, "foobarbaz")
                             } catch {
                                 cb(error)
                             }
@@ -371,7 +371,7 @@ class FsTests: XCTestCase {
                     FS.open(targetFile, flags: .read) { getfd in
                         let fd = try! getfd()
                         XCTAssertGreaterThanOrEqual(fd, 0)
-                        FS.write(fd, data: Data("foo")) { result in
+                        FS.write(fd, data: "foo".data) { result in
                             FS.close(fd)
                             do {
                                 try result()

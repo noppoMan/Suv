@@ -6,6 +6,9 @@
 //  Copyright © 2016 MikeTOKYO. All rights reserved.
 //
 
+
+import Foundation
+
 public final class TCPServer {
     
     public enum TCPServerError: Error {
@@ -50,7 +53,7 @@ public final class TCPServer {
      - parameter addr: Bind Address
      - throws: SuvError.UVError
     */
-    public func bind(_ uri: URI) throws {
+    public func bind(_ uri: URL) throws {
         guard let host = uri.host, let port = uri.port else {
             throw TCPServerError.InvalidURI
         }
@@ -101,8 +104,8 @@ public final class TCPServer {
     /**
      Close server handle
      */
-    public func close() throws {
-        try self.ipcChan?.close()
-        try self.socket?.close()
+    public func close() {
+        self.ipcChan?.close()
+        self.socket?.close()
     }
 }

@@ -50,18 +50,18 @@ class FileStreamTests: XCTestCase {
     func testFileStream(){
         waitUntil(description: "readFileStream") { done in
             let writeStream = FS.createWritableStream(path: targetFile)
-            let data: C7.Data = "foobar"
+            let data = "foobar".data
             
-            writeStream.send(data) { result in
-                try! writeStream.close()
+            writeStream.write(data) { result in
+                writeStream.close()
                 
                 _ = try! result()
                 
                 let readStream = FS.createReadableStream(path: targetFile)
-                readStream.receive { getData in
+                readStream.read { getData in
                     let data = try! getData()
-                    XCTAssertEqual("\(data)", "foobar")
-                    try! readStream.close()
+                    XCTAssertEqual(data.utf8String!, "foobar")
+                    readStream.close()
                     done()
                 }
             }

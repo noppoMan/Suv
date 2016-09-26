@@ -6,7 +6,7 @@
 //
 //
 
-public class WritablePipe: AsyncSendingStream {
+public class WritablePipe: WritableStream {
     
     let socket: PipeSocket
     
@@ -31,14 +31,14 @@ public class WritablePipe: AsyncSendingStream {
         return self
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
-        socket.send(data, completion: completion)
+    public func write(_ data: Data, deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
+        socket.write(data, completion: completion)
     }
     
-    public func close() throws {
-        try socket.close()
+    public func close() {
+        socket.close()
     }
     
-    public func flush(timingOut deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void) {}
+    public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void) {}
 }
 

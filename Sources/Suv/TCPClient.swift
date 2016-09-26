@@ -6,7 +6,7 @@
 //
 //
 
-private func shouldResolveIpv4FromName(_ uri: URI) throws -> Bool {
+private func shouldResolveIpv4FromName(_ uri: URL) throws -> Bool {
     guard let host = uri.host else {
         throw TCPClient.TCPClientError.hostIsRequired
     }
@@ -19,7 +19,7 @@ private func shouldResolveIpv4FromName(_ uri: URI) throws -> Bool {
     return false
 }
 
-private func resolveNameIfNeeded(loop: Loop, uri: URI, completion: @escaping ((Void) throws -> [Address]) -> Void) throws {
+private func resolveNameIfNeeded(loop: Loop, uri: URL, completion: @escaping ((Void) throws -> [Address]) -> Void) throws {
     if try shouldResolveIpv4FromName(uri) {
         DNS.getAddrInfo(fqdn: uri.host!) { result in
             completion {
@@ -33,13 +33,13 @@ private func resolveNameIfNeeded(loop: Loop, uri: URI, completion: @escaping ((V
     }
 }
 
-public final class TCPClient: AsyncConnection {
+public final class TCPClient: Connection {
     
     public enum TCPClientError: Error {
         case hostIsRequired
     }
     
-    public let uri: URI
+    public let uri: URL
     
     public let socket: TCPSocket
     
@@ -51,13 +51,13 @@ public final class TCPClient: AsyncConnection {
         return socket.closed
     }
     
-    public init(loop: Loop = Loop.defaultLoop, uri: URI){
+    public init(loop: Loop = Loop.defaultLoop, uri: URL){
         self.uri = uri
         self.loop = loop
         self.socket = TCPSocket(loop: loop)
     }
     
-    public func open(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> AsyncConnection) -> Void = { _ in }) throws {
+    public func open(deadline: Double = .never, completion: @escaping ((Void) throws -> Connection) -> Void = { _ in }) throws {
         
         try resolveNameIfNeeded(loop: loop, uri: uri) { [unowned self] getAddrInfo in
             do {
@@ -77,19 +77,19 @@ public final class TCPClient: AsyncConnection {
         }
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
-        socket.send(data, timingOut: deadline, completion: completion)
+    public func write(_ data: Data, deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {
+        socket.write(data, deadline: deadline, completion: completion)
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
-        socket.receive(upTo: byteCount, timingOut: deadline, completion: completion)
+    public func read(upTo byteCount: Int = 1024, deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
+        socket.read(upTo: byteCount, deadline: deadline, completion: completion)
     }
     
-    public func close() throws {
-        try socket.close()
+    public func close() {
+        socket.close()
         self.state = .closed
     }
     
-    public func flush(timingOut deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
+    public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
 }
 

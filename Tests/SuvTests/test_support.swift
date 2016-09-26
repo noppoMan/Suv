@@ -8,7 +8,6 @@
 
 import XCTest
 import Foundation
-import Time
 @testable import Suv
 
 private class AsynchronousTestSupporter {
@@ -23,12 +22,14 @@ private class AsynchronousTestSupporter {
         }
 
         callback(done)
-
-        let endts = Time().addSec(timeout).unixtime
+        
+        var date = Date()
+        date.addTimeInterval(TimeInterval(timeout))
+        let endts = date.timeIntervalSince1970
 
         let t = TimerWrap(mode: .interval, delay: 100)
         t.start {
-            if Time().unixtime > endts {
+            if Date().timeIntervalSince1970 > endts {
                 Loop.defaultLoop.stop()
                 XCTFail("Test is timed out")
             }

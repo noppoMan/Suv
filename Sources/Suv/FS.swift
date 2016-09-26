@@ -46,7 +46,7 @@ public class FS {
         FSWrap.read(fd, loop: loop, length: length, position: position) { getData in
             completion {
                 let buffer = try getData()
-                return buffer.data
+                return buffer
             }
         }
     }
@@ -63,7 +63,7 @@ public class FS {
      - parameter completion: Completion handler
      */
     public static func write(_ fd: Int32, loop: Loop = Loop.defaultLoop, data: Data, offset: Int = 0, length: Int? = nil, position: Int = 0, completion: @escaping ((Void) throws -> Void) ->  Void){
-        FSWrap.write(fd, loop: loop, data: data.bufferd, offset: offset, position: position, completion: completion)
+        FSWrap.write(fd, loop: loop, data: data, offset: offset, position: position, completion: completion)
     }
     
     /**
@@ -120,8 +120,8 @@ extension FS {
         ) { getData in
             do {
                 let buffer = try getData()
-                pos+=buffer.bytes.count
-                if buffer.bytes.count == 0 {
+                pos+=buffer.count
+                if buffer.count == 0 {
                     completion {
                         pos
                     }
@@ -166,7 +166,7 @@ extension FS {
                 FS.read(fd) { getData in
                     do {
                         let data = try getData()
-                        received += data
+                        received.append(data)
                         if data.count < FileReader.upTo {
                             FS.close(fd)
                             return completion {

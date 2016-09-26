@@ -6,7 +6,7 @@
 //
 //
 
-public class ReadablePipe: AsyncReceivingStream {
+public class ReadablePipe: ReadableStream {
     
     let socket: PipeSocket
     
@@ -31,11 +31,11 @@ public class ReadablePipe: AsyncReceivingStream {
         return self
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
-        socket.receive(upTo: byteCount, timingOut: deadline, completion: completion)
+    public func read(upTo byteCount: Int = 1024, deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
+        socket.read(upTo: byteCount, deadline: deadline, completion: completion)
     }
     
-    public func close() throws {
-        try socket.close()
+    public func close() {
+        socket.close()
     }
 }

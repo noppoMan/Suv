@@ -6,7 +6,7 @@
 //
 //
 
-public class WritableFileStream: AsyncSendingStream {
+public class WritableFileStream: WritableStream {
     
     public let path: String
     
@@ -24,10 +24,10 @@ public class WritableFileStream: AsyncSendingStream {
         self.mode = mode
     }
     
-    public func send(_ data: Data, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
+    public func write(_ data: Data, deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         if closed {
             completion {
-                throw ClosableError.alreadyClosed
+                throw StreamError.closedStream(data: [])
             }
             return
         }
@@ -56,15 +56,12 @@ public class WritableFileStream: AsyncSendingStream {
         }
     }
     
-    public func flush(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
+    public func flush(deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         // noop
     }
     
-    public func close() throws {
-        if closed {
-            throw ClosableError.alreadyClosed
-        }
-        if let fd = fd {
+    public func close() {
+        if let fd = fd, !closed {
             FS.close(fd)
         }
         closed = true
