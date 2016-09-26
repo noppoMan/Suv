@@ -13,7 +13,7 @@
 #endif
 
 import XCTest
-import Time
+import Foundation
 @testable import Suv
 
 class TimerTests: XCTestCase {
@@ -30,16 +30,17 @@ class TimerTests: XCTestCase {
                 timer.unref()
                 XCTAssertEqual(timer.state, TimerState.pause)
                 
-                let start = Time().unixtime
+                let start = Int(Date().timeIntervalSince1970)
                 
                 timer.start {
-                    XCTAssertGreaterThan(Time().unixtime - start, 0)
+                    XCTAssertGreaterThan(Int(Date().timeIntervalSince1970) - start, 0)
                     timer.end()
                     XCTAssertEqual(timer.state, TimerState.end)
                     Loop.defaultLoop.stop()
                     cb(nil)
                 }
             }
+            
             
             let timerInterval: SeriesCB = { cb in
                 let timer = TimerWrap(mode: .interval, delay: 500)

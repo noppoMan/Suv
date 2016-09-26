@@ -6,8 +6,7 @@ let package = Package(
         Target(name: "ClusterTest", dependencies: ["Suv"])
     ],
 	dependencies: [
-      .Package(url: "https://github.com/noppoMan/swifty-libuv.git", majorVersion: 0, minor: 5),
-      .Package(url: "https://github.com/slimane-swift/Time.git", majorVersion: 0, minor: 3),
-      .Package(url: "https://github.com/open-swift/C7.git", majorVersion: 0, minor: 12)
+      .Package(url: "https://github.com/noppoMan/swifty-libuv.git", majorVersion: 0, minor: 6),
+      .Package(url: "https://github.com/slimane-swift/Core.git", majorVersion: 0, minor: 1)
   ]
 )

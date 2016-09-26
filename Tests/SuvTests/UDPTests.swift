@@ -18,28 +18,28 @@ class UDPTests: XCTestCase {
 
     func testUdpConnect(){
         waitUntil(5, description: "UDP connection") { done in
-            let uri = URI(host: "127.0.0.1", port: 41234)
+            let uri = URL(string: "udp://127.0.0.1:41234")!
 
             let client = UDPSocket()
             let server = UDPSocket()
             try! server.bind(uri)
 
-            client.receive { getResults in
+            client.read { getResults in
                 let (data, _) = try! getResults()
-                XCTAssertEqual("\(data)", "pong")
+                XCTAssertEqual(data.utf8String!, "pong")
                 Loop.defaultLoop.stop()
-                try! client.close()
-                try! server.close()
+                client.close()
+                server.close()
                 done()
             }
 
-            server.receive { getResults in
+            server.read { getResults in
                 let (data, uri) = try! getResults()
-                XCTAssertEqual("\(data)", "ping")
-                server.send(Data("pong"), uri: uri)
+                XCTAssertEqual(data.utf8String!, "ping")
+                server.write("pong".data, uri: uri)
             }
 
-            client.send(Data("ping"), uri: uri)
+            client.write("ping".data, uri: uri)
         }
     }
 }

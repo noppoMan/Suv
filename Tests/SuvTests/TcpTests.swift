@@ -14,7 +14,7 @@ import CLibUv
 private func launchServer() throws -> TCPServer {
     let server = TCPServer()
     
-    let addr = URI(host: "0.0.0.0", port: 9999)
+    let addr =  URL(string: "tcp://0.0.0.0:9999")!
     try server.bind(addr)
     try server.listen { getQueue in
         do {
@@ -22,12 +22,12 @@ private func launchServer() throws -> TCPServer {
             let client = TCPSocket()
             try server.accept(client)
             
-            client.receive { getData in
+            client.read { getData in
                 do {
                     let data = try getData()
-                    client.send(data)
+                    client.write(data)
                 } catch {
-                    try! client.close()
+                    client.close()
                     XCTFail("\(error)")
                 }
             }
@@ -49,18 +49,18 @@ class TcpTests: XCTestCase {
     func testTcpConnect(){
         waitUntil(5, description: "TCPServer Connect") { done in
             let server = try! launchServer()
-            let client = TCPClient(uri: URI(host: "0.0.0.0", port: 9999))
+            let client = TCPClient(uri: URL(string: "tcp://0.0.0.0:9999")!)
             
             try! client.open { getClient in
                 _ = try! getClient()
                 
-                client.send(Data("Hi!"))
+                client.write("Hi!".data)
                 
-                client.receive { getData in
+                client.read { getData in
                     do {
                         let data = try getData()
-                        XCTAssertEqual("\(data)", "Hi!")
-                        try! server.close()
+                        XCTAssertEqual(data.utf8String!, "Hi!")
+                        server.close()
                         Loop.defaultLoop.stop()
                         done()
                     } catch {

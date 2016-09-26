@@ -123,7 +123,7 @@ struct InternalMessageParser {
 extension WritablePipe {
     internal func send(_ event: InterProcessEvent){
         let data = "Suv.InterProcess.\(event.cmdString)\t\(event.stringValue.characters.count)\t\(event.stringValue)"
-        self.send(data.data)
+        self.write(data.data)
     }
 }
 
@@ -131,7 +131,7 @@ extension ReadablePipe {
     internal func onIPC(_ callback: @escaping (InterProcessEvent) -> ()){
         var parser = InternalMessageParser(callback)
         
-        self.receive { getData in
+        self.read { getData in
             do {
                 let data = try getData()
                 parser.parse("\(data)")

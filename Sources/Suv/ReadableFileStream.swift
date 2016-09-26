@@ -6,7 +6,7 @@
 //
 //
 
-public class ReadableFileStream: AsyncReceivingStream {
+public class ReadableFileStream: ReadableStream {
     
     public let path: String
     
@@ -24,10 +24,10 @@ public class ReadableFileStream: AsyncReceivingStream {
         self.mode = mode
     }
     
-    public func receive(upTo byteCount: Int = 1024, timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
+    public func read(upTo byteCount: Int = 1024, deadline: Double = .never, completion: @escaping ((Void) throws -> Data) -> Void = { _ in }) {
         if closed {
             completion {
-                throw ClosableError.alreadyClosed
+                throw StreamError.closedStream(data: [])
             }
             return
         }
@@ -56,15 +56,12 @@ public class ReadableFileStream: AsyncReceivingStream {
         }
     }
     
-    public func flush(timingOut deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
+    public func flush(deadline: Double = .never, completion: @escaping ((Void) throws -> Void) -> Void = {_ in}) {
         // noop
     }
     
-    public func close() throws {    
-        if closed {
-            throw ClosableError.alreadyClosed
-        }
-        if let fd = fd {
+    public func close() {
+        if let fd = fd, !closed {
             FS.close(fd)
         }
         closed = true

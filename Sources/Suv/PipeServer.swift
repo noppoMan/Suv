@@ -88,6 +88,6 @@ public final class PipeServer {
         if let name = sockName {
             try FS.unlink(name)
         }
-        try self.socket.close()
+        self.socket.close()
     }
 }

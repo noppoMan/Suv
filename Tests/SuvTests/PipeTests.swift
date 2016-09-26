@@ -28,12 +28,12 @@ private func launchServer() throws -> PipeServer {
             let client = PipeSocket()
             try server.accept(client)
             
-            client.receive { getData in
+            client.read { getData in
                 do {
                     let data = try getData()
-                    client.send(data)
+                    client.write(data)
                 } catch {
-                    try! client.close()
+                    client.close()
                     XCTFail("\(error)")
                 }
             }
@@ -61,13 +61,13 @@ class PipeTests: XCTestCase {
             try! client.open { result in
                 _ = try! result()
                 
-                client.send(Data("Hi!"))
+                client.write("Hi!".data)
                 
-                client.receive { getData in
+                client.read { getData in
                     do {
                         let data = try getData()
                         try! server.close()
-                        XCTAssertEqual("\(data)", "Hi!")
+                        XCTAssertEqual(data.utf8String!, "Hi!")
                         Loop.defaultLoop.stop()
                         done()
                     } catch {

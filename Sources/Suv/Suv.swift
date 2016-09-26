@@ -6,6 +6,5 @@
 //
 //
 
-@_exported import Time
-@_exported import C7
+@_exported import Core
 @_exported import SwiftyLibuv
