@@ -79,3 +79,10 @@ public class UDPSocket {
         rawSocket.close()
     }
 }
+
+
+extension UDPSocket: Equatable {}
+
+public func ==(lhs: UDPSocket, rhs: UDPSocket) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+}

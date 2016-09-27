@@ -59,3 +59,10 @@ public final class PipeSocket: Stream {
 
     public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void) {}
 }
+
+
+extension PipeSocket: Equatable {}
+
+public func ==(lhs: PipeSocket, rhs: PipeSocket) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+}

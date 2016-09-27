@@ -93,3 +93,8 @@ public final class TCPClient: Connection {
     public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
 }
 
+extension TCPClient: Equatable {}
+
+public func ==(lhs: TCPClient, rhs: TCPClient) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+}

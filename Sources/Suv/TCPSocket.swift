@@ -73,3 +73,10 @@ public class TCPSocket: Stream {
 
     public func flush(deadline: Double, completion: @escaping ((Void) throws -> Void) -> Void = { _ in }) {}
 }
+
+
+extension TCPSocket: Equatable {}
+
+public func ==(lhs: TCPSocket, rhs: TCPSocket) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+}
