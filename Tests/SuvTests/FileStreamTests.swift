@@ -15,24 +15,17 @@
 import XCTest
 @testable import Suv
 
-private let targetFile = CommandLine.cwd + "/test.txt"
+private let targetFile = Process.cwd + "/test.txt"
 
 class FileStreamTests: XCTestCase {
     static var allTests: [(String, (FileStreamTests) -> () throws -> Void)] {
         return [
-            ("testReadFile", testFileStream)
+            ("testStreamReandAndWrite", testStreamReandAndWrite)
         ]
     }
     
     func prepare() {
         unlink(targetFile)
-        waitUntil(description: "setup") { done in
-            FS.open(targetFile, flags: .createWrite) { getFd in
-                let fd = try! getFd()
-                FS.close(fd)
-                done()
-            }
-        }
     }
     
     func cleanup(){
@@ -47,22 +40,28 @@ class FileStreamTests: XCTestCase {
         cleanup()
     }
     
-    func testFileStream(){
-        waitUntil(description: "readFileStream") { done in
-            let writeStream = FS.createWritableStream(path: targetFile)
+    func testStreamReandAndWrite(){
+        waitUntil(description: "testStreamReandAndWrite") { done in
+            let writeStream = WritableFileStream(path: targetFile)
             let data = "foobar".data
             
             writeStream.write(data) { result in
                 writeStream.close()
-                
-                _ = try! result()
-                
-                let readStream = FS.createReadableStream(path: targetFile)
-                readStream.read { getData in
-                    let data = try! getData()
-                    XCTAssertEqual(data.utf8String!, "foobar")
-                    readStream.close()
-                    done()
+                switch result {
+                case .success(_):
+                    let readStream = ReadableFileStream(path: targetFile)
+                    readStream.read { result in
+                        switch result {
+                        case .success(let data):
+                            XCTAssertEqual(data.utf8String!, "foobar")
+                            readStream.close()
+                            done()
+                        case .failure(let error):
+                            XCTFail("\(error)")
+                        }
+                    }
+                case .failure(let error):
+                    XCTFail("\(error)")
                 }
             }
         }

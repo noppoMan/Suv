@@ -26,7 +26,7 @@ class TimerTests: XCTestCase {
     func testTimer() {
         waitUntil(10, description: "TimerTimeout") { done in
             let timerTimeout: SeriesCB = { cb in
-                let timer = TimerWrap(mode: .timeout, delay: 1000)
+                let timer = Timer(mode: .timeout, delay: 1000)
                 timer.unref()
                 XCTAssertEqual(timer.state, TimerState.pause)
                 
@@ -43,7 +43,7 @@ class TimerTests: XCTestCase {
             
             
             let timerInterval: SeriesCB = { cb in
-                let timer = TimerWrap(mode: .interval, delay: 500)
+                let timer = Timer(mode: .interval, delay: 500)
                 timer.unref()
                 XCTAssertEqual(timer.state, TimerState.pause)
                 
@@ -60,14 +60,14 @@ class TimerTests: XCTestCase {
                     }
                 }
                 
-                let t2 = TimerWrap(delay: 1000)
+                let t2 = Timer(delay: 1000)
                 
                 t2.start {
                     t2.end()
                     timer.stop()
                 }
                 
-                let t3 = TimerWrap(delay: 2000)
+                let t3 = Timer(delay: 2000)
                 t3.start {
                     t3.end()
                     XCTAssertEqual(timer.state, TimerState.stop)

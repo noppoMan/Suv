@@ -23,6 +23,6 @@ class OSTests: XCTestCase {
     }
     
     func testCpuCount() {
-        XCTAssertGreaterThan(OS.cpus().count, 0)
+        XCTAssertGreaterThan(ProcessInfo.cpus().count, 0)
     }
 }
