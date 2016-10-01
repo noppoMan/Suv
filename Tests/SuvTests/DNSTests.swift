@@ -20,17 +20,16 @@ class DNSTests: XCTestCase {
     
     func testGetAddrInfo() {
         waitUntil(5, description: "GetAddrInfo") { done in
-            DNS.getAddrInfo(fqdn: "localhost") { getAddrInfos in
-                do {
-                    let addrInfos = try getAddrInfos()
+            DNS.getAddrInfo(fqdn: "localhost") { result in
+                switch result {
+                case .success(let addrInfos):
                     for ai in addrInfos {
                         if ai.host == "127.0.0.1" && ai.service == "0" {
                             done()
                             return
                         }
                     }
-                    done()
-                } catch {
+                case .failure(_):
                     XCTFail("Could not resolve localhost")
                 }
             }

@@ -1,19 +1,13 @@
 # Suv
 
 A libuv based cross platform asyncronous I/O, networking library in Swift.  
-This is built with [libuv](https://github.com/libuv/libuv) as core architecture and wrap it as node.js like interface.
 
 Suv is also core engine of [Slimane](https://github.com/noppoMan/slimane.git)
 
 ## Features
-- [x] TCP Server
-- [x] TCP Client
-- [x] TCP Socket
-- [x] Pipe Server
-- [x] Pipe Client
-- [x] Pipe Socket
-- [x] UDP Socket
-- [x] UDP Client
+- [x] TCP
+- [x] Pipe
+- [x] UDP
 - [x] File System
 - [x] Child Process
 - [x] Cluster/Worker

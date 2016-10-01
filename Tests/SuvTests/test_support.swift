@@ -27,7 +27,7 @@ private class AsynchronousTestSupporter {
         date.addTimeInterval(TimeInterval(timeout))
         let endts = date.timeIntervalSince1970
 
-        let t = TimerWrap(mode: .interval, delay: 100)
+        let t = Timer(mode: .interval, delay: 100)
         t.start {
             if Date().timeIntervalSince1970 > endts {
                 Loop.defaultLoop.stop()
