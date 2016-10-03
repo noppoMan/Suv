@@ -11,27 +11,25 @@ import CLibUv
 @testable import Suv
 
 // Simple Echo Server
-private func launchServer() throws -> TCPServer {
-    let server = TCPServer()
-    
-    let addr =  URL(string: "tcp://0.0.0.0:9999")!
+private func launchServer() throws -> TCP {
+    let server = TCP()
+    let addr =  Address(host: "0.0.0.0", port: 9999)
     try server.bind(addr)
-    try server.listen { getQueue in
-        do {
-            _ = try getQueue()
-            let client = TCPSocket()
-            try server.accept(client)
-            
-            client.read { getData in
-                do {
-                    let data = try getData()
+    try server.listen { result in
+        switch result {
+        case .success(let queue):
+            let client = TCP()
+            try! server.accept(client)
+            client.read { result in
+                switch result {
+                case .success(let data):
                     client.write(data)
-                } catch {
+                case .failure(let error):
                     client.close()
                     XCTFail("\(error)")
                 }
             }
-        } catch {
+        case .failure(let error):
             XCTFail("\(error)")
         }
     }
@@ -49,23 +47,26 @@ class TcpTests: XCTestCase {
     func testTcpConnect(){
         waitUntil(5, description: "TCPServer Connect") { done in
             let server = try! launchServer()
-            let client = TCPClient(uri: URL(string: "tcp://0.0.0.0:9999")!)
+            let client = TCP()
             
-            try! client.open { getClient in
-                _ = try! getClient()
-                
-                client.write("Hi!".data)
-                
-                client.read { getData in
-                    do {
-                        let data = try getData()
-                        XCTAssertEqual(data.utf8String!, "Hi!")
-                        server.close()
-                        Loop.defaultLoop.stop()
-                        done()
-                    } catch {
-                        XCTFail("\(error)")
+            client.connect(Address(host: "0.0.0.0", port: 9999)) { result in
+                switch result {
+                case .success(_):
+                    client.write("Hi!".data)
+                    client.read { result in
+                        switch result {
+                        case .success(let data):
+                            XCTAssertEqual(data.utf8String!, "Hi!")
+                            server.close()
+                            Loop.defaultLoop.stop()
+                            done()
+                        case .failure(let error):
+                            client.close()
+                            XCTFail("\(error)")
+                        }
                     }
+                case .failure(let error):
+                    XCTFail("\(error)")
                 }
             }
         }

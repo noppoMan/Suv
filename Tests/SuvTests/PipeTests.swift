@@ -18,26 +18,25 @@ import XCTest
 @testable import Suv
 
 // Simple Echo Server
-private func launchServer() throws -> PipeServer {
-    let server = PipeServer()    
+private func launchServer() throws -> Suv.Pipe {
+    let server = Suv.Pipe()
     try server.bind("/tmp/suv-test.sock")
     
     try server.listen { result in
-        do {
-            _ = try result()
-            let client = PipeSocket()
-            try server.accept(client)
-            
-            client.read { getData in
-                do {
-                    let data = try getData()
+        switch result {
+        case .success(_):
+            let client = Suv.Pipe()
+            try! server.accept(client)
+            client.read { result in
+                switch result {
+                case .success(let data):
                     client.write(data)
-                } catch {
+                case .failure(let error):
                     client.close()
                     XCTFail("\(error)")
                 }
             }
-        } catch {
+        case .failure(let error):
             XCTFail("\(error)")
         }
     }
@@ -55,24 +54,24 @@ class PipeTests: XCTestCase {
     func testPipeConnect(){
         waitUntil(5, description: "PipeServer Connect") { done in
             let server = try! launchServer()
-            
-            let client = PipeClient(sockName: "/tmp/suv-test.sock")
-            
-            try! client.open { result in
-                _ = try! result()
-                
-                client.write("Hi!".data)
-                
-                client.read { getData in
-                    do {
-                        let data = try getData()
-                        try! server.close()
-                        XCTAssertEqual(data.utf8String!, "Hi!")
-                        Loop.defaultLoop.stop()
-                        done()
-                    } catch {
-                        XCTFail("\(error)")
+            let client = Suv.Pipe()
+            client.connect("/tmp/suv-test.sock") { result in
+                switch result {
+                case .success(_):
+                    client.write("Hi!".data)
+                    client.read { result in
+                        switch result {
+                        case .success(let data):
+                            server.close()
+                            XCTAssertEqual(data.utf8String!, "Hi!")
+                            Loop.defaultLoop.stop()
+                            done()
+                        case .failure(let error):
+                            XCTFail("\(error)")
+                        }
                     }
+                case .failure(let error):
+                    XCTFail("\(error)")
                 }
             }
         }
